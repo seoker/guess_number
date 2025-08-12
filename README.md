@@ -1,95 +1,133 @@
-# 🎯 互動猜謎競賽 (Interactive Number Guessing Competition)
+# 🎯 Interactive Number Guessing Competition
 
-一個有趣的雙人猜數字遊戲，玩家和電腦同時猜測對方的四位數字！
+A fun two-player number guessing game where player and computer simultaneously guess each other's four-digit numbers!
 
-## 🌍 多語言支援
+🎮 **[Try the Live Demo](https://seoker.tw/guess_number)**
 
-本遊戲支援以下語言：
-- 🇹🇼 中文 (繁體)
-- 🇺🇸 English (英文)
-- 🇯🇵 日本語 (日文)
+## 🌍 Multi-language Support
 
-### 切換語言
-點擊右上角的語言選擇器 (🌐) 來切換遊戲語言。語言設定會自動保存到瀏覽器中。
+This game supports the following languages:
+- 🇹🇼 Traditional Chinese (中文)
+- 🇺🇸 English
+- 🇯🇵 Japanese (日本語)
 
-## 🎮 遊戲規則
+### Language Switching
+Click the language selector (🌐) in the top-right corner to switch game language. Language preferences are automatically saved in the browser.
 
-1. **目標**: 猜測對方的四位數字
-2. **數字規則**: 四位數字不能重複 (例如: 1234, 5678)
-3. **提示系統**:
-   - **A**: 數字和位置都對的個數
-   - **B**: 數字對但位置不對的個數
-4. **範例**: 
-   - 目標數字: 1234
-   - 猜測: 1567
-   - 結果: 1A0B (1在正確位置，沒有其他數字對但位置錯)
+## 🎮 Game Rules
 
-## 📊 遊戲記錄功能
+1. **Objective**: Guess the opponent's four-digit number
+2. **Number Rules**: Four digits must be unique (e.g., 1234, 5678)
+3. **Hint System**:
+   - **A**: Number of digits that are correct in both value and position
+   - **B**: Number of digits that are correct in value but wrong in position
+4. **Example**: 
+   - Target number: 1234
+   - Guess: 1567
+   - Result: 1A0B (1 is in correct position, no other digits are correct but in wrong position)
 
-遊戲會自動記錄每場比賽的結果，包括：
-- **時間戳**: 遊戲完成的時間
-- **勝負結果**: 玩家獲勝或電腦獲勝
-- **回合數**: 總回合數、玩家嘗試次數、電腦嘗試次數
-- **持久化存儲**: 使用瀏覽器的 localStorage 保存記錄
+## 📊 Game Records Feature
 
-### 查看記錄
-點擊導航欄中的「記錄」標籤可以查看所有遊戲記錄。記錄會按時間倒序排列，最新的記錄在最上方。
+The game automatically records each match result, including:
+- **Timestamp**: When the game was completed
+- **Win/Loss Result**: Player victory or computer victory
+- **Round Count**: Total rounds, player attempts, computer attempts
+- **Persistent Storage**: Uses browser localStorage to save records
 
-### 清除記錄
-在記錄頁面可以點擊「清除所有記錄」按鈕來刪除所有保存的遊戲記錄。
+### View Records
+Click the "Records" tab in the navigation bar to view all game records. Records are sorted in reverse chronological order with the newest records at the top.
 
-## 🚀 開始遊戲
+### Clear Records
+On the records page, you can click the "Clear All Records" button to delete all saved game records.
+
+## 🚀 Getting Started
 
 ```bash
-# 安裝依賴
+# Install dependencies
 npm install
 
-# 啟動開發服務器
+# Start development server
 npm run dev
 
-# 構建生產版本
+# Build for production
 npm run build
+
+# Deploy to GitHub Pages
+npm run deploy
 ```
 
-## 🛠️ 技術特色
+## 🛠️ Technical Features
 
-- **React 18** - 現代化前端框架
-- **Vite** - 快速開發和構建工具
-- **國際化 (i18n)** - 完整的多語言支援
-- **響應式設計** - 適配各種設備
-- **智能 AI** - 電腦會根據提示進行邏輯推理
+- **React 18** - Modern frontend framework
+- **Vite** - Fast development and build tool
+- **Internationalization (i18n)** - Complete multi-language support with react-i18next
+- **Responsive Design** - Adapts to various devices
+- **Smart AI** - Computer performs logical reasoning based on hints
+- **Feedback Correction** - Advanced correction system for inconsistent feedback
 
-## 📁 項目結構
+## 📁 Project Structure
 
 ```
 src/
-├── components/          # UI 組件
-│   ├── GameUI.jsx     # 主要遊戲界面
-│   ├── GameUI.css     # 遊戲樣式
-│   ├── NavigationBar.jsx  # 導航欄
-│   ├── NavigationBar.css  # 導航欄樣式
-│   ├── GameRecords.jsx    # 遊戲記錄顯示
-│   ├── GameRecords.css    # 遊戲記錄樣式
-│   ├── LanguageSelector.jsx  # 語言選擇器
-│   └── LanguageSelector.css  # 語言選擇器樣式
-├── hooks/              # 自定義 Hooks
-│   ├── useGameLogic.js # 遊戲邏輯
-│   ├── useGameRecords.js # 遊戲記錄管理
-│   └── useI18n.js     # 國際化功能
-├── i18n/               # 翻譯文件
-│   ├── translations.js # 多語言翻譯
-│   └── config.js      # 國際化配置
-└── App.jsx            # 主應用組件
+├── components/          # UI Components
+│   ├── GameUI.jsx      # Main game interface
+│   ├── GameUI.css      # Game styles
+│   ├── NavigationBar.jsx   # Navigation bar
+│   ├── NavigationBar.css   # Navigation bar styles
+│   ├── GameRecords.jsx     # Game records display
+│   ├── GameRecords.css     # Game records styles
+│   ├── LanguageSelector.jsx # Language selector
+│   └── LanguageSelector.css # Language selector styles
+├── hooks/               # Custom Hooks
+│   ├── useGameLogic.js  # Game logic
+│   └── useGameRecords.js # Game records management
+├── i18n/                # Translation files
+│   ├── index.js         # i18n configuration
+│   └── locales/         # Language files
+│       ├── zh.json      # Traditional Chinese
+│       ├── en.json      # English
+│       └── ja.json      # Japanese
+└── App.jsx             # Main application component
 ```
 
-## 🎯 遊戲特色
+## 🎯 Game Features
 
-- **雙向競賽**: 玩家和電腦同時猜測
-- **智能推理**: 電腦會根據提示進行邏輯分析
-- **歷史記錄**: 顯示所有猜測歷史
-- **遊戲記錄**: 自動保存每場遊戲的結果到瀏覽器
-- **導航系統**: 可在遊戲介面和記錄介面之間切換
-- **即時反饋**: 提供詳細的 A/B 提示
-- **多語言**: 支援中文、英文、日文
+- **Bidirectional Competition**: Player and computer guess simultaneously
+- **Smart Reasoning**: Computer performs logical analysis based on hints
+- **History Tracking**: Shows all guess history with ordinal numbering
+- **Game Records**: Automatically saves each game result to browser
+- **Navigation System**: Switch between game interface and records interface
+- **Real-time Feedback**: Provides detailed A/B hints
+- **Feedback Correction**: Fix and reset functionality when computer detects inconsistent feedback
+- **Multi-language**: Supports Chinese, English, and Japanese
 
-享受遊戲吧！🎉
+## 🧪 Testing
+
+The project includes comprehensive test coverage:
+
+```bash
+# Run all tests
+npm test
+
+# Run tests with UI
+npm run test:ui
+
+# Run tests in watch mode
+npm run test:watch
+
+# Generate coverage report
+npm run test:coverage
+```
+
+Test suite includes:
+- **Unit tests** for game logic, components, and hooks
+- **Integration tests** for complete game flow
+- **46 test cases** ensuring full functionality
+
+## 🚀 Deployment
+
+The project is automatically deployed to GitHub Pages:
+- **Live Demo**: [https://seoker.tw/guess_number](https://seoker.tw/guess_number)
+- **Repository**: GitHub Pages deployment via gh-pages branch
+
+Enjoy the game! 🎉
