@@ -1,3 +1,4 @@
+import { describe, test, expect, beforeEach, vi } from 'vitest'
 import { renderHook, act } from '@testing-library/react'
 import { useGameRecords } from '../../src/hooks/useGameRecords'
 
@@ -19,7 +20,7 @@ describe('useGameRecords', () => {
   test('should initialize with empty records', () => {
     const { result } = renderHook(() => useGameRecords())
     
-    expect(result.current.gameRecords).toEqual([])
+    expect(result.current.gameRecords).toStrictEqual([])
   })
 
   test('should load existing records from localStorage', () => {
@@ -30,7 +31,7 @@ describe('useGameRecords', () => {
     
     const { result } = renderHook(() => useGameRecords())
     
-    expect(result.current.gameRecords).toEqual(mockRecords)
+    expect(result.current.gameRecords).toStrictEqual(mockRecords)
   })
 
   test('should add new game record', () => {
@@ -51,7 +52,7 @@ describe('useGameRecords', () => {
     expect(result.current.gameRecords[0]).toMatchObject(newRecord)
     expect(result.current.gameRecords[0]).toHaveProperty('id')
     expect(result.current.gameRecords[0]).toHaveProperty('timestamp')
-    expect(localStorageMock.setItem).toHaveBeenCalled()
+    expect(localStorageMock.setItem).toHaveBeenCalledWith('guessNumberGameRecords', expect.any(String))
   })
 
   test('should clear all records', () => {
@@ -74,7 +75,7 @@ describe('useGameRecords', () => {
       result.current.clearAllRecords()
     })
     
-    expect(result.current.gameRecords).toEqual([])
+    expect(result.current.gameRecords).toStrictEqual([])
     expect(localStorageMock.removeItem).toHaveBeenCalledWith('guessNumberGameRecords')
   })
 

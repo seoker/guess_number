@@ -259,7 +259,7 @@ export const useGameLogic = (t, addGameRecord) => {
         }))
       }, GAME_CONFIG.COMPUTER_THINKING_TIME)
     }
-  }, [gameState.playerGuess, gameState.computerTarget, validateNumber, calculateAB, computerMakeGuess, t])
+  }, [gameState.playerGuess, gameState.computerTarget, gameState.playerAttempts, gameState.computerAttempts, validateNumber, calculateAB, computerMakeGuess, t, addGameRecord])
 
   // 處理玩家反饋
   const handleFeedbackSubmit = useCallback(() => {
@@ -331,7 +331,7 @@ export const useGameLogic = (t, addGameRecord) => {
       showFeedbackForm: false,
       playerFeedback: { A: '', B: '' }
     }))
-  }, [computerAI.playerFeedback, computerAI.currentGuess, validateFeedback, checkFeedbackConsistency, generateComplaint, updateComputerPossibleNumbers, t])
+  }, [computerAI.playerFeedback, computerAI.currentGuess, gameState.playerAttempts, gameState.computerAttempts, validateFeedback, checkFeedbackConsistency, generateComplaint, updateComputerPossibleNumbers, t, addGameRecord])
 
   // 更新玩家猜測
   const updatePlayerGuess = useCallback((guess) => {

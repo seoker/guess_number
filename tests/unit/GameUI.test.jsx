@@ -52,7 +52,8 @@ describe('gameUI', () => {
       
       expect(screen.getByText('title')).toBeInTheDocument()
       expect(screen.getByText('startGame')).toBeInTheDocument()
-      expect(screen.getByText('description')).toBeInTheDocument()
+      expect(screen.getByText(/description/)).toBeInTheDocument()
+      expect(screen.getAllByText(/rules/)).toHaveLength(2) // 'rules' and 'rulesDetail' both match
     })
 
     it('應該能夠開始遊戲', async () => {
@@ -79,9 +80,9 @@ describe('gameUI', () => {
     it('應該顯示遊戲進行畫面', () => {
       render(<GameUI {...gameInProgressProps} />)
       
-      expect(screen.getByText('playerAttempts')).toBeInTheDocument()
-      expect(screen.getByText('computerAttempts')).toBeInTheDocument()
-      expect(screen.getByText('currentTurn')).toBeInTheDocument()
+      expect(screen.getByText(/playerAttempts/)).toBeInTheDocument()
+      expect(screen.getByText(/computerAttempts/)).toBeInTheDocument()
+      expect(screen.getByText(/currentTurn/)).toBeInTheDocument()
     })
 
     it('應該顯示玩家輸入區域', () => {
@@ -99,7 +100,9 @@ describe('gameUI', () => {
       const input = screen.getByPlaceholderText('guessPlaceholder')
       await user.type(input, '1234')
       
-      expect(mockProps.updatePlayerGuess).toHaveBeenCalledWith('1234')
+      // 因為每個字符都會觸發一次 updatePlayerGuess，所以檢查最後一次調用
+      expect(mockProps.updatePlayerGuess).toHaveBeenCalledTimes(4)
+      expect(mockProps.updatePlayerGuess).toHaveBeenLastCalledWith('4')
     })
 
     it('應該處理玩家猜測提交', async () => {
@@ -146,8 +149,7 @@ describe('gameUI', () => {
     it('應該顯示電腦猜測和反饋表單', () => {
       render(<GameUI {...computerTurnProps} />)
       
-      expect(screen.getByText('computerGuess')).toBeInTheDocument()
-      expect(screen.getByText('5678')).toBeInTheDocument()
+      expect(screen.getByText(/computerGuess5678/)).toBeInTheDocument()
       expect(screen.getByText('feedbackHint')).toBeInTheDocument()
     })
 
@@ -157,9 +159,9 @@ describe('gameUI', () => {
       expect(screen.getByText('aLabel')).toBeInTheDocument()
       expect(screen.getByText('bLabel')).toBeInTheDocument()
       
-      // 檢查數字按鈕
+      // 檢查數字按鈕 (A和B區域都有，所以每個數字出現2次)
       for (let i = 0; i <= 4; i++) {
-        expect(screen.getByText(i.toString())).toBeInTheDocument()
+        expect(screen.getAllByText(i.toString())).toHaveLength(2)
       }
     })
 
@@ -204,8 +206,8 @@ describe('gameUI', () => {
       render(<GameUI {...propsWithHistory} />)
       
       expect(screen.getByText('playerHistory')).toBeInTheDocument()
-      expect(screen.getByText('1234')).toBeInTheDocument()
-      expect(screen.getByText('5678')).toBeInTheDocument()
+      expect(screen.getAllByText('1234')).toHaveLength(1)
+      expect(screen.getAllByText('5678')).toHaveLength(2) // appears in both player and computer history
       expect(screen.getByText('2A2B')).toBeInTheDocument()
       expect(screen.getByText('0A0B')).toBeInTheDocument()
     })
@@ -247,11 +249,11 @@ describe('gameUI', () => {
   })
 
   describe('語言切換', () => {
-    it('應該顯示語言選擇器', () => {
+    it('應該接收語言相關的props', () => {
       render(<GameUI {...mockProps} />)
       
-      // 檢查語言選擇器是否存在
-      expect(screen.getByRole('combobox')).toBeInTheDocument()
+      // GameUI 組件本身不包含語言選擇器，但接收 t 函數進行翻譯
+      expect(screen.getByText('title')).toBeInTheDocument()
     })
   })
 })

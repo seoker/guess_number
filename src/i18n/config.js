@@ -1,4 +1,4 @@
-import { addNewTranslations } from './translations'
+// import { addNewTranslations } from './translations' // Currently unused
 
 // 國際化相關配置
 export const i18nConfig = {

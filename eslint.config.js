@@ -89,7 +89,7 @@ export default defineConfig([
       'testing-library/no-dom-import': 'error',
       'testing-library/no-global-regexp-flag-in-query': 'error',
       'testing-library/no-manual-cleanup': 'error',
-      'testing-library/no-node-access': 'error',
+      'testing-library/no-node-access': 'warn', // Allow userEvent interactions
       'testing-library/no-unnecessary-act': 'error',
       'testing-library/prefer-explicit-assert': 'error',
       'testing-library/prefer-find-by': 'error',

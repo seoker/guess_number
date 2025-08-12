@@ -2,7 +2,8 @@ import '@testing-library/jest-dom'
 import { vi, beforeEach } from 'vitest'
 
 // 全域測試設定
-global.ResizeObserver = vi.fn().mockImplementation(() => ({
+// eslint-disable-next-line vitest/prefer-spy-on
+global.ResizeObserver = vi.fn(() => ({
   observe: vi.fn(),
   unobserve: vi.fn(),
   disconnect: vi.fn(),

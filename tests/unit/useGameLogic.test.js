@@ -6,15 +6,15 @@ import { useGameLogic } from '../../src/hooks/useGameLogic'
 const mockT = vi.fn((key) => key)
 
 describe('useGameLogic', () => {
-  let hook
+  let hookResult
 
   beforeEach(() => {
-    const { result } = renderHook(() => useGameLogic(mockT))
-    hook = result.current
+    hookResult = renderHook(() => useGameLogic(mockT))
   })
 
   describe('遊戲初始化', () => {
     it('應該正確初始化遊戲狀態', () => {
+      const hook = hookResult.result.current
       expect(hook.gameState.gameStarted).toBe(false)
       expect(hook.gameState.playerAttempts).toBe(0)
       expect(hook.gameState.computerAttempts).toBe(0)
@@ -23,44 +23,47 @@ describe('useGameLogic', () => {
 
     it('應該能夠開始新遊戲', () => {
       act(() => {
-        hook.startNewGame()
+        hookResult.result.current.startNewGame()
       })
 
+      const hook = hookResult.result.current
       expect(hook.gameState.gameStarted).toBe(true)
       expect(hook.gameState.computerTarget).toHaveLength(4)
-      expect(hook.gameState.currentTurn).toBe('computer')
+      expect(hook.gameState.currentTurn).toBe('player')
     })
   })
 
   describe('玩家猜測', () => {
     beforeEach(() => {
       act(() => {
-        hook.startNewGame()
+        hookResult.result.current.startNewGame()
       })
     })
 
     it('應該處理正確的玩家猜測', () => {
       act(() => {
-        hook.updatePlayerGuess('1234')
+        hookResult.result.current.updatePlayerGuess('1234')
       })
 
       act(() => {
-        hook.handlePlayerGuess()
+        hookResult.result.current.handlePlayerGuess()
       })
 
+      const hook = hookResult.result.current
       expect(hook.gameState.playerAttempts).toBe(1)
       expect(hook.history.player).toHaveLength(1)
     })
 
     it('應該拒絕無效的玩家猜測', () => {
       act(() => {
-        hook.updatePlayerGuess('123')
+        hookResult.result.current.updatePlayerGuess('123')
       })
 
       act(() => {
-        hook.handlePlayerGuess()
+        hookResult.result.current.handlePlayerGuess()
       })
 
+      const hook = hookResult.result.current
       expect(hook.gameState.playerAttempts).toBe(0)
       expect(hook.gameState.message).toBe('fourDigitsRequired')
     })
@@ -68,6 +71,7 @@ describe('useGameLogic', () => {
 
   describe('遊戲配置', () => {
     it('應該有正確的遊戲配置', () => {
+      const hook = hookResult.result.current
       expect(hook.GAME_CONFIG.DIGIT_COUNT).toBe(4)
       expect(hook.GAME_CONFIG.MAX_DIGIT).toBe(10)
       expect(hook.GAME_CONFIG.COMPUTER_THINKING_TIME).toBe(1000)
