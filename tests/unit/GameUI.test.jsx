@@ -25,16 +25,26 @@ const mockComputerAI = {
   playerFeedback: { A: '', B: '' }
 }
 
+const mockFeedbackCorrection = {
+  isActive: false,
+  showHistory: false
+}
+
 const mockProps = {
   gameState: mockGameState,
   history: mockHistory,
   computerAI: mockComputerAI,
+  feedbackCorrection: mockFeedbackCorrection,
   startNewGame: vi.fn(),
   handlePlayerGuess: vi.fn(),
   handleFeedbackSubmit: vi.fn(),
   updatePlayerGuess: vi.fn(),
   updatePlayerFeedback: vi.fn(),
-  getMessageType: vi.fn(() => 'INFO'),
+  getMessageType: vi.fn(() => 'info'),
+  startFeedbackCorrection: vi.fn(),
+  resetGame: vi.fn(),
+  correctHistoryFeedback: vi.fn(),
+  cancelFeedbackCorrection: vi.fn(),
   t: vi.fn((key) => key),
   currentLanguage: 'zh-TW',
   changeLanguage: vi.fn(),
@@ -254,6 +264,68 @@ describe('gameUI', () => {
       
       // GameUI 組件本身不包含語言選擇器，但接收 t 函數進行翻譯
       expect(screen.getByText('title')).toBeInTheDocument()
+    })
+  })
+
+  describe('反饋修正功能', () => {
+    it('應該在抱怨消息時顯示修正按鈕', () => {
+      const propsWithComplaint = {
+        ...mockProps,
+        gameState: { ...mockGameState, gameStarted: true, message: 'This is unreasonable!' },
+        feedbackCorrection: { isActive: true, showHistory: false },
+        getMessageType: vi.fn(() => 'complaint')
+      }
+      
+      render(<GameUI {...propsWithComplaint} />)
+      
+      expect(screen.getByText('fixFeedback')).toBeInTheDocument()
+      expect(screen.getByText('resetGame')).toBeInTheDocument()
+    })
+
+    it('應該在點擊修正按鈕後顯示修正面板', () => {
+      const propsWithCorrection = {
+        ...mockProps,
+        gameState: { ...mockGameState, gameStarted: true },
+        feedbackCorrection: { isActive: true, showHistory: true },
+        history: {
+          ...mockHistory,
+          computer: [
+            { guess: '1234', result: '1A2B', isCorrect: false },
+            { guess: '5678', result: '0A1B', isCorrect: false }
+          ]
+        }
+      }
+      
+      render(<GameUI {...propsWithCorrection} />)
+      
+      expect(screen.getByText('correctFeedback')).toBeInTheDocument()
+      expect(screen.getByText('selectCorrection')).toBeInTheDocument()
+      // Check for the correction panel specifically
+      expect(screen.getByRole('heading', { level: 3, name: 'correctFeedback' })).toBeInTheDocument()
+      // Numbers appear in both regular history and correction panel, which is expected
+      expect(screen.getAllByText('1234')).toHaveLength(2) // One in regular history, one in correction panel
+      expect(screen.getAllByText('5678')).toHaveLength(2)
+    })
+
+    it('修正按鈕點擊應該調用正確的函數', async () => {
+      const user = userEvent.setup()
+      const propsWithComplaint = {
+        ...mockProps,
+        gameState: { ...mockGameState, gameStarted: true, message: 'This is unreasonable!' },
+        feedbackCorrection: { isActive: true, showHistory: false },
+        getMessageType: vi.fn(() => 'complaint')
+      }
+      
+      render(<GameUI {...propsWithComplaint} />)
+      
+      const fixButton = screen.getByText('fixFeedback')
+      const resetButton = screen.getByText('resetGame')
+      
+      await user.click(fixButton)
+      expect(mockProps.startFeedbackCorrection).toHaveBeenCalledTimes(1)
+      
+      await user.click(resetButton)
+      expect(mockProps.resetGame).toHaveBeenCalledTimes(1)
     })
   })
 })

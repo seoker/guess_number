@@ -26,12 +26,17 @@ function App() {
     gameState,
     history,
     computerAI,
+    feedbackCorrection,
     startNewGame,
     handlePlayerGuess,
     handleFeedbackSubmit,
     updatePlayerGuess,
     updatePlayerFeedback,
-    getMessageType
+    getMessageType,
+    startFeedbackCorrection,
+    resetGame,
+    correctHistoryFeedback,
+    cancelFeedbackCorrection
   } = useGameLogic(addGameRecord)
 
   const handleViewChange = (view) => {
@@ -55,12 +60,17 @@ function App() {
             gameState={gameState}
             history={history}
             computerAI={computerAI}
+            feedbackCorrection={feedbackCorrection}
             startNewGame={startNewGame}
             handlePlayerGuess={handlePlayerGuess}
             handleFeedbackSubmit={handleFeedbackSubmit}
             updatePlayerGuess={updatePlayerGuess}
             updatePlayerFeedback={updatePlayerFeedback}
             getMessageType={getMessageType}
+            startFeedbackCorrection={startFeedbackCorrection}
+            resetGame={resetGame}
+            correctHistoryFeedback={correctHistoryFeedback}
+            cancelFeedbackCorrection={cancelFeedbackCorrection}
             t={t}
             currentLanguage={i18n.language}
             changeLanguage={changeLanguage}

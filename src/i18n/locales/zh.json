@@ -48,6 +48,13 @@
   },
   
   "noPossibleNumbers": "這很奇怪！根據你給的提示，我找不到任何可能的數字。你確定沒有記錯嗎？",
+
+  "fixFeedback": "修正反饋",
+  "resetGame": "重新開始",
+  "correctFeedback": "修正我之前的猜測反饋：",
+  "selectCorrection": "點擊要修正的猜測記錄：",
+  "cancelCorrection": "取消修正",
+  "confirmCorrection": "確認修正",
   
   "gameTab": "遊戲",
   "recordsTab": "記錄",

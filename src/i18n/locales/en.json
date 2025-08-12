@@ -48,6 +48,13 @@
   },
   
   "noPossibleNumbers": "This is strange! Based on your feedback, I can't find any possible numbers. Are you sure you didn't make a mistake?",
+
+  "fixFeedback": "Fix Feedback",
+  "resetGame": "Reset Game",
+  "correctFeedback": "Correct my previous guess feedback:",
+  "selectCorrection": "Click the guess record you want to correct:",
+  "cancelCorrection": "Cancel Correction",
+  "confirmCorrection": "Confirm Correction",
   
   "gameTab": "Game",
   "recordsTab": "Records",

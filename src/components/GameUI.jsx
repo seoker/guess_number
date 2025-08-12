@@ -1,16 +1,21 @@
-import { useRef, useEffect } from 'react'
+import { useRef, useEffect, useState } from 'react'
 import './GameUI.css'
 
 export const GameUI = ({ 
   gameState, 
   history, 
-  computerAI, 
+  computerAI,
+  feedbackCorrection,
   startNewGame, 
   handlePlayerGuess, 
   handleFeedbackSubmit, 
   updatePlayerGuess, 
   updatePlayerFeedback, 
   getMessageType,
+  startFeedbackCorrection,
+  resetGame,
+  correctHistoryFeedback,
+  cancelFeedbackCorrection,
   t
 }) => {
   const inputRef = useRef(null)
@@ -145,9 +150,34 @@ export const GameUI = ({
             )}
 
             {gameState.message && (
-              <div className={`message ${getMessageType(gameState.message)}`}>
+              <div className={`message ${getMessageType()}`}>
                 {gameState.message}
+                {feedbackCorrection.isActive && getMessageType() === 'complaint' && (
+                  <div className="correction-buttons">
+                    <button 
+                      className="fix-button"
+                      onClick={startFeedbackCorrection}
+                    >
+                      {t('fixFeedback')}
+                    </button>
+                    <button 
+                      className="reset-button"
+                      onClick={resetGame}
+                    >
+                      {t('resetGame')}
+                    </button>
+                  </div>
+                )}
               </div>
+            )}
+
+            {feedbackCorrection.showHistory && (
+              <FeedbackCorrectionPanel 
+                history={history.computer}
+                correctHistoryFeedback={correctHistoryFeedback}
+                cancelFeedbackCorrection={cancelFeedbackCorrection}
+                t={t}
+              />
             )}
 
             <div className="history-container">
@@ -189,5 +219,99 @@ export const GameUI = ({
           </div>
         )}
       </div>
+  )
+}
+
+// 反饋修正面板組件
+const FeedbackCorrectionPanel = ({ history, correctHistoryFeedback, cancelFeedbackCorrection, t }) => {
+  const [selectedIndex, setSelectedIndex] = useState(null)
+  const [editingFeedback, setEditingFeedback] = useState({ A: '', B: '' })
+
+  const handleRecordClick = (index) => {
+    setSelectedIndex(index)
+    const record = history[index]
+    const [A, B] = record.result.match(/(\d+)A(\d+)B/).slice(1, 3)
+    setEditingFeedback({ A, B })
+  }
+
+  const handleFeedbackChange = (type, value) => {
+    setEditingFeedback(prev => ({ ...prev, [type]: value.toString() }))
+  }
+
+  const handleConfirmCorrection = () => {
+    if (selectedIndex !== null) {
+      correctHistoryFeedback(selectedIndex, parseInt(editingFeedback.A), parseInt(editingFeedback.B))
+    }
+  }
+
+  return (
+    <div className="correction-panel">
+      <h3 className="correction-title">{t('correctFeedback')}</h3>
+      <p className="correction-hint">{t('selectCorrection')}</p>
+      
+      <div className="correction-history">
+        {history.map((record, index) => (
+          <div 
+            key={index} 
+            className={`correction-item ${selectedIndex === index ? 'selected' : ''}`}
+            onClick={() => handleRecordClick(index)}
+          >
+            <span className="correction-guess">{record.guess}</span>
+            <span className="correction-result">{record.result}</span>
+          </div>
+        ))}
+      </div>
+
+      {selectedIndex !== null && (
+        <div className="correction-editor">
+          <h4>修正 {history[selectedIndex].guess} 的反饋：</h4>
+          <div className="correction-inputs">
+            <div className="correction-input-group">
+              <label>A:</label>
+              <div className="number-buttons">
+                {[0, 1, 2, 3, 4].map(num => (
+                  <button
+                    key={num}
+                    className={`number-button ${editingFeedback.A === num.toString() ? 'selected' : ''}`}
+                    onClick={() => handleFeedbackChange('A', num)}
+                  >
+                    {num}
+                  </button>
+                ))}
+              </div>
+            </div>
+            <div className="correction-input-group">
+              <label>B:</label>
+              <div className="number-buttons">
+                {[0, 1, 2, 3, 4].map(num => (
+                  <button
+                    key={num}
+                    className={`number-button ${editingFeedback.B === num.toString() ? 'selected' : ''}`}
+                    onClick={() => handleFeedbackChange('B', num)}
+                  >
+                    {num}
+                  </button>
+                ))}
+              </div>
+            </div>
+          </div>
+          <div className="correction-actions">
+            <button 
+              className="confirm-correction-button"
+              onClick={handleConfirmCorrection}
+              disabled={editingFeedback.A === '' || editingFeedback.B === ''}
+            >
+              {t('confirmCorrection')}
+            </button>
+            <button 
+              className="cancel-correction-button"
+              onClick={cancelFeedbackCorrection}
+            >
+              {t('cancelCorrection')}
+            </button>
+          </div>
+        </div>
+      )}
+    </div>
   )
 }

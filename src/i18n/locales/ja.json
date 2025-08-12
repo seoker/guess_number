@@ -48,6 +48,13 @@
   },
   
   "noPossibleNumbers": "これは奇妙です！あなたのフィードバックに基づいて、私は可能な数字を見つけることができません。記憶違いはありませんか？",
+
+  "fixFeedback": "フィードバック修正",
+  "resetGame": "ゲームリセット",
+  "correctFeedback": "私の以前の推測フィードバックを修正：",
+  "selectCorrection": "修正したい推測記録をクリック：",
+  "cancelCorrection": "修正をキャンセル",
+  "confirmCorrection": "修正を確認",
   
   "gameTab": "ゲーム",
   "recordsTab": "記録",

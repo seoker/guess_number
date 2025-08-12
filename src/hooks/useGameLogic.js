@@ -15,6 +15,7 @@ export const useGameLogic = (addGameRecord) => {
     computerTarget: '',
     playerGuess: '',
     message: '',
+    messageType: 'info', // 直接儲存訊息類型
     playerAttempts: 0,
     computerAttempts: 0,
     gameWon: false,
@@ -34,6 +35,12 @@ export const useGameLogic = (addGameRecord) => {
     currentGuess: '',
     playerFeedback: { A: '', B: '' },
     showFeedbackForm: false
+  })
+
+  // 反饋修正狀態
+  const [feedbackCorrection, setFeedbackCorrection] = useState({
+    isActive: false,
+    showHistory: false
   })
 
   // 生成四位不重複的數字
@@ -159,13 +166,10 @@ export const useGameLogic = (addGameRecord) => {
   }, [t])
 
   // 判斷訊息類型
-  const getMessageType = useCallback((message) => {
+  const getMessageType = useCallback(() => {
     if (gameState.gameWon) return 'success'
-    if (message.includes('等等') || message.includes('Wait') || message.includes('這不合理') || message.includes('unreasonable')) {
-      return 'complaint'
-    }
-    return 'info'
-  }, [gameState.gameWon])
+    return gameState.messageType
+  }, [gameState.gameWon, gameState.messageType])
 
   // 開始新遊戲
   const startNewGame = useCallback(() => {
@@ -173,6 +177,7 @@ export const useGameLogic = (addGameRecord) => {
       computerTarget: generateTargetNumber(),
       playerGuess: '',
       message: '',
+      messageType: 'info',
       playerAttempts: 0,
       computerAttempts: 0,
       gameWon: false,
@@ -194,20 +199,22 @@ export const useGameLogic = (addGameRecord) => {
   const handlePlayerGuess = useCallback(() => {
     const validation = validateNumber(gameState.playerGuess)
     if (!validation.valid) {
-      setGameState(prev => ({ ...prev, message: validation.message }))
+      setGameState(prev => ({ ...prev, message: validation.message, messageType: 'info' }))
       return
     }
 
     setGameState(prev => ({ 
       ...prev,
       playerAttempts: prev.playerAttempts + 1,
-      message: ''
+      message: '',
+      messageType: 'info'
     }))
 
     if (gameState.playerGuess === gameState.computerTarget) {
       setGameState(prev => ({ 
         ...prev,
         message: t('playerWon'),
+        messageType: 'success',
         gameWon: true 
       }))
       setHistory(prev => ({
@@ -234,6 +241,7 @@ export const useGameLogic = (addGameRecord) => {
       setGameState(prev => ({ 
         ...prev,
         message: `${t('yourHint')}${result}`,
+        messageType: 'info',
         currentTurn: 'computer',
         playerGuess: ''
       }))
@@ -256,7 +264,8 @@ export const useGameLogic = (addGameRecord) => {
         }))
         setGameState(prev => ({ 
           ...prev,
-          message: t('computerThinking', { guess: computerGuessNum })
+          message: t('computerThinking', { guess: computerGuessNum }),
+          messageType: 'info'
         }))
       }, GAME_CONFIG.COMPUTER_THINKING_TIME)
     }
@@ -269,7 +278,7 @@ export const useGameLogic = (addGameRecord) => {
     
     const validation = validateFeedback(A, B)
     if (!validation.valid) {
-      setGameState(prev => ({ ...prev, message: validation.message }))
+      setGameState(prev => ({ ...prev, message: validation.message, messageType: 'info' }))
       return
     }
 
@@ -278,7 +287,8 @@ export const useGameLogic = (addGameRecord) => {
     // 檢查提示是否合理
     if (!checkFeedbackConsistency(computerAI.currentGuess, feedback)) {
       const complaint = generateComplaint(computerAI.currentGuess, feedback)
-      setGameState(prev => ({ ...prev, message: complaint }))
+      setGameState(prev => ({ ...prev, message: complaint, messageType: 'complaint' }))
+      setFeedbackCorrection(prev => ({ ...prev, isActive: true }))
       return
     }
 
@@ -297,7 +307,8 @@ export const useGameLogic = (addGameRecord) => {
       setGameState(prev => ({ 
         ...prev,
         gameWon: true,
-        message: t('computerWon', { computerNumber: prev.computerTarget })
+        message: t('computerWon', { computerNumber: prev.computerTarget }),
+        messageType: 'success'
       }))
       
       // 保存遊戲記錄
@@ -314,7 +325,8 @@ export const useGameLogic = (addGameRecord) => {
       if (remainingNumbers.length === 0) {
         setGameState(prev => ({ 
           ...prev,
-          message: t('noPossibleNumbers')
+          message: t('noPossibleNumbers'),
+          messageType: 'info'
         }))
         return
       }
@@ -322,7 +334,8 @@ export const useGameLogic = (addGameRecord) => {
         ...prev,
         computerAttempts: prev.computerAttempts + 1,
         currentTurn: 'player',
-        message: ''
+        message: '',
+        messageType: 'info'
       }))
     }
     
@@ -347,6 +360,74 @@ export const useGameLogic = (addGameRecord) => {
     }))
   }, [])
 
+  // 開始修正反饋
+  const startFeedbackCorrection = useCallback(() => {
+    setFeedbackCorrection(prev => ({ ...prev, showHistory: true }))
+  }, [])
+
+  // 重置遊戲到開始狀態
+  const resetGame = useCallback(() => {
+    setGameState({
+      computerTarget: generateTargetNumber(),
+      playerGuess: '',
+      message: '',
+      messageType: 'info',
+      playerAttempts: 0,
+      computerAttempts: 0,
+      gameWon: false,
+      gameStarted: true,
+      currentTurn: 'player'
+    })
+    
+    setHistory({ player: [], computer: [] })
+    
+    setComputerAI({
+      possibleNumbers: initializeComputerPossibleNumbers(),
+      currentGuess: '',
+      playerFeedback: { A: '', B: '' },
+      showFeedbackForm: false
+    })
+
+    setFeedbackCorrection({
+      isActive: false,
+      showHistory: false
+    })
+  }, [generateTargetNumber, initializeComputerPossibleNumbers])
+
+  // 修正歷史反饋
+  const correctHistoryFeedback = useCallback((index, newA, newB) => {
+    const updatedHistory = [...history.computer]
+    updatedHistory[index].result = `${newA}A${newB}B`
+    
+    // 重新初始化電腦可能的數字列表
+    let possibleNumbers = initializeComputerPossibleNumbers()
+    
+    // 根據修正後的歷史記錄重新計算可能的數字
+    for (let i = 0; i <= index; i++) {
+      const record = updatedHistory[i]
+      possibleNumbers = possibleNumbers.filter(num => {
+        const { A, B } = calculateAB(record.guess, num)
+        return `${A}A${B}B` === record.result
+      })
+    }
+    
+    setHistory(prev => ({ ...prev, computer: updatedHistory }))
+    setComputerAI(prev => ({ ...prev, possibleNumbers }))
+    setFeedbackCorrection({ isActive: false, showHistory: false })
+    setGameState(prev => ({ 
+      ...prev, 
+      message: '',
+      messageType: 'info',
+      currentTurn: 'player'
+    }))
+  }, [history.computer, initializeComputerPossibleNumbers, calculateAB])
+
+  // 取消修正
+  const cancelFeedbackCorrection = useCallback(() => {
+    setFeedbackCorrection({ isActive: false, showHistory: false })
+    setGameState(prev => ({ ...prev, message: '', messageType: 'info' }))
+  }, [])
+
   // 初始化遊戲
   useEffect(() => {
     if (gameState.gameStarted && !gameState.computerTarget) {
@@ -360,6 +441,7 @@ export const useGameLogic = (addGameRecord) => {
     gameState,
     history,
     computerAI,
+    feedbackCorrection,
     
     // 方法
     startNewGame,
@@ -368,6 +450,10 @@ export const useGameLogic = (addGameRecord) => {
     updatePlayerGuess,
     updatePlayerFeedback,
     getMessageType,
+    startFeedbackCorrection,
+    resetGame,
+    correctHistoryFeedback,
+    cancelFeedbackCorrection,
     
     // 常數
     GAME_CONFIG,
