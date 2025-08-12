@@ -52,6 +52,7 @@
   "fixFeedback": "修正反饋",
   "resetGame": "重新開始",
   "correctFeedback": "修正我之前的猜測反饋：",
+  "correctFeedbackFor": "修正 {{guess}} 的反饋",
   "selectCorrection": "點擊要修正的猜測記錄：",
   "cancelCorrection": "取消修正",
   "confirmCorrection": "確認修正",

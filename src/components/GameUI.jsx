@@ -186,9 +186,12 @@ export const GameUI = ({
                 <h3 className="history-title">{t('playerHistory')}</h3>
                 <div className="history-list" ref={playerHistoryRef}>
                   {history.player.map((record, index) => (
-                    <div key={index} className={`history-item ${record.isCorrect ? 'correct' : ''}`}>
-                      <span className="history-guess">{record.guess}</span>
-                      <span className="history-result">{record.result}</span>
+                    <div key={index} className={`item-base history-item ${record.isCorrect ? 'correct' : ''}`}>
+                      <span className="ordinal-base history-ordinal">{index + 1}</span>
+                      <div className="content-base history-content">
+                        <span className="history-guess">{record.guess}</span>
+                        <span className="history-result">{record.result}</span>
+                      </div>
                     </div>
                   ))}
                 </div>
@@ -199,9 +202,12 @@ export const GameUI = ({
                 <h3 className="history-title">{t('computerHistory')}</h3>
                 <div className="history-list" ref={computerHistoryRef}>
                   {history.computer.map((record, index) => (
-                    <div key={index} className={`history-item ${record.isCorrect ? 'correct' : ''}`}>
-                      <span className="history-guess">{record.guess}</span>
-                      <span className="history-result">{record.result}</span>
+                    <div key={index} className={`item-base history-item ${record.isCorrect ? 'correct' : ''}`}>
+                      <span className="ordinal-base history-ordinal">{index + 1}</span>
+                      <div className="content-base history-content">
+                        <span className="history-guess">{record.guess}</span>
+                        <span className="history-result">{record.result}</span>
+                      </div>
                     </div>
                   ))}
                 </div>
@@ -253,18 +259,21 @@ const FeedbackCorrectionPanel = ({ history, correctHistoryFeedback, cancelFeedba
         {history.map((record, index) => (
           <div 
             key={index} 
-            className={`correction-item ${selectedIndex === index ? 'selected' : ''}`}
+            className={`item-base correction-item ${selectedIndex === index ? 'selected' : ''}`}
             onClick={() => handleRecordClick(index)}
           >
-            <span className="correction-guess">{record.guess}</span>
-            <span className="correction-result">{record.result}</span>
+            <span className="ordinal-base correction-ordinal">{index + 1}</span>
+            <div className="content-base correction-content">
+              <span className="correction-guess">{record.guess}</span>
+              <span className="correction-result">{record.result}</span>
+            </div>
           </div>
         ))}
       </div>
 
       {selectedIndex !== null && (
         <div className="correction-editor">
-          <h4>Correct feedback for {history[selectedIndex].guess}:</h4>
+          <h4>{t('correctFeedbackFor', { guess: history[selectedIndex].guess })}:</h4>
           <div className="correction-inputs">
             <div className="correction-input-group">
               <label>A:</label>

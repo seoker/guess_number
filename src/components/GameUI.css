@@ -320,14 +320,17 @@
   max-width: 1400px;
   margin-left: auto;
   margin-right: auto;
+  align-items: stretch;
 }
 
 /* 歷史記錄樣式 */
 .history-section {
+  display: flex;
+  flex-direction: column;
   background: #f8f9fa;
   border-radius: 15px;
   padding: 2rem;
-  max-height: 400px;
+  height: 400px;
   overflow: hidden;
   min-width: 300px;
 }
@@ -338,13 +341,16 @@
   margin-bottom: 1.5rem;
   font-weight: 700;
   text-align: center;
+  flex-shrink: 0;
+  height: 2rem;
+  line-height: 2rem;
 }
 
 .history-list {
   display: flex;
   flex-direction: column;
   gap: 0.8rem;
-  max-height: 280px;
+  flex: 1;
   overflow-y: auto;
   padding-right: 0.5rem;
   scroll-behavior: smooth;
@@ -368,22 +374,79 @@
   background: #a8a8a8;
 }
 
-.history-item {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 1rem 1.5rem;
-  background: white;
-  border-radius: 8px;
-  border-left: 4px solid #dee2e6;
-  transition: all 0.3s ease;
-  animation: slideIn 0.3s ease;
-  gap: 1.5rem;
+/* Base item structure - shared by history and correction items */
+.item-base {
+  display: flex !important;
+  align-items: stretch !important;
+  padding: 0 !important;
+  background: transparent !important;
+  border-radius: 8px !important;
+  transition: all 0.3s ease !important;
+  gap: 0 !important;
+  position: relative !important;
+  overflow: hidden !important;
+  height: 56px !important;
+  box-sizing: border-box !important;
 }
 
-.history-item.correct {
-  border-left-color: #4caf50;
-  background: linear-gradient(135deg, #e8f5e8, #f1f8e9);
+.ordinal-base {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  width: 48px !important;
+  height: 100% !important;
+  background: #dee2e6 !important;
+  color: #495057 !important;
+  font-weight: 700 !important;
+  font-size: 1.1rem !important;
+  border-radius: 8px 0 0 8px !important;
+  flex-shrink: 0 !important;
+  box-sizing: border-box !important;
+}
+
+.content-base {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+  flex: 1 !important;
+  height: 100% !important;
+  padding: 1rem 1.5rem !important;
+  background: white !important;
+  border-radius: 0 8px 8px 0 !important;
+  gap: 1rem !important;
+  box-sizing: border-box !important;
+}
+
+/* History item specific styles */
+.history-item {
+  animation: slideIn 0.3s ease !important;
+}
+
+.history-item.correct .history-content {
+  background: linear-gradient(135deg, #e8f5e8, #f1f8e9) !important;
+}
+
+.history-item.correct .history-ordinal {
+  background: #4caf50 !important;
+  color: white !important;
+}
+
+/* Ensure consistent heights across all states */
+.item-base,
+.item-base *,
+.history-item,
+.history-item *,
+.correction-item,
+.correction-item * {
+  box-sizing: border-box !important;
+}
+
+/* Force consistent item heights */
+.history-item,
+.correction-item {
+  height: 56px !important;
+  min-height: 56px !important;
+  max-height: 56px !important;
 }
 
 .history-guess {
@@ -519,27 +582,37 @@
   margin-bottom: 1.5rem;
 }
 
+/* Correction item specific styles */
 .correction-item {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 1rem 1.5rem;
-  background: white;
-  border-radius: 8px;
-  border: 2px solid transparent;
+  border: 2px solid transparent !important;
   cursor: pointer;
-  transition: all 0.3s ease;
 }
 
 .correction-item:hover {
-  border-color: #28a745;
-  background: #f8fff8;
+  border-color: #28a745 !important;
+}
+
+.correction-item:hover .correction-content {
+  background: #f8fff8 !important;
+}
+
+.correction-item:hover .correction-ordinal {
+  background: #28a745 !important;
+  color: white !important;
 }
 
 .correction-item.selected {
-  border-color: #28a745;
-  background: #e8f5e8;
-  box-shadow: 0 2px 8px rgba(40, 167, 69, 0.2);
+  border-color: #28a745 !important;
+  box-shadow: 0 2px 8px rgba(40, 167, 69, 0.2) !important;
+}
+
+.correction-item.selected .correction-content {
+  background: #e8f5e8 !important;
+}
+
+.correction-item.selected .correction-ordinal {
+  background: #28a745 !important;
+  color: white !important;
 }
 
 .correction-guess {
@@ -639,6 +712,17 @@
 @media (max-width: 768px) {
   .history-container {
     grid-template-columns: 1fr;
+    gap: 1.5rem;
+  }
+  
+  .history-section {
+    height: 350px;
+    padding: 1.5rem;
+  }
+  
+  .history-title {
+    font-size: 1.2rem;
+    margin-bottom: 1rem;
   }
   
   .container {

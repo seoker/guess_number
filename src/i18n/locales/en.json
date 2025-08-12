@@ -52,6 +52,7 @@
   "fixFeedback": "Fix Feedback",
   "resetGame": "Reset Game",
   "correctFeedback": "Correct my previous guess feedback:",
+  "correctFeedbackFor": "Correct feedback for {{guess}}",
   "selectCorrection": "Click the guess record you want to correct:",
   "cancelCorrection": "Cancel Correction",
   "confirmCorrection": "Confirm Correction",

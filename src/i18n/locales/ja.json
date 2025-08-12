@@ -52,6 +52,7 @@
   "fixFeedback": "フィードバック修正",
   "resetGame": "ゲームリセット",
   "correctFeedback": "私の以前の推測フィードバックを修正：",
+  "correctFeedbackFor": "{{guess}} のフィードバックを修正",
   "selectCorrection": "修正したい推測記録をクリック：",
   "cancelCorrection": "修正をキャンセル",
   "confirmCorrection": "修正を確認",
