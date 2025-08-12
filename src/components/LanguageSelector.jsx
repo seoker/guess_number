@@ -1,5 +1,4 @@
 import './LanguageSelector.css'
-import { i18nConfig } from '../i18n/config'
 import { useState, useRef, useEffect } from 'react'
 
 // 國旗圖標組件
@@ -45,7 +44,7 @@ export const LanguageSelector = ({ currentLanguage, changeLanguage, getSupported
 
   return (
     <div className="language-selector">
-      <label htmlFor="language-select">{i18nConfig.languageSelectorLabel} </label>
+      <label htmlFor="language-select">🌐 </label>
       <div className="custom-select-wrapper" ref={dropdownRef}>
         <div 
           className="custom-select"

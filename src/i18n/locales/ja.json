@@ -1,0 +1,55 @@
+{
+  "title": "数字当てゲーム 1A2B",
+  "description": "あなたとコンピュータが同時にお互いの4桁の数字を当てます！",
+  "rules": "ルール：",
+  "rulesDetail": "紙に4桁の数字を書いて、競争を開始します",
+  "aExplanation": "A：数字と位置が両方正しい個数",
+  "bExplanation": "B：数字は正しいが位置が間違っている個数",
+  
+  "startGame": "ゲーム開始",
+  "guess": "推測",
+  "submitFeedback": "フィードバック送信",
+  "playAgain": "もう一度プレイ",
+  
+  "playerAttempts": "プレイヤーの試行",
+  "computerAttempts": "コンピュータの試行",
+  "currentTurn": "現在のターン",
+  "player": "プレイヤー",
+  "computer": "コンピュータ",
+  
+  "guessPlaceholder": "コンピュータの数字を推測...",
+  "feedbackHint": "あなたの数字に基づいてA、Bのフィードバックを入力してください",
+  "computerGuess": "コンピュータの推測：",
+  
+  "aLabel": "A（数字と位置が正しい）：",
+  "bLabel": "B（数字は正しいが位置が間違い）：",
+  
+  "playerHistory": "プレイヤーの推測履歴",
+  "computerHistory": "コンピュータの推測履歴",
+  
+  "gameOver": "🎉 ゲーム終了！",
+  
+  "fourDigitsRequired": "4桁の数字を入力してください！",
+  "digitsMustBeUnique": "4桁の数字は重複してはいけません！",
+  "invalidFeedback": "有効なAとBの値を入力してください（0-4、A+B≤4）",
+  
+  "playerWon": "おめでとうございます！あなたの勝利です！コンピュータの数字を正しく当てました！",
+  "computerWon": "コンピュータの勝利です！コンピュータがあなたの数字を正しく当てました！コンピュータの数字は：{{computerNumber}}",
+  
+  "yourHint": "あなたのヒント：",
+  "computerThinking": "コンピュータの推測：{{guess}}、AとBのフィードバックを入力してください",
+  
+  "complaints": {
+    "inconsistent": "待って！私は{{guess}}を推測しましたが、あなたは{{feedback}}を与えました。これは私の以前の推測結果と一致しません！",
+    "unreasonable": "これは不合理です！私は{{guess}}を推測して{{feedback}}を得ましたが、私の以前の推理によると、これは不可能です！",
+    "joking": "あなたは冗談を言っているのではないでしょうか！{{guess}}の結果{{feedback}}は私の以前の分析と合いません！",
+    "problematic": "これは問題があります！私は{{guess}}を推測しましたが、あなたは{{feedback}}を与えました。これは論理に反します！",
+    "wrong": "待って、これは間違っています！{{guess}}の{{feedback}}は私の以前の推測結果と矛盾します！"
+  },
+  
+  "noPossibleNumbers": "これは奇妙です！あなたのフィードバックに基づいて、私は可能な数字を見つけることができません。記憶違いはありませんか？",
+  
+  "gameTab": "ゲーム",
+  "recordsTab": "記録",
+  "clearAllRecords": "すべての記録をクリア"
+}

@@ -1,6 +1,6 @@
 import { useState } from 'react'
+import { useTranslation } from 'react-i18next'
 import { useGameLogic } from './hooks/useGameLogic'
-import { useI18n } from './hooks/useI18n'
 import { useGameRecords } from './hooks/useGameRecords'
 import { NavigationBar } from './components/NavigationBar'
 import { GameUI } from './components/GameUI'
@@ -8,9 +8,19 @@ import { GameRecords } from './components/GameRecords'
 import './App.css'
 
 function App() {
-  const { currentLanguage, changeLanguage, t, getSupportedLanguages } = useI18n()
+  const { t, i18n } = useTranslation()
   const { gameRecords, addGameRecord, clearAllRecords } = useGameRecords()
   const [currentView, setCurrentView] = useState('game')
+  
+  const changeLanguage = (lng) => {
+    i18n.changeLanguage(lng)
+  }
+  
+  const getSupportedLanguages = () => [
+    { code: 'zh', name: '中文' },
+    { code: 'en', name: 'English' },
+    { code: 'ja', name: '日本語' }
+  ]
   
   const {
     gameState,
@@ -22,7 +32,7 @@ function App() {
     updatePlayerGuess,
     updatePlayerFeedback,
     getMessageType
-  } = useGameLogic(t, addGameRecord)
+  } = useGameLogic(addGameRecord)
 
   const handleViewChange = (view) => {
     setCurrentView(view)
@@ -34,7 +44,7 @@ function App() {
         currentView={currentView} 
         onViewChange={handleViewChange} 
         t={t}
-        currentLanguage={currentLanguage}
+        currentLanguage={i18n.language}
         changeLanguage={changeLanguage}
         getSupportedLanguages={getSupportedLanguages}
       />
@@ -52,7 +62,7 @@ function App() {
             updatePlayerFeedback={updatePlayerFeedback}
             getMessageType={getMessageType}
             t={t}
-            currentLanguage={currentLanguage}
+            currentLanguage={i18n.language}
             changeLanguage={changeLanguage}
             getSupportedLanguages={getSupportedLanguages}
           />

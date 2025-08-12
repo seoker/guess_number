@@ -1,0 +1,55 @@
+{
+  "title": "Number Guessing Game 1A2B",
+  "description": "You and the computer guess each other's four-digit numbers simultaneously!",
+  "rules": "Rules:",
+  "rulesDetail": "Write down your four-digit number on paper, then start the competition",
+  "aExplanation": "A: Number of digits that are correct in both value and position",
+  "bExplanation": "B: Number of digits that are correct in value but wrong in position",
+  
+  "startGame": "Start Game",
+  "guess": "Guess",
+  "submitFeedback": "Submit Feedback",
+  "playAgain": "Play Again",
+  
+  "playerAttempts": "Player Attempts",
+  "computerAttempts": "Computer Attempts",
+  "currentTurn": "Current Turn",
+  "player": "Player",
+  "computer": "Computer",
+  
+  "guessPlaceholder": "Guess the computer's number...",
+  "feedbackHint": "Please enter A and B feedback based on your number",
+  "computerGuess": "Computer guess:",
+  
+  "aLabel": "A (correct number and position):",
+  "bLabel": "B (correct number, wrong position):",
+  
+  "playerHistory": "Player Guess History",
+  "computerHistory": "Computer Guess History",
+  
+  "gameOver": "🎉 Game Over!",
+  
+  "fourDigitsRequired": "Please enter four digits!",
+  "digitsMustBeUnique": "The four digits must be unique!",
+  "invalidFeedback": "Please enter valid A and B values (0-4, and A+B≤4)",
+  
+  "playerWon": "Congratulations! You won! You guessed the computer's number correctly!",
+  "computerWon": "Computer won! The computer guessed your number correctly! The computer's number was: {{computerNumber}}",
+  
+  "yourHint": "Your hint:",
+  "computerThinking": "Computer guess: {{guess}}, please enter the A and B feedback",
+  
+  "complaints": {
+    "inconsistent": "Wait! I guessed {{guess}}, you gave {{feedback}}, but this is inconsistent with my previous guess results!",
+    "unreasonable": "This is unreasonable! I guessed {{guess}} and got {{feedback}}, but according to my previous reasoning, this is impossible!",
+    "joking": "I suspect you're joking! The result {{feedback}} for {{guess}} doesn't match my previous analysis!",
+    "problematic": "This is problematic! I guessed {{guess}}, you gave {{feedback}}, but this violates logic!",
+    "wrong": "Wait, this is wrong! The {{feedback}} for {{guess}} contradicts my previous guess results!"
+  },
+  
+  "noPossibleNumbers": "This is strange! Based on your feedback, I can't find any possible numbers. Are you sure you didn't make a mistake?",
+  
+  "gameTab": "Game",
+  "recordsTab": "Records",
+  "clearAllRecords": "Clear All Records"
+}

@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback } from 'react'
-import { i18nConfig, getAllComplaintKeywords } from '../i18n/config'
+import { useTranslation } from 'react-i18next'
 
 // 遊戲配置
 const GAME_CONFIG = {
@@ -8,7 +8,8 @@ const GAME_CONFIG = {
   COMPUTER_THINKING_TIME: 1000
 }
 
-export const useGameLogic = (t, addGameRecord) => {
+export const useGameLogic = (addGameRecord) => {
+  const { t } = useTranslation()
   // 遊戲狀態
   const [gameState, setGameState] = useState({
     computerTarget: '',
@@ -159,11 +160,11 @@ export const useGameLogic = (t, addGameRecord) => {
 
   // 判斷訊息類型
   const getMessageType = useCallback((message) => {
-    if (gameState.gameWon) return i18nConfig.messageTypes.SUCCESS
-    if (getAllComplaintKeywords().some(keyword => message.includes(keyword))) {
-      return i18nConfig.messageTypes.COMPLAINT
+    if (gameState.gameWon) return 'success'
+    if (message.includes('等等') || message.includes('Wait') || message.includes('這不合理') || message.includes('unreasonable')) {
+      return 'complaint'
     }
-    return i18nConfig.messageTypes.INFO
+    return 'info'
   }, [gameState.gameWon])
 
   // 開始新遊戲
@@ -370,6 +371,10 @@ export const useGameLogic = (t, addGameRecord) => {
     
     // 常數
     GAME_CONFIG,
-    MESSAGE_TYPES: i18nConfig.messageTypes
+    MESSAGE_TYPES: {
+      SUCCESS: 'success',
+      COMPLAINT: 'complaint', 
+      INFO: 'info'
+    }
   }
 }

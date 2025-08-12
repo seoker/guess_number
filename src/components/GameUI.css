@@ -287,8 +287,8 @@
 }
 
 .message.complaint {
-  background: #fff3cd;
-  color: #856404;
+  background: #fff3cd !important;
+  color: #856404 !important;
   border-left: 4px solid #ffc107;
   font-weight: 700;
   animation: shake 0.5s ease-in-out;

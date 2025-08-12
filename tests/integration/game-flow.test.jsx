@@ -4,13 +4,14 @@ import { render, screen, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import App from '../../src/App.jsx'
 
-// Mock i18n
-vi.mock('../../src/hooks/useI18n', () => ({
-  useI18n: () => ({
-    currentLanguage: 'zh-TW',
-    changeLanguage: vi.fn(),
-    t: vi.fn((key) => key),
-    getSupportedLanguages: vi.fn(() => ['zh-TW', 'en'])
+// Mock react-i18next
+vi.mock('react-i18next', () => ({
+  useTranslation: () => ({
+    t: (key) => key,
+    i18n: {
+      language: 'zh',
+      changeLanguage: vi.fn()
+    }
   })
 }))
 
@@ -124,8 +125,8 @@ describe('遊戲完整流程測試', () => {
       render(<App />)
       
       // 檢查語言選擇器存在
-      expect(screen.getAllByText('🌐')).toHaveLength(2) // appears twice in the interface
-      expect(screen.getByText('zh-TW')).toBeInTheDocument()
+      expect(screen.getAllByText('🌐')).toHaveLength(1) // language selector
+      expect(screen.getByText('中文')).toBeInTheDocument()
     })
   })
 
@@ -141,7 +142,7 @@ describe('遊戲完整流程測試', () => {
       expect(screen.getByRole('button', { name: 'startGame' })).toBeInTheDocument()
       
       // 檢查語言選擇器
-      expect(screen.getByText('zh-TW')).toBeInTheDocument()
+      expect(screen.getByText('中文')).toBeInTheDocument()
     })
   })
 })

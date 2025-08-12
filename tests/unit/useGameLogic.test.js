@@ -2,14 +2,18 @@ import { describe, it, expect, vi, beforeEach } from 'vitest'
 import { renderHook, act } from '@testing-library/react'
 import { useGameLogic } from '../../src/hooks/useGameLogic'
 
-// Mock i18n
-const mockT = vi.fn((key) => key)
+// Mock react-i18next
+vi.mock('react-i18next', () => ({
+  useTranslation: () => ({
+    t: (key) => key
+  })
+}))
 
 describe('useGameLogic', () => {
   let hookResult
 
   beforeEach(() => {
-    hookResult = renderHook(() => useGameLogic(mockT))
+    hookResult = renderHook(() => useGameLogic())
   })
 
   describe('遊戲初始化', () => {
