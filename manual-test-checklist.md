@@ -1,175 +1,214 @@
-# 猜數字遊戲手動測試檢查清單
+# Number Guessing Game Manual Test Checklist
 
-## 1. 遊戲初始化測試
+## 1. Game Initialization Testing
 
-### ✅ 基本功能檢查
-- [ ] 遊戲啟動時顯示開始畫面
-- [ ] 點擊「開始遊戲」按鈕後進入遊戲
-- [ ] 遊戲開始後顯示玩家和電腦的嘗試次數
-- [ ] 初始回合為電腦回合
+### ✅ Basic Functionality Check
+- [ ] Game shows start screen when launched
+- [ ] Clicking "Start Game" button enters the game
+- [ ] After game starts, displays player and computer attempt counts
+- [ ] Initial turn is computer turn
 
-### ✅ 語言切換功能
-- [ ] 語言選擇器正常顯示
-- [ ] 切換語言後介面文字正確更新
-- [ ] 所有文字都有對應的翻譯
+### ✅ Language Switching Function
+- [ ] Language selector displays correctly
+- [ ] Interface text updates correctly after switching language
+- [ ] All text has corresponding translations
 
-## 2. 玩家猜測功能測試
+## 2. Player Guessing Function Testing
 
-### ✅ 輸入驗證
-- [ ] 只能輸入數字（字母被過濾）
-- [ ] 最多只能輸入4位數字
-- [ ] 重複數字被拒絕
-- [ ] 空輸入被拒絕
-- [ ] 少於4位數字時猜測按鈕禁用
+### ✅ Input Validation
+- [ ] Only numbers can be input (letters are filtered)
+- [ ] Maximum of 4 digits can be input
+- [ ] Duplicate digits are rejected
+- [ ] Empty input is rejected
+- [ ] Guess button is disabled when less than 4 digits
 
-### ✅ 猜測結果
-- [ ] 正確猜測時顯示「恭喜你贏了！」
-- [ ] 錯誤猜測時顯示正確的A和B值
-- [ ] 猜測記錄正確添加到歷史記錄
-- [ ] 猜測後回合切換到電腦
+### ✅ Guess Results
+- [ ] Shows "Congratulations! You won!" for correct guess
+- [ ] Shows correct A and B values for incorrect guess
+- [ ] Guess record is correctly added to history
+- [ ] Turn switches to computer after guess
 
-### ✅ 按鈕狀態
-- [ ] 遊戲未開始時猜測按鈕禁用
-- [ ] 電腦回合時猜測按鈕禁用
-- [ ] 遊戲結束時猜測按鈕禁用
-- [ ] 輸入不完整時猜測按鈕禁用
+### ✅ Button States
+- [ ] Guess button disabled when game not started
+- [ ] Guess button disabled during computer turn
+- [ ] Guess button disabled when game ends
+- [ ] Guess button disabled when input incomplete
 
-## 3. 電腦猜測功能測試
+## 3. Computer Guessing Function Testing
 
-### ✅ 電腦猜測流程
-- [ ] 電腦回合時顯示「電腦思考中...」
-- [ ] 電腦生成合理的猜測數字
-- [ ] 顯示電腦的猜測結果
-- [ ] 出現反饋表單供玩家輸入A和B值
+### ✅ Computer Guess Process
+- [ ] Shows "Computer thinking..." during computer turn
+- [ ] Computer generates reasonable guess numbers
+- [ ] Displays computer's guess result
+- [ ] Feedback form appears for player to input A and B values
 
-### ✅ 反饋表單
-- [ ] A和B值按鈕正常運作
-- [ ] 選中的值正確顯示
-- [ ] 兩個值都選中後提交按鈕啟用
-- [ ] 提交後回合切換到玩家
+### ✅ Feedback Form
+- [ ] A and B value buttons work correctly
+- [ ] Selected values display correctly
+- [ ] Submit button enables after both values are selected
+- [ ] Turn switches to player after submission
 
-### ✅ 電腦AI邏輯
-- [ ] 電腦根據反饋正確縮小可能範圍
-- [ ] 電腦不會重複猜測
-- [ ] 電腦猜對時遊戲結束
-- [ ] 電腦猜測記錄正確添加到歷史記錄
+### ✅ Computer AI Logic
+- [ ] Computer correctly narrows possible range based on feedback
+- [ ] Computer doesn't repeat guesses
+- [ ] Game ends when computer guesses correctly
+- [ ] Computer guess records are correctly added to history
 
-## 4. 遊戲結束條件測試
+## 4. Game End Condition Testing
 
-### ✅ 勝利條件
-- [ ] 玩家猜對時遊戲結束
-- [ ] 電腦猜對時遊戲結束
-- [ ] 遊戲結束時顯示正確的勝利訊息
-- [ ] 遊戲結束時顯示「再玩一次」按鈕
+### ✅ Victory Conditions
+- [ ] Game ends when player guesses correctly
+- [ ] Game ends when computer guesses correctly
+- [ ] Correct victory message displays when game ends
+- [ ] "Play Again" button shows when game ends
 
-### ✅ 重新開始
-- [ ] 點擊「再玩一次」按鈕後遊戲重置
-- [ ] 歷史記錄清空
-- [ ] 嘗試次數重置
-- [ ] 回到開始畫面
+### ✅ Restart
+- [ ] Game resets after clicking "Play Again" button
+- [ ] History records are cleared
+- [ ] Attempt counts are reset
+- [ ] Returns to start screen
 
-## 5. 反饋驗證測試
+## 5. Feedback Validation Testing
 
-### ✅ 反饋合理性檢查
-- [ ] 輸入不合理的A和B值時顯示抱怨訊息
-- [ ] 抱怨訊息包含猜測數字和反饋值
-- [ ] 合理的反饋被接受
-- [ ] 反饋驗證邏輯正確
+### ✅ Feedback Reasonableness Check
+- [ ] Shows complaint message when unreasonable A and B values are input
+- [ ] Complaint message includes guess number and feedback values
+- [ ] Reasonable feedback is accepted
+- [ ] Feedback validation logic is correct
 
-### ✅ 反饋邊界情況
-- [ ] A值範圍：0-4
-- [ ] B值範圍：0-4
-- [ ] A+B不能超過4
-- [ ] 負數被拒絕
+### ✅ Feedback Correction Feature
+- [ ] Fix and Reset buttons appear when computer complains
+- [ ] Clicking Fix button shows correction panel
+- [ ] Can select and modify previous feedback in correction panel
+- [ ] Correction updates game state correctly
+- [ ] Reset button restarts the game properly
 
-## 6. 歷史記錄測試
+### ✅ Feedback Boundary Cases
+- [ ] A value range: 0-4
+- [ ] B value range: 0-4
+- [ ] A+B cannot exceed 4
+- [ ] Negative numbers are rejected
 
-### ✅ 記錄顯示
-- [ ] 玩家歷史記錄正確顯示
-- [ ] 電腦歷史記錄正確顯示
-- [ ] 正確猜測的記錄有特殊標記
-- [ ] 歷史記錄自動滾動到最新
+## 6. History Records Testing
 
-### ✅ 記錄格式
-- [ ] 猜測數字格式正確
-- [ ] 結果格式為「XA YB」
-- [ ] 記錄按時間順序排列
+### ✅ Record Display
+- [ ] Player history records display correctly with ordinal numbers
+- [ ] Computer history records display correctly with ordinal numbers
+- [ ] Correct guess records have special marking
+- [ ] History records auto-scroll to latest
+- [ ] Left and right history items have consistent height
 
-## 7. 使用者體驗測試
+### ✅ Record Format
+- [ ] Guess number format is correct
+- [ ] Result format is "XA YB"
+- [ ] Records are arranged in chronological order
+- [ ] Ordinal numbers (1, 2, 3, 4...) display correctly
 
-### ✅ 介面響應
-- [ ] 按鈕點擊有視覺反饋
-- [ ] 輸入框自動聚焦
-- [ ] 載入動畫正常顯示
-- [ ] 錯誤訊息清楚顯示
+## 7. User Experience Testing
 
-### ✅ 鍵盤操作
-- [ ] Enter鍵可以提交猜測
-- [ ] 數字鍵盤正常運作
-- [ ] 退格鍵正常運作
+### ✅ Interface Responsiveness
+- [ ] Button clicks have visual feedback
+- [ ] Input field auto-focuses
+- [ ] Loading animations display correctly
+- [ ] Error messages display clearly
 
-### ✅ 響應式設計
-- [ ] 在不同螢幕尺寸下正常顯示
-- [ ] 在手機上可以正常操作
-- [ ] 文字不會溢出容器
+### ✅ Keyboard Operations
+- [ ] Enter key can submit guesses
+- [ ] Number keypad works correctly
+- [ ] Backspace key works correctly
 
-## 8. 效能測試
+### ✅ Responsive Design
+- [ ] Displays correctly on different screen sizes
+- [ ] Can operate normally on mobile devices
+- [ ] Text doesn't overflow containers
 
-### ✅ 載入速度
-- [ ] 遊戲啟動時間合理
-- [ ] 語言切換響應快速
-- [ ] 按鈕點擊響應及時
+## 8. Game Records Feature Testing
 
-### ✅ 記憶體使用
-- [ ] 長時間遊戲不會造成記憶體洩漏
-- [ ] 重新開始遊戲後狀態正確重置
+### ✅ Records Storage
+- [ ] Game records are saved to localStorage
+- [ ] Records persist after page refresh
+- [ ] Records include timestamp, winner, and attempt counts
+- [ ] Records display in reverse chronological order
 
-## 9. 錯誤處理測試
+### ✅ Records Management
+- [ ] "Records" tab navigation works
+- [ ] "Clear All Records" button functions correctly
+- [ ] Empty state shows appropriate message
+- [ ] All record labels are properly translated
 
-### ✅ 異常情況
-- [ ] 網路中斷時遊戲正常運作
-- [ ] 重新整理頁面後遊戲狀態正確
-- [ ] 瀏覽器相容性良好
+## 9. Performance Testing
 
-### ✅ 輸入錯誤
-- [ ] 無效輸入被正確處理
-- [ ] 錯誤訊息清楚易懂
-- [ ] 錯誤後可以繼續遊戲
+### ✅ Loading Speed
+- [ ] Game startup time is reasonable
+- [ ] Language switching responds quickly
+- [ ] Button clicks respond promptly
 
-## 10. 遊戲邏輯完整性測試
+### ✅ Memory Usage
+- [ ] Extended gameplay doesn't cause memory leaks
+- [ ] Game state resets correctly after restart
 
-### ✅ 遊戲規則
-- [ ] 4位不重複數字規則正確執行
-- [ ] A和B計算邏輯正確
-- [ ] 回合切換邏輯正確
-- [ ] 勝利條件判斷正確
+## 10. Error Handling Testing
 
-### ✅ 電腦AI
-- [ ] 電腦猜測策略合理
-- [ ] 電腦不會給出不可能的猜測
-- [ ] 電腦能夠在合理次數內猜對
+### ✅ Exception Situations
+- [ ] Game works normally when network is interrupted
+- [ ] Game state is correct after page refresh
+- [ ] Good browser compatibility
 
-## 測試結果記錄
+### ✅ Input Errors
+- [ ] Invalid input is handled correctly
+- [ ] Error messages are clear and understandable
+- [ ] Can continue playing after errors
 
-### 測試日期：_____________
-### 測試人員：_____________
-### 測試環境：_____________
-- 瀏覽器：_____________
-- 作業系統：_____________
-- 螢幕解析度：_____________
+## 11. Game Logic Integrity Testing
 
-### 測試結果：
-- 總檢查項目：_____ 項
-- 通過：_____ 項
-- 失敗：_____ 項
-- 成功率：_____ %
+### ✅ Game Rules
+- [ ] 4 unique digits rule is correctly enforced
+- [ ] A and B calculation logic is correct
+- [ ] Turn switching logic is correct
+- [ ] Victory condition judgment is correct
 
-### 發現的問題：
+### ✅ Computer AI
+- [ ] Computer guessing strategy is reasonable
+- [ ] Computer doesn't make impossible guesses
+- [ ] Computer can guess correctly within reasonable attempts
+
+## 12. Internationalization Testing
+
+### ✅ Multi-language Support
+- [ ] All UI text is properly translated in Chinese
+- [ ] All UI text is properly translated in English
+- [ ] All UI text is properly translated in Japanese
+- [ ] Language switching preserves game state
+- [ ] No missing translation keys (like correctFeedbackFor)
+
+## Test Results Record
+
+### Test Date: _____________
+### Tester: _____________
+### Test Environment: _____________
+- Browser: _____________
+- Operating System: _____________
+- Screen Resolution: _____________
+
+### Test Results:
+- Total Check Items: _____ items
+- Passed: _____ items
+- Failed: _____ items
+- Success Rate: _____ %
+
+### Issues Found:
 1. ________________________________
 2. ________________________________
 3. ________________________________
 
-### 建議改進：
+### Improvement Suggestions:
 1. ________________________________
 2. ________________________________
 3. ________________________________
+
+### Additional Notes:
+- Game deployed at: https://seoker.tw/guess_number
+- All automated tests passing: 46/46 test cases
+- CSS refactored for consistent history item heights
+- Feedback correction system implemented
+- Ordinal numbering added to all history items
