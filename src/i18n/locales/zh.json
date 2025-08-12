@@ -58,5 +58,14 @@
   
   "gameTab": "遊戲",
   "recordsTab": "記錄",
-  "clearAllRecords": "清除所有記錄"
+  
+  "gameRecords": "遊戲記錄",
+  "noRecordsYet": "還沒有遊戲記錄",
+  "clearAllRecords": "清除所有記錄",
+  "totalRounds": "總回合數",
+  "playerWonShort": "玩家勝",
+  "computerWonShort": "電腦勝",
+  "gameIncomplete": "遊戲未完成",
+  "playerWonInRounds": "玩家在 {{rounds}} 回合獲勝",
+  "computerWonInRounds": "電腦在 {{rounds}} 回合獲勝"
 }

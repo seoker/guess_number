@@ -58,5 +58,14 @@
   
   "gameTab": "ゲーム",
   "recordsTab": "記録",
-  "clearAllRecords": "すべての記録をクリア"
+  
+  "gameRecords": "ゲーム記録",
+  "noRecordsYet": "ゲーム記録はまだありません",
+  "clearAllRecords": "すべての記録をクリア",
+  "totalRounds": "総ラウンド数",
+  "playerWonShort": "プレイヤー勝ち",
+  "computerWonShort": "コンピュータ勝ち",
+  "gameIncomplete": "ゲーム未完了",
+  "playerWonInRounds": "プレイヤーが{{rounds}}ラウンドで勝利",
+  "computerWonInRounds": "コンピュータが{{rounds}}ラウンドで勝利"
 }

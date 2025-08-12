@@ -58,5 +58,14 @@
   
   "gameTab": "Game",
   "recordsTab": "Records",
-  "clearAllRecords": "Clear All Records"
+  
+  "gameRecords": "Game Records",
+  "noRecordsYet": "No game records yet",
+  "clearAllRecords": "Clear All Records",
+  "totalRounds": "Total Rounds",
+  "playerWonShort": "Player Won",
+  "computerWonShort": "Computer Won",
+  "gameIncomplete": "Game Incomplete",
+  "playerWonInRounds": "Player won in {{rounds}} rounds",
+  "computerWonInRounds": "Computer won in {{rounds}} rounds"
 }
