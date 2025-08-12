@@ -15,7 +15,7 @@ vi.mock('react-i18next', () => ({
   })
 }))
 
-describe('遊戲完整流程測試', () => {
+describe('complete game flow tests', () => {
   let user
 
   beforeEach(() => {
@@ -23,19 +23,19 @@ describe('遊戲完整流程測試', () => {
     vi.clearAllMocks()
   })
 
-  describe('遊戲初始化', () => {
-    it('應該正確初始化遊戲', async () => {
+  describe('game initialization', () => {
+    it('should correctly initialize game', async () => {
       render(<App />)
       
-      // 檢查開始畫面 (使用 className 選擇器來避免重複)
+      // Check start screen (use className selector to avoid duplication)
       expect(screen.getByText('gameTab')).toBeInTheDocument() // Navigation tab
       expect(screen.getByRole('button', { name: 'startGame' })).toBeInTheDocument()
       
-      // 開始遊戲
+      // Start game
       const startButton = screen.getByRole('button', { name: 'startGame' })
       await user.click(startButton)
       
-      // 檢查遊戲狀態
+      // Check game state
       await waitFor(() => {
         expect(screen.getByText(/playerAttempts/)).toBeInTheDocument()
         expect(screen.getByText(/computerAttempts/)).toBeInTheDocument()
@@ -43,41 +43,41 @@ describe('遊戲完整流程測試', () => {
     })
   })
 
-  describe('玩家猜測流程', () => {
-    it('應該處理玩家的猜測輸入', async () => {
+  describe('player guess flow', () => {
+    it('should handle player guess input', async () => {
       render(<App />)
       
-      // 開始遊戲
+      // Start game
       const startButton = screen.getByRole('button', { name: 'startGame' })
       await user.click(startButton)
       
-      // 等待遊戲開始，檢查玩家輸入界面
+      // Wait for game to start, check player input interface
       await waitFor(() => {
         expect(screen.getByPlaceholderText('guessPlaceholder')).toBeInTheDocument()
       })
       
-      // 玩家輸入猜測
+      // Player enters guess
       const input = screen.getByPlaceholderText('guessPlaceholder')
       await user.type(input, '1234')
       
-      // 檢查按鈕是否啟用
+      // Check if button is enabled
       const guessButton = screen.getByRole('button', { name: 'guess' })
       expect(guessButton).toBeEnabled()
     })
 
-    it('應該處理玩家的無效輸入', async () => {
+    it('should handle player invalid input', async () => {
       render(<App />)
       
-      // 開始遊戲
+      // Start game
       const startButton = screen.getByRole('button', { name: 'startGame' })
       await user.click(startButton)
       
-      // 等待遊戲開始
+      // Wait for game to start
       await waitFor(() => {
         expect(screen.getByPlaceholderText('guessPlaceholder')).toBeInTheDocument()
       })
       
-      // 玩家輸入無效猜測
+      // Player enters invalid guess
       const input = screen.getByPlaceholderText('guessPlaceholder')
       await user.type(input, '123')
       
@@ -86,15 +86,15 @@ describe('遊戲完整流程測試', () => {
     })
   })
 
-  describe('遊戲界面', () => {
-    it('應該顯示遊戲基本界面元素', async () => {
+  describe('game interface', () => {
+    it('should display basic game interface elements', async () => {
       render(<App />)
       
-      // 開始遊戲
+      // Start game
       const startButton = screen.getByRole('button', { name: 'startGame' })
       await user.click(startButton)
       
-      // 檢查遊戲界面元素
+      // Check game interface elements
       await waitFor(() => {
         expect(screen.getByText(/playerAttempts/)).toBeInTheDocument()
         expect(screen.getByText(/computerAttempts/)).toBeInTheDocument()
@@ -104,44 +104,44 @@ describe('遊戲完整流程測試', () => {
     })
   })
 
-  describe('導航功能', () => {
-    it('應該能夠在遊戲和記錄頁面間切換', async () => {
+  describe('navigation functionality', () => {
+    it('should be able to switch between game and records pages', async () => {
       render(<App />)
       
-      // 檢查初始狀態 - 應該顯示遊戲內容
+      // Check initial state - should display game content
       expect(screen.getByRole('button', { name: 'startGame' })).toBeInTheDocument()
       
-      // 切換到記錄頁面
+      // Switch to records page
       const recordsTab = screen.getByRole('button', { name: 'recordsTab' })
       await user.click(recordsTab)
       
-      // 檢查是否切換到記錄頁面 - 記錄相關內容應該顯示
+      // Check if switched to records page - record related content should be displayed
       expect(screen.queryByRole('button', { name: 'startGame' })).not.toBeInTheDocument()
     })
   })
 
-  describe('語言切換', () => {
-    it('應該顯示語言選擇器', async () => {
+  describe('language switching', () => {
+    it('should display language selector', async () => {
       render(<App />)
       
-      // 檢查語言選擇器存在
+      // Check language selector exists
       expect(screen.getAllByText('🌐')).toHaveLength(1) // language selector
       expect(screen.getByText('中文')).toBeInTheDocument()
     })
   })
 
-  describe('應用程式結構', () => {
-    it('應該包含所有主要組件', async () => {
+  describe('application structure', () => {
+    it('should include all main components', async () => {
       render(<App />)
       
-      // 檢查導航欄
+      // Check navigation bar
       expect(screen.getByText('gameTab')).toBeInTheDocument()
       expect(screen.getByText('recordsTab')).toBeInTheDocument()
       
-      // 檢查遊戲區域
+      // Check game area
       expect(screen.getByRole('button', { name: 'startGame' })).toBeInTheDocument()
       
-      // 檢查語言選擇器
+      // Check language selector
       expect(screen.getByText('中文')).toBeInTheDocument()
     })
   })

@@ -54,11 +54,11 @@ export default defineConfig([
       },
     },
     rules: {
-      // 測試檔案的基本規則
-      'no-unused-vars': 'off', // 測試中常有未使用的變數
-      'no-console': 'off', // 測試中可能需要 console.log
+      // Basic rules for test files
+      'no-unused-vars': 'off', // Tests often have unused variables
+      'no-console': 'off', // Tests may need console.log
       
-      // Vitest 規則
+      // Vitest rules
       'vitest/expect-expect': 'error',
       'vitest/no-disabled-tests': 'error',
       'vitest/no-focused-tests': 'error',
@@ -78,10 +78,10 @@ export default defineConfig([
       'vitest/valid-expect': 'error',
       'vitest/valid-title': 'error',
       
-      // Testing Library 規則
+      // Testing Library rules
       'testing-library/await-async-queries': 'error',
       'testing-library/await-async-utils': 'error',
-      'testing-library/consistent-data-testid': 'off', // 可選
+      'testing-library/consistent-data-testid': 'off', // Optional
       'testing-library/no-await-sync-events': 'error',
       'testing-library/no-await-sync-queries': 'error',
       'testing-library/no-container': 'error',
@@ -98,10 +98,10 @@ export default defineConfig([
       'testing-library/prefer-user-event': 'error',
       'testing-library/render-result-naming-convention': 'error',
       
-      // 測試檔案的特殊規則
-      'max-lines-per-function': 'off', // 測試函數可能較長
-      'max-statements': 'off', // 測試可能有多個斷言
-      'complexity': 'off', // 測試邏輯可能複雜
+      // Special rules for test files
+      'max-lines-per-function': 'off', // Test functions can be longer
+      'max-statements': 'off', // Tests may have multiple assertions
+      'complexity': 'off', // Test logic can be complex
     },
   },
 ])

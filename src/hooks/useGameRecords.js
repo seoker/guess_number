@@ -3,7 +3,7 @@ import { useState, useEffect } from 'react'
 export const useGameRecords = () => {
   const [gameRecords, setGameRecords] = useState([])
 
-  // 從 localStorage 讀取記錄
+  // Load records from localStorage
   const loadRecords = () => {
     try {
       const saved = localStorage.getItem('guessNumberGameRecords')
@@ -16,7 +16,7 @@ export const useGameRecords = () => {
     return []
   }
 
-  // 保存記錄到 localStorage
+  // Save records to localStorage
   const saveRecords = (records) => {
     try {
       localStorage.setItem('guessNumberGameRecords', JSON.stringify(records))
@@ -25,7 +25,7 @@ export const useGameRecords = () => {
     }
   }
 
-  // 添加新的遊戲記錄
+  // Add new game record
   const addGameRecord = (record) => {
     const newRecord = {
       id: Date.now(),
@@ -38,13 +38,13 @@ export const useGameRecords = () => {
     saveRecords(updatedRecords)
   }
 
-  // 清除所有記錄
+  // Clear all records
   const clearAllRecords = () => {
     setGameRecords([])
     localStorage.removeItem('guessNumberGameRecords')
   }
 
-  // 初始化時載入記錄
+  // Load records on initialization
   useEffect(() => {
     setGameRecords(loadRecords())
   }, [])

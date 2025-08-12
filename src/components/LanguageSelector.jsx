@@ -1,7 +1,7 @@
 import './LanguageSelector.css'
 import { useState, useRef, useEffect } from 'react'
 
-// 國旗圖標組件
+// Flag icon component
 const FlagIcon = ({ countryCode }) => {
   const flagEmojis = {
     'zh': '🇹🇼',

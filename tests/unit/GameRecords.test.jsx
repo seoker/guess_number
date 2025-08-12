@@ -27,7 +27,8 @@ vi.mock('react-i18next', () => ({
   })
 }))
 
-describe('gameRecords', () => {
+// eslint-disable-next-line vitest/prefer-lowercase-title
+describe('GameRecords', () => {
   const mockClearAllRecords = vi.fn()
   const mockT = vi.fn((key, options) => {
     const translations = {
@@ -51,14 +52,14 @@ describe('gameRecords', () => {
   })
 
   describe('empty records state', () => {
-    it('應該顯示空記錄訊息', () => {
+    it('should display empty records message', () => {
       render(<GameRecords gameRecords={[]} clearAllRecords={mockClearAllRecords} t={mockT} />)
       
       expect(screen.getByText('Game Records')).toBeInTheDocument()
       expect(screen.getByText('No game records yet')).toBeInTheDocument()
     })
 
-    it('應該不顯示清除按鈕當沒有記錄時', () => {
+    it('should not display clear button when no records', () => {
       render(<GameRecords gameRecords={[]} clearAllRecords={mockClearAllRecords} t={mockT} />)
       
       expect(screen.queryByText('Clear All Records')).not.toBeInTheDocument()
@@ -93,7 +94,7 @@ describe('gameRecords', () => {
       }
     ]
 
-    it('應該顯示所有翻譯後的標籤', () => {
+    it('should display all translated labels', () => {
       render(<GameRecords gameRecords={sampleRecords} clearAllRecords={mockClearAllRecords} t={mockT} />)
       
       expect(screen.getByText('Game Records')).toBeInTheDocument()
@@ -103,7 +104,7 @@ describe('gameRecords', () => {
       expect(screen.getAllByText('Computer Attempts:')).toHaveLength(3)
     })
 
-    it('應該顯示正確的勝利者標籤', () => {
+    it('should display correct winner labels', () => {
       render(<GameRecords gameRecords={sampleRecords} clearAllRecords={mockClearAllRecords} t={mockT} />)
       
       expect(screen.getByText('Player Won')).toBeInTheDocument()
@@ -111,14 +112,14 @@ describe('gameRecords', () => {
       expect(screen.getByText('Game Incomplete')).toBeInTheDocument()
     })
 
-    it('應該顯示正確的勝利描述', () => {
+    it('should display correct winner descriptions', () => {
       render(<GameRecords gameRecords={sampleRecords} clearAllRecords={mockClearAllRecords} t={mockT} />)
       
       expect(screen.getByText('Player won in 3 rounds')).toBeInTheDocument()
       expect(screen.getByText('Computer won in 4 rounds')).toBeInTheDocument()
     })
 
-    it('應該顯示正確的統計數據', () => {
+    it('should display correct statistical data', () => {
       render(<GameRecords gameRecords={sampleRecords} clearAllRecords={mockClearAllRecords} t={mockT} />)
       
       // Check that values are displayed - some numbers appear multiple times so we check length
@@ -130,7 +131,7 @@ describe('gameRecords', () => {
       expect(screen.getByText('1')).toBeInTheDocument() // computerAttempts for third record (unique)
     })
 
-    it('清除按鈕點擊應該調用正確的函數', async () => {
+    it('clear button click should call correct function', async () => {
       const user = userEvent.setup()
       render(<GameRecords gameRecords={sampleRecords} clearAllRecords={mockClearAllRecords} t={mockT} />)
       
@@ -142,7 +143,7 @@ describe('gameRecords', () => {
   })
 
   describe('translation functionality', () => {
-    it('應該調用所有必需的翻譯鍵', () => {
+    it('should call all required translation keys', () => {
       const sampleRecord = [{
         id: '1',
         timestamp: 1700000000000,
@@ -164,7 +165,7 @@ describe('gameRecords', () => {
       expect(mockT).toHaveBeenCalledWith('playerWonInRounds', { rounds: 3 })
     })
 
-    it('應該處理電腦勝利的翻譯', () => {
+    it('should handle computer victory translation', () => {
       const computerWonRecord = [{
         id: '1',
         timestamp: 1700000000000,
@@ -180,7 +181,7 @@ describe('gameRecords', () => {
       expect(mockT).toHaveBeenCalledWith('computerWonInRounds', { rounds: 3 })
     })
 
-    it('應該處理未完成遊戲的翻譯', () => {
+    it('should handle incomplete game translation', () => {
       const incompleteRecord = [{
         id: '1',
         timestamp: 1700000000000,
@@ -197,7 +198,7 @@ describe('gameRecords', () => {
   })
 
   describe('date formatting', () => {
-    it('應該顯示格式化的日期', () => {
+    it('should display formatted date', () => {
       const recordWithDate = [{
         id: '1',
         timestamp: 1700000000000, // Nov 14, 2023

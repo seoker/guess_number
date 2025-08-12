@@ -7,7 +7,7 @@ export default defineConfig({
     environment: 'jsdom',
     setupFiles: ['./tests/setup.js'],
     globals: true,
-    watch: false, // 禁用 watch 模式
+    watch: false, // Disable watch mode
     coverage: {
       provider: 'v8',
       reporter: ['text', 'json', 'html'],

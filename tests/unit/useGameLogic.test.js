@@ -16,8 +16,8 @@ describe('useGameLogic', () => {
     hookResult = renderHook(() => useGameLogic())
   })
 
-  describe('遊戲初始化', () => {
-    it('應該正確初始化遊戲狀態', () => {
+  describe('game initialization', () => {
+    it('should correctly initialize game state', () => {
       const hook = hookResult.result.current
       expect(hook.gameState.gameStarted).toBe(false)
       expect(hook.gameState.playerAttempts).toBe(0)
@@ -25,7 +25,7 @@ describe('useGameLogic', () => {
       expect(hook.gameState.gameWon).toBe(false)
     })
 
-    it('應該能夠開始新遊戲', () => {
+    it('should be able to start new game', () => {
       act(() => {
         hookResult.result.current.startNewGame()
       })
@@ -37,14 +37,14 @@ describe('useGameLogic', () => {
     })
   })
 
-  describe('玩家猜測', () => {
+  describe('player guessing', () => {
     beforeEach(() => {
       act(() => {
         hookResult.result.current.startNewGame()
       })
     })
 
-    it('應該處理正確的玩家猜測', () => {
+    it('should handle correct player guess', () => {
       act(() => {
         hookResult.result.current.updatePlayerGuess('1234')
       })
@@ -58,7 +58,7 @@ describe('useGameLogic', () => {
       expect(hook.history.player).toHaveLength(1)
     })
 
-    it('應該拒絕無效的玩家猜測', () => {
+    it('should reject invalid player guess', () => {
       act(() => {
         hookResult.result.current.updatePlayerGuess('123')
       })
@@ -73,8 +73,8 @@ describe('useGameLogic', () => {
     })
   })
 
-  describe('遊戲配置', () => {
-    it('應該有正確的遊戲配置', () => {
+  describe('game configuration', () => {
+    it('should have correct game configuration', () => {
       const hook = hookResult.result.current
       expect(hook.GAME_CONFIG.DIGIT_COUNT).toBe(4)
       expect(hook.GAME_CONFIG.MAX_DIGIT).toBe(10)

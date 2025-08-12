@@ -51,13 +51,14 @@ const mockProps = {
   getSupportedLanguages: vi.fn(() => ['zh-TW', 'en'])
 }
 
-describe('gameUI', () => {
+// eslint-disable-next-line vitest/prefer-lowercase-title
+describe('GameUI', () => {
   beforeEach(() => {
     vi.clearAllMocks()
   })
 
-  describe('遊戲開始畫面', () => {
-    it('應該顯示開始畫面當遊戲未開始時', () => {
+  describe('game start screen', () => {
+    it('should display start screen when game is not started', () => {
       render(<GameUI {...mockProps} />)
       
       expect(screen.getByText('title')).toBeInTheDocument()
@@ -66,7 +67,7 @@ describe('gameUI', () => {
       expect(screen.getAllByText(/rules/)).toHaveLength(2) // 'rules' and 'rulesDetail' both match
     })
 
-    it('應該能夠開始遊戲', async () => {
+    it('should be able to start game', async () => {
       const user = userEvent.setup()
       render(<GameUI {...mockProps} />)
       
@@ -77,7 +78,7 @@ describe('gameUI', () => {
     })
   })
 
-  describe('遊戲進行畫面', () => {
+  describe('game in progress screen', () => {
     const gameInProgressProps = {
       ...mockProps,
       gameState: {
@@ -87,7 +88,7 @@ describe('gameUI', () => {
       }
     }
 
-    it('應該顯示遊戲進行畫面', () => {
+    it('should display game in progress screen', () => {
       render(<GameUI {...gameInProgressProps} />)
       
       expect(screen.getByText(/playerAttempts/)).toBeInTheDocument()
@@ -95,7 +96,7 @@ describe('gameUI', () => {
       expect(screen.getByText(/currentTurn/)).toBeInTheDocument()
     })
 
-    it('應該顯示玩家輸入區域', () => {
+    it('should display player input area', () => {
       render(<GameUI {...gameInProgressProps} />)
       
       const input = screen.getByPlaceholderText('guessPlaceholder')
@@ -103,19 +104,19 @@ describe('gameUI', () => {
       expect(input).not.toBeDisabled()
     })
 
-    it('應該處理玩家輸入', async () => {
+    it('should handle player input', async () => {
       const user = userEvent.setup()
       render(<GameUI {...gameInProgressProps} />)
       
       const input = screen.getByPlaceholderText('guessPlaceholder')
       await user.type(input, '1234')
       
-      // 因為每個字符都會觸發一次 updatePlayerGuess，所以檢查最後一次調用
+      // Each character triggers updatePlayerGuess once, so check the last call
       expect(mockProps.updatePlayerGuess).toHaveBeenCalledTimes(4)
       expect(mockProps.updatePlayerGuess).toHaveBeenLastCalledWith('4')
     })
 
-    it('應該處理玩家猜測提交', async () => {
+    it('should handle player guess submission', async () => {
       const user = userEvent.setup()
       const propsWithGuess = {
         ...gameInProgressProps,
@@ -133,7 +134,7 @@ describe('gameUI', () => {
       expect(mockProps.handlePlayerGuess).toHaveBeenCalledTimes(1)
     })
 
-    it('應該在輸入不完整時禁用猜測按鈕', () => {
+    it('should disable guess button when input is incomplete', () => {
       render(<GameUI {...gameInProgressProps} />)
       
       const guessButton = screen.getByText('guess')
@@ -141,7 +142,7 @@ describe('gameUI', () => {
     })
   })
 
-  describe('電腦回合', () => {
+  describe('computer turn', () => {
     const computerTurnProps = {
       ...mockProps,
       gameState: {
@@ -156,26 +157,26 @@ describe('gameUI', () => {
       }
     }
 
-    it('應該顯示電腦猜測和反饋表單', () => {
+    it('should display computer guess and feedback form', () => {
       render(<GameUI {...computerTurnProps} />)
       
       expect(screen.getByText(/computerGuess5678/)).toBeInTheDocument()
       expect(screen.getByText('feedbackHint')).toBeInTheDocument()
     })
 
-    it('應該顯示A和B選擇按鈕', () => {
+    it('should display A and B selection buttons', () => {
       render(<GameUI {...computerTurnProps} />)
       
       expect(screen.getByText('aLabel')).toBeInTheDocument()
       expect(screen.getByText('bLabel')).toBeInTheDocument()
       
-      // 檢查數字按鈕 (A和B區域都有，所以每個數字出現2次)
+      // Check number buttons (both A and B areas have them, so each number appears twice)
       for (let i = 0; i <= 4; i++) {
         expect(screen.getAllByText(i.toString())).toHaveLength(2)
       }
     })
 
-    it('應該處理反饋提交', async () => {
+    it('should handle feedback submission', async () => {
       const user = userEvent.setup()
       const propsWithFeedback = {
         ...computerTurnProps,
@@ -194,7 +195,7 @@ describe('gameUI', () => {
     })
   })
 
-  describe('歷史記錄', () => {
+  describe('game history', () => {
     const propsWithHistory = {
       ...mockProps,
       gameState: {
@@ -212,7 +213,7 @@ describe('gameUI', () => {
       }
     }
 
-    it('應該顯示玩家歷史記錄', () => {
+    it('should display player history', () => {
       render(<GameUI {...propsWithHistory} />)
       
       expect(screen.getByText('playerHistory')).toBeInTheDocument()
@@ -222,7 +223,7 @@ describe('gameUI', () => {
       expect(screen.getByText('0A0B')).toBeInTheDocument()
     })
 
-    it('應該顯示電腦歷史記錄', () => {
+    it('should display computer history', () => {
       render(<GameUI {...propsWithHistory} />)
       
       expect(screen.getByText('computerHistory')).toBeInTheDocument()
@@ -230,7 +231,7 @@ describe('gameUI', () => {
     })
   })
 
-  describe('遊戲結束', () => {
+  describe('game over', () => {
     const gameWonProps = {
       ...mockProps,
       gameState: {
@@ -240,14 +241,14 @@ describe('gameUI', () => {
       }
     }
 
-    it('應該顯示遊戲結束畫面', () => {
+    it('should display game over screen', () => {
       render(<GameUI {...gameWonProps} />)
       
       expect(screen.getByText('gameOver')).toBeInTheDocument()
       expect(screen.getByText('playAgain')).toBeInTheDocument()
     })
 
-    it('應該能夠重新開始遊戲', async () => {
+    it('should be able to restart game', async () => {
       const user = userEvent.setup()
       render(<GameUI {...gameWonProps} />)
       
@@ -258,17 +259,17 @@ describe('gameUI', () => {
     })
   })
 
-  describe('語言切換', () => {
-    it('應該接收語言相關的props', () => {
+  describe('language switching', () => {
+    it('should receive language-related props', () => {
       render(<GameUI {...mockProps} />)
       
-      // GameUI 組件本身不包含語言選擇器，但接收 t 函數進行翻譯
+      // GameUI component itself doesn't contain language selector, but receives t function for translation
       expect(screen.getByText('title')).toBeInTheDocument()
     })
   })
 
-  describe('反饋修正功能', () => {
-    it('應該在抱怨消息時顯示修正按鈕', () => {
+  describe('feedback correction functionality', () => {
+    it('should show correction buttons when complaint message appears', () => {
       const propsWithComplaint = {
         ...mockProps,
         gameState: { ...mockGameState, gameStarted: true, message: 'This is unreasonable!' },
@@ -282,7 +283,7 @@ describe('gameUI', () => {
       expect(screen.getByText('resetGame')).toBeInTheDocument()
     })
 
-    it('應該在點擊修正按鈕後顯示修正面板', () => {
+    it('should show correction panel after clicking correction button', () => {
       const propsWithCorrection = {
         ...mockProps,
         gameState: { ...mockGameState, gameStarted: true },
@@ -307,7 +308,7 @@ describe('gameUI', () => {
       expect(screen.getAllByText('5678')).toHaveLength(2)
     })
 
-    it('修正按鈕點擊應該調用正確的函數', async () => {
+    it('correction button clicks should call correct functions', async () => {
       const user = userEvent.setup()
       const propsWithComplaint = {
         ...mockProps,

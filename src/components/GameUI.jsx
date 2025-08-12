@@ -22,14 +22,14 @@ export const GameUI = ({
   const playerHistoryRef = useRef(null)
   const computerHistoryRef = useRef(null)
 
-  // 自動聚焦輸入框
+  // Auto focus input field
   useEffect(() => {
     if (gameState.gameStarted && !gameState.gameWon && inputRef.current && gameState.currentTurn === 'player') {
       inputRef.current.focus()
     }
   }, [gameState.gameStarted, gameState.gameWon, gameState.currentTurn])
 
-  // 自動滾動到最新記錄
+  // Auto scroll to latest record
   useEffect(() => {
     if (playerHistoryRef.current && history.player.length > 0) {
       playerHistoryRef.current.scrollTop = playerHistoryRef.current.scrollHeight
@@ -181,7 +181,7 @@ export const GameUI = ({
             )}
 
             <div className="history-container">
-              {/* 玩家歷史記錄 */}
+              {/* Player history records */}
               <div className="history-section">
                 <h3 className="history-title">{t('playerHistory')}</h3>
                 <div className="history-list" ref={playerHistoryRef}>
@@ -194,7 +194,7 @@ export const GameUI = ({
                 </div>
               </div>
 
-              {/* 電腦歷史記錄 */}
+              {/* Computer history records */}
               <div className="history-section">
                 <h3 className="history-title">{t('computerHistory')}</h3>
                 <div className="history-list" ref={computerHistoryRef}>
@@ -222,7 +222,7 @@ export const GameUI = ({
   )
 }
 
-// 反饋修正面板組件
+// Feedback correction panel component
 const FeedbackCorrectionPanel = ({ history, correctHistoryFeedback, cancelFeedbackCorrection, t }) => {
   const [selectedIndex, setSelectedIndex] = useState(null)
   const [editingFeedback, setEditingFeedback] = useState({ A: '', B: '' })
@@ -264,7 +264,7 @@ const FeedbackCorrectionPanel = ({ history, correctHistoryFeedback, cancelFeedba
 
       {selectedIndex !== null && (
         <div className="correction-editor">
-          <h4>修正 {history[selectedIndex].guess} 的反饋：</h4>
+          <h4>Correct feedback for {history[selectedIndex].guess}:</h4>
           <div className="correction-inputs">
             <div className="correction-input-group">
               <label>A:</label>
