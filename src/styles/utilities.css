@@ -1,0 +1,193 @@
+/* Utility Classes for Common Patterns */
+
+/* Glass morphism containers */
+.glass-container {
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(10px);
+  border-radius: 20px;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+  padding: 2rem;
+  width: 95%;
+  max-width: 1400px;
+  min-width: 320px;
+  margin: 0 auto;
+}
+
+/* Common button styles */
+.btn-primary {
+  background: linear-gradient(45deg, #667eea, #764ba2);
+  color: white;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  font-weight: 600;
+  transition: all 0.3s ease;
+  padding: 1rem 2rem;
+}
+
+.btn-primary:hover:not(:disabled) {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+}
+
+.btn-primary:disabled {
+  background: #6c757d;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.btn-warning {
+  background: linear-gradient(45deg, #ffc107, #ff9800);
+  color: white;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  font-weight: 600;
+  transition: all 0.3s ease;
+  padding: 1rem 2rem;
+}
+
+.btn-warning:hover:not(:disabled) {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 15px rgba(255, 193, 7, 0.3);
+}
+
+.btn-danger {
+  background: linear-gradient(45deg, #ff4757, #ff3742);
+  color: white;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 600;
+  transition: all 0.3s ease;
+  padding: 0.5rem 1rem;
+}
+
+.btn-danger:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(255, 71, 87, 0.3);
+}
+
+/* Flex utilities */
+.flex-center {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.flex-column-center {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.flex-between {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+/* Common transitions */
+.hover-lift {
+  transition: all 0.3s ease;
+}
+
+.hover-lift:hover {
+  transform: translateY(-2px);
+}
+
+/* Shadow utilities */
+.shadow-sm {
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.shadow-md {
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
+}
+
+.shadow-lg {
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+}
+
+/* Border radius utilities */
+.rounded-sm {
+  border-radius: 8px;
+}
+
+.rounded-md {
+  border-radius: 12px;
+}
+
+.rounded-lg {
+  border-radius: 20px;
+}
+
+.rounded-pill {
+  border-radius: 25px;
+}
+
+/* Responsive container */
+.responsive-container {
+  width: 95%;
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+/* Mobile-first responsive utilities */
+@media (max-width: 480px) {
+  .glass-container {
+    padding: 1rem;
+    margin: 0.5rem;
+    width: 98%;
+    border-radius: 15px;
+  }
+  
+  .btn-primary, .btn-warning {
+    padding: 0.8rem 1.5rem;
+    font-size: 1.1rem;
+  }
+}
+
+@media (max-width: 768px) and (min-width: 481px) {
+  .glass-container {
+    padding: 1.5rem;
+    margin: 1rem;
+    width: 96%;
+  }
+}
+
+/* Text utilities */
+.text-center {
+  text-align: center;
+}
+
+.text-left {
+  text-align: left;
+}
+
+/* Color utilities */
+.text-primary {
+  color: #667eea;
+}
+
+.text-warning {
+  color: #ffc107;
+}
+
+.text-danger {
+  color: #ff4757;
+}
+
+.text-success {
+  color: #2ed573;
+}
+
+.text-muted {
+  color: #666;
+}
+
+/* Background gradients */
+.bg-primary-gradient {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+}

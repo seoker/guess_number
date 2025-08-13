@@ -7,6 +7,13 @@ const GameRecords = ({ gameRecords, clearAllRecords, t }) => {
     return date.toLocaleString()
   }
 
+  const formatMobileDate = (timestamp) => {
+    const date = new Date(timestamp)
+    const dateStr = date.toLocaleDateString()
+    const timeStr = date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+    return { date: dateStr, time: timeStr }
+  }
+
   const getWinnerText = (record) => {
     if (record.winner === 'player') {
       return t('playerWonShort')
@@ -27,11 +34,11 @@ const GameRecords = ({ gameRecords, clearAllRecords, t }) => {
 
   if (gameRecords.length === 0) {
     return (
-      <div className="game-records">
-        <div className="records-header">
+      <div className="main-container">
+        <div className="records-header flex-between">
           <h2>{t('gameRecords')}</h2>
         </div>
-        <div className="no-records">
+        <div className="no-records text-center">
           <p>{t('noRecordsYet')}</p>
         </div>
       </div>
@@ -39,11 +46,11 @@ const GameRecords = ({ gameRecords, clearAllRecords, t }) => {
   }
 
   return (
-    <div className="game-records">
-      <div className="records-header">
+    <div className="main-container">
+      <div className="records-header flex-between">
         <h2>{t('gameRecords')}</h2>
         <button 
-          className="clear-records-btn"
+          className="clear-records-btn btn-danger"
           onClick={clearAllRecords}
           title={t('clearAllRecords')}
         >
@@ -53,29 +60,35 @@ const GameRecords = ({ gameRecords, clearAllRecords, t }) => {
       
       <div className="records-list">
         {gameRecords.map((record) => (
-          <div key={record.id} className="record-item">
-            <div className="record-header">
-              <span className={`winner-badge ${getWinnerClass(record)}`}>
+          <div key={record.id} className={`record-item rounded-md shadow-sm hover-lift ${getWinnerClass(record)}-bg`}>
+            <div className="record-header flex-between">
+              <span className={`winner-badge ${getWinnerClass(record)} rounded-pill`}>
                 {getWinnerText(record)}
               </span>
-              <span className="record-date">
-                {formatDate(record.timestamp)}
-              </span>
+              <div className="record-date text-muted">
+                <div className="date-desktop">
+                  {formatDate(record.timestamp)}
+                </div>
+                <div className="date-mobile">
+                  <div>{formatMobileDate(record.timestamp).date}</div>
+                  <div>{formatMobileDate(record.timestamp).time}</div>
+                </div>
+              </div>
             </div>
             
             <div className="record-details">
               <div className="record-stat">
-                <span className="stat-label">{t('totalRounds')}:</span>
+                <span className="stat-label text-muted">{t('totalRounds')}:</span>
                 <span className="stat-value">{record.totalRounds}</span>
               </div>
               
               <div className="record-stat">
-                <span className="stat-label">{t('playerAttempts')}:</span>
+                <span className="stat-label text-muted">{t('playerAttempts')}:</span>
                 <span className="stat-value">{record.playerAttempts}</span>
               </div>
               
               <div className="record-stat">
-                <span className="stat-label">{t('computerAttempts')}:</span>
+                <span className="stat-label text-muted">{t('computerAttempts')}:</span>
                 <span className="stat-value">{record.computerAttempts}</span>
               </div>
             </div>
