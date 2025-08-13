@@ -164,16 +164,24 @@ describe('GameUI', () => {
       expect(screen.getByText('feedbackHint')).toBeInTheDocument()
     })
 
-    it('should display A and B selection buttons', () => {
+    it('should display A and B feedback selection in "0A0B" format', () => {
       render(<GameUI {...computerTurnProps} />)
       
-      expect(screen.getByText('aLabel')).toBeInTheDocument()
-      expect(screen.getByText('bLabel')).toBeInTheDocument()
+      // Check the feedback display shows the format "0A0B"
+      expect(screen.getByText('A')).toBeInTheDocument() // Static A label
+      expect(screen.getByText('B')).toBeInTheDocument() // Static B label
       
-      // Check number buttons (both A and B areas have them, so each number appears twice)
-      for (let i = 0; i <= 4; i++) {
-        expect(screen.getAllByText(i.toString())).toHaveLength(2)
-      }
+      // Check clickable number buttons (default 0)
+      const numberButtons = screen.getAllByRole('button').filter(button => 
+        button.textContent === '0' && button.className.includes('clickable')
+      )
+      expect(numberButtons).toHaveLength(2) // A and B value buttons
+      
+      // Check that static letters are not clickable
+      const staticA = screen.getByText('A')
+      const staticB = screen.getByText('B')
+      expect(staticA.className).toContain('static')
+      expect(staticB.className).toContain('static')
     })
 
     it('should handle feedback submission', async () => {
