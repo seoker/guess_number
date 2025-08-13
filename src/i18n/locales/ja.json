@@ -37,7 +37,7 @@
   "computerWon": "コンピュータの勝利です！コンピュータがあなたの数字を正しく当てました！コンピュータの数字は：{{computerNumber}}",
   
   "yourHint": "あなたのヒント：",
-  "computerThinking": "コンピュータの推測：{{guess}}、AとBのフィードバックを入力してください",
+  "computerThinking": "AとBのフィードバックを入力してください",
   
   "complaints": {
     "inconsistent": "待って！私は{{guess}}を推測しましたが、あなたは{{feedback}}を与えました。これは私の以前の推測結果と一致しません！",

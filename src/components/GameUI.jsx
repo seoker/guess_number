@@ -58,7 +58,7 @@ export const GameUI = ({
   }
 
   return (
-    <div className="container">
+    <div className="main-container">
         <h1 className="title">{t('title')}</h1>
         
         {!gameState.gameStarted ? (
@@ -86,39 +86,35 @@ export const GameUI = ({
                 <p className="feedback-hint">{t('feedbackHint')}</p>
                 <div className="feedback-form">
                   <div className="feedback-inputs">
-                    <div className="feedback-input-group">
-                      <label>{t('aLabel')}</label>
-                      <div className="number-buttons">
-                        {[0, 1, 2, 3, 4].map(num => (
-                          <button
-                            key={num}
-                            className={`number-button ${computerAI.playerFeedback.A === num.toString() ? 'selected' : ''}`}
-                            onClick={() => handleFeedbackClick('A', num)}
-                          >
-                            {num}
-                          </button>
-                        ))}
-                      </div>
-                    </div>
-                    <div className="feedback-input-group">
-                      <label>{t('bLabel')}</label>
-                      <div className="number-buttons">
-                        {[0, 1, 2, 3, 4].map(num => (
-                          <button
-                            key={num}
-                            className={`number-button ${computerAI.playerFeedback.B === num.toString() ? 'selected' : ''}`}
-                            onClick={() => handleFeedbackClick('B', num)}
-                          >
-                            {num}
-                          </button>
-                        ))}
-                      </div>
+                    <div className="feedback-display">
+                      <button 
+                        className="feedback-element clickable"
+                        onClick={() => {
+                          const currentA = parseInt(computerAI.playerFeedback.A || '0');
+                          const nextA = (currentA + 1) % 5;
+                          handleFeedbackClick('A', nextA);
+                        }}
+                      >
+                        {computerAI.playerFeedback.A || '0'}
+                      </button>
+                      <span className="feedback-element static">A</span>
+                      <button 
+                        className="feedback-element clickable"
+                        onClick={() => {
+                          const currentB = parseInt(computerAI.playerFeedback.B || '0');
+                          const nextB = (currentB + 1) % 5;
+                          handleFeedbackClick('B', nextB);
+                        }}
+                      >
+                        {computerAI.playerFeedback.B || '0'}
+                      </button>
+                      <span className="feedback-element static">B</span>
                     </div>
                   </div>
                   <button 
                     onClick={handleFeedbackSubmit}
                     className="feedback-button"
-                    disabled={computerAI.playerFeedback.A === '' || computerAI.playerFeedback.B === ''}
+                    disabled={false}
                   >
                     {t('submitFeedback')}
                   </button>
@@ -275,40 +271,36 @@ const FeedbackCorrectionPanel = ({ history, correctHistoryFeedback, cancelFeedba
         <div className="correction-editor">
           <h4>{t('correctFeedbackFor', { guess: history[selectedIndex].guess })}:</h4>
           <div className="correction-inputs">
-            <div className="correction-input-group">
-              <label>A:</label>
-              <div className="number-buttons">
-                {[0, 1, 2, 3, 4].map(num => (
-                  <button
-                    key={num}
-                    className={`number-button ${editingFeedback.A === num.toString() ? 'selected' : ''}`}
-                    onClick={() => handleFeedbackChange('A', num)}
-                  >
-                    {num}
-                  </button>
-                ))}
-              </div>
-            </div>
-            <div className="correction-input-group">
-              <label>B:</label>
-              <div className="number-buttons">
-                {[0, 1, 2, 3, 4].map(num => (
-                  <button
-                    key={num}
-                    className={`number-button ${editingFeedback.B === num.toString() ? 'selected' : ''}`}
-                    onClick={() => handleFeedbackChange('B', num)}
-                  >
-                    {num}
-                  </button>
-                ))}
-              </div>
+            <div className="feedback-display">
+              <button 
+                className="feedback-element clickable"
+                onClick={() => {
+                  const currentA = parseInt(editingFeedback.A || '0');
+                  const nextA = (currentA + 1) % 5;
+                  handleFeedbackChange('A', nextA);
+                }}
+              >
+                {editingFeedback.A || '0'}
+              </button>
+              <span className="feedback-element static">A</span>
+              <button 
+                className="feedback-element clickable"
+                onClick={() => {
+                  const currentB = parseInt(editingFeedback.B || '0');
+                  const nextB = (currentB + 1) % 5;
+                  handleFeedbackChange('B', nextB);
+                }}
+              >
+                {editingFeedback.B || '0'}
+              </button>
+              <span className="feedback-element static">B</span>
             </div>
           </div>
           <div className="correction-actions">
             <button 
               className="confirm-correction-button"
               onClick={handleConfirmCorrection}
-              disabled={editingFeedback.A === '' || editingFeedback.B === ''}
+              disabled={false}
             >
               {t('confirmCorrection')}
             </button>

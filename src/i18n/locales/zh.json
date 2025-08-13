@@ -37,7 +37,7 @@
   "computerWon": "電腦贏了！電腦猜對了你的數字！電腦的數字是：{{computerNumber}}",
   
   "yourHint": "你的提示：",
-  "computerThinking": "電腦猜測：{{guess}}，請填入幾A幾B的提示",
+  "computerThinking": "請填入幾A幾B的提示",
   
   "complaints": {
     "inconsistent": "等等！我猜測 {{guess}}，你給出 {{feedback}}，但這與我之前的猜測結果不一致！",

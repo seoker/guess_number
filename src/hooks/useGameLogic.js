@@ -264,7 +264,7 @@ export const useGameLogic = (addGameRecord) => {
         }))
         setGameState(prev => ({ 
           ...prev,
-          message: t('computerThinking', { guess: computerGuessNum }),
+          message: t('computerThinking'),
           messageType: 'info'
         }))
       }, GAME_CONFIG.COMPUTER_THINKING_TIME)

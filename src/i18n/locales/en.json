@@ -37,7 +37,7 @@
   "computerWon": "Computer won! The computer guessed your number correctly! The computer's number was: {{computerNumber}}",
   
   "yourHint": "Your hint:",
-  "computerThinking": "Computer guess: {{guess}}, please enter the A and B feedback",
+  "computerThinking": "Please enter the A and B feedback",
   
   "complaints": {
     "inconsistent": "Wait! I guessed {{guess}}, you gave {{feedback}}, but this is inconsistent with my previous guess results!",
