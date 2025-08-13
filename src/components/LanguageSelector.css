@@ -118,17 +118,18 @@
 /* 響應式設計 */
 @media (max-width: 768px) {
   .language-selector {
-    gap: 6px;
+    gap: 4px;
+    flex-shrink: 0;
   }
   
   .language-selector label {
-    font-size: 14px;
+    font-size: 12px;
   }
   
   .custom-select {
-    padding: 6px 10px;
-    font-size: 13px;
-    min-width: 120px;
+    padding: 6px 8px;
+    font-size: 12px;
+    min-width: 100px;
   }
   
   .flag-icon {
@@ -138,5 +139,29 @@
   .dropdown-item {
     padding: 8px 10px;
     font-size: 13px;
+  }
+}
+
+@media (max-width: 480px) {
+  .language-selector {
+    gap: 2px;
+  }
+  
+  .language-selector label {
+    display: none; /* Hide the globe emoji on very small screens */
+  }
+  
+  .custom-select {
+    padding: 5px 6px;
+    font-size: 11px;
+    min-width: 90px;
+  }
+  
+  .language-name {
+    display: none; /* Show only flag and arrow on very small screens */
+  }
+  
+  .select-display {
+    gap: 4px;
   }
 }
