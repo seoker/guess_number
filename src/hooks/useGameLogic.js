@@ -243,7 +243,7 @@ export const useGameLogic = (addGameRecord) => {
           }))
           setGameState(prev => ({ 
             ...prev,
-            message: t('computerFinalGuess'),
+            message: `${t('computerFinalGuess')}${computerGuessNum}`,
             messageType: 'info'
           }))
         }, GAME_CONFIG.COMPUTER_THINKING_TIME)
