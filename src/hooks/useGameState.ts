@@ -2,21 +2,38 @@ import { useReducer, useCallback } from 'react'
 import { GameState, MessageType, CurrentTurn } from '../types'
 import { generateTargetNumber } from '../utils/gameUtils'
 
+enum GameActionType {
+  START_GAME = 'START_GAME',
+  RESET_GAME = 'RESET_GAME',
+  UPDATE_PLAYER_GUESS = 'UPDATE_PLAYER_GUESS',
+  SET_MESSAGE = 'SET_MESSAGE',
+  CLEAR_MESSAGE = 'CLEAR_MESSAGE',
+  PLAYER_TURN_SUCCESS = 'PLAYER_TURN_SUCCESS',
+  PLAYER_WINS = 'PLAYER_WINS',
+  PLAYER_WINS_WITH_COMPUTER_ATTEMPTS = 'PLAYER_WINS_WITH_COMPUTER_ATTEMPTS',
+  COMPUTER_TURN = 'COMPUTER_TURN',
+  COMPUTER_FINAL_TURN = 'COMPUTER_FINAL_TURN',
+  COMPUTER_WINS = 'COMPUTER_WINS',
+  GAME_DRAW = 'GAME_DRAW',
+  SWITCH_TO_PLAYER = 'SWITCH_TO_PLAYER',
+  SWITCH_TO_COMPUTER = 'SWITCH_TO_COMPUTER'
+}
+
 type GameAction =
-  | { type: 'START_GAME' }
-  | { type: 'RESET_GAME' }
-  | { type: 'UPDATE_PLAYER_GUESS'; payload: string }
-  | { type: 'SET_MESSAGE'; payload: { message: string; messageType: MessageType } }
-  | { type: 'CLEAR_MESSAGE' }
-  | { type: 'PLAYER_TURN_SUCCESS'; payload: { attempts: number; result: string } }
-  | { type: 'PLAYER_WINS'; payload: number }
-  | { type: 'PLAYER_WINS_WITH_COMPUTER_ATTEMPTS'; payload: { playerAttempts: number; computerAttempts: number } }
-  | { type: 'COMPUTER_TURN'; payload: number }
-  | { type: 'COMPUTER_FINAL_TURN'; payload: number }
-  | { type: 'COMPUTER_WINS'; payload: { computerAttempts: number; computerTarget: string } }
-  | { type: 'GAME_DRAW'; payload: number }
-  | { type: 'SWITCH_TO_PLAYER' }
-  | { type: 'SWITCH_TO_COMPUTER' }
+  | { type: GameActionType.START_GAME }
+  | { type: GameActionType.RESET_GAME }
+  | { type: GameActionType.UPDATE_PLAYER_GUESS; payload: string }
+  | { type: GameActionType.SET_MESSAGE; payload: { message: string; messageType: MessageType } }
+  | { type: GameActionType.CLEAR_MESSAGE }
+  | { type: GameActionType.PLAYER_TURN_SUCCESS; payload: { attempts: number; result: string } }
+  | { type: GameActionType.PLAYER_WINS; payload: number }
+  | { type: GameActionType.PLAYER_WINS_WITH_COMPUTER_ATTEMPTS; payload: { playerAttempts: number; computerAttempts: number } }
+  | { type: GameActionType.COMPUTER_TURN; payload: number }
+  | { type: GameActionType.COMPUTER_FINAL_TURN; payload: number }
+  | { type: GameActionType.COMPUTER_WINS; payload: { computerAttempts: number; computerTarget: string } }
+  | { type: GameActionType.GAME_DRAW; payload: number }
+  | { type: GameActionType.SWITCH_TO_PLAYER }
+  | { type: GameActionType.SWITCH_TO_COMPUTER }
 
 const initialState: GameState = {
   computerTarget: '',
@@ -32,7 +49,7 @@ const initialState: GameState = {
 
 const gameStateReducer = (state: GameState, action: GameAction): GameState => {
   switch (action.type) {
-    case 'START_GAME':
+    case GameActionType.START_GAME:
       return {
         ...initialState,
         computerTarget: generateTargetNumber(),
@@ -40,7 +57,7 @@ const gameStateReducer = (state: GameState, action: GameAction): GameState => {
         currentTurn: CurrentTurn.PLAYER
       }
 
-    case 'RESET_GAME':
+    case GameActionType.RESET_GAME:
       return {
         ...initialState,
         computerTarget: generateTargetNumber(),
@@ -48,27 +65,27 @@ const gameStateReducer = (state: GameState, action: GameAction): GameState => {
         currentTurn: CurrentTurn.PLAYER
       }
 
-    case 'UPDATE_PLAYER_GUESS':
+    case GameActionType.UPDATE_PLAYER_GUESS:
       return {
         ...state,
         playerGuess: action.payload
       }
 
-    case 'SET_MESSAGE':
+    case GameActionType.SET_MESSAGE:
       return {
         ...state,
         message: action.payload.message,
         messageType: action.payload.messageType
       }
 
-    case 'CLEAR_MESSAGE':
+    case GameActionType.CLEAR_MESSAGE:
       return {
         ...state,
         message: '',
         messageType: MessageType.INFO
       }
 
-    case 'PLAYER_TURN_SUCCESS':
+    case GameActionType.PLAYER_TURN_SUCCESS:
       return {
         ...state,
         playerAttempts: action.payload.attempts,
@@ -78,7 +95,7 @@ const gameStateReducer = (state: GameState, action: GameAction): GameState => {
         playerGuess: ''
       }
 
-    case 'PLAYER_WINS':
+    case GameActionType.PLAYER_WINS:
       return {
         ...state,
         playerAttempts: action.payload,
@@ -88,7 +105,7 @@ const gameStateReducer = (state: GameState, action: GameAction): GameState => {
         playerGuess: ''
       }
 
-    case 'PLAYER_WINS_WITH_COMPUTER_ATTEMPTS':
+    case GameActionType.PLAYER_WINS_WITH_COMPUTER_ATTEMPTS:
       return {
         ...state,
         playerAttempts: action.payload.playerAttempts,
@@ -99,7 +116,7 @@ const gameStateReducer = (state: GameState, action: GameAction): GameState => {
         playerGuess: ''
       }
 
-    case 'COMPUTER_TURN':
+    case GameActionType.COMPUTER_TURN:
       return {
         ...state,
         playerAttempts: action.payload,
@@ -109,7 +126,7 @@ const gameStateReducer = (state: GameState, action: GameAction): GameState => {
         playerGuess: ''
       }
 
-    case 'COMPUTER_FINAL_TURN':
+    case GameActionType.COMPUTER_FINAL_TURN:
       return {
         ...state,
         playerAttempts: action.payload,
@@ -119,7 +136,7 @@ const gameStateReducer = (state: GameState, action: GameAction): GameState => {
         playerGuess: ''
       }
 
-    case 'COMPUTER_WINS':
+    case GameActionType.COMPUTER_WINS:
       return {
         ...state,
         computerAttempts: action.payload.computerAttempts,
@@ -128,7 +145,7 @@ const gameStateReducer = (state: GameState, action: GameAction): GameState => {
         messageType: MessageType.SUCCESS
       }
 
-    case 'GAME_DRAW':
+    case GameActionType.GAME_DRAW:
       return {
         ...state,
         computerAttempts: action.payload,
@@ -137,7 +154,7 @@ const gameStateReducer = (state: GameState, action: GameAction): GameState => {
         messageType: MessageType.SUCCESS
       }
 
-    case 'SWITCH_TO_PLAYER':
+    case GameActionType.SWITCH_TO_PLAYER:
       return {
         ...state,
         computerAttempts: state.computerAttempts + 1,
@@ -146,7 +163,7 @@ const gameStateReducer = (state: GameState, action: GameAction): GameState => {
         messageType: MessageType.INFO
       }
 
-    case 'SWITCH_TO_COMPUTER':
+    case GameActionType.SWITCH_TO_COMPUTER:
       return {
         ...state,
         currentTurn: CurrentTurn.COMPUTER
@@ -161,59 +178,59 @@ export const useGameState = () => {
   const [gameState, dispatch] = useReducer(gameStateReducer, initialState)
 
   const startNewGame = useCallback(() => {
-    dispatch({ type: 'START_GAME' })
+    dispatch({ type: GameActionType.START_GAME })
   }, [])
 
   const resetGame = useCallback(() => {
-    dispatch({ type: 'RESET_GAME' })
+    dispatch({ type: GameActionType.RESET_GAME })
   }, [])
 
   const updatePlayerGuess = useCallback((guess: string) => {
-    dispatch({ type: 'UPDATE_PLAYER_GUESS', payload: guess })
+    dispatch({ type: GameActionType.UPDATE_PLAYER_GUESS, payload: guess })
   }, [])
 
   const setMessage = useCallback((message: string, messageType: MessageType = MessageType.INFO) => {
-    dispatch({ type: 'SET_MESSAGE', payload: { message, messageType } })
+    dispatch({ type: GameActionType.SET_MESSAGE, payload: { message, messageType } })
   }, [])
 
   const clearMessage = useCallback(() => {
-    dispatch({ type: 'CLEAR_MESSAGE' })
+    dispatch({ type: GameActionType.CLEAR_MESSAGE })
   }, [])
 
   const playerTurnSuccess = useCallback((attempts: number, result: string) => {
-    dispatch({ type: 'PLAYER_TURN_SUCCESS', payload: { attempts, result } })
+    dispatch({ type: GameActionType.PLAYER_TURN_SUCCESS, payload: { attempts, result } })
   }, [])
 
   const playerWins = useCallback((attempts: number) => {
-    dispatch({ type: 'PLAYER_WINS', payload: attempts })
+    dispatch({ type: GameActionType.PLAYER_WINS, payload: attempts })
   }, [])
 
   const playerWinsWithComputerAttempts = useCallback((playerAttempts: number, computerAttempts: number) => {
-    dispatch({ type: 'PLAYER_WINS_WITH_COMPUTER_ATTEMPTS', payload: { playerAttempts, computerAttempts } })
+    dispatch({ type: GameActionType.PLAYER_WINS_WITH_COMPUTER_ATTEMPTS, payload: { playerAttempts, computerAttempts } })
   }, [])
 
   const computerTurn = useCallback((playerAttempts: number) => {
-    dispatch({ type: 'COMPUTER_TURN', payload: playerAttempts })
+    dispatch({ type: GameActionType.COMPUTER_TURN, payload: playerAttempts })
   }, [])
 
   const computerFinalTurn = useCallback((playerAttempts: number) => {
-    dispatch({ type: 'COMPUTER_FINAL_TURN', payload: playerAttempts })
+    dispatch({ type: GameActionType.COMPUTER_FINAL_TURN, payload: playerAttempts })
   }, [])
 
   const computerWins = useCallback((computerAttempts: number, computerTarget: string) => {
-    dispatch({ type: 'COMPUTER_WINS', payload: { computerAttempts, computerTarget } })
+    dispatch({ type: GameActionType.COMPUTER_WINS, payload: { computerAttempts, computerTarget } })
   }, [])
 
   const gameDraw = useCallback((computerAttempts: number) => {
-    dispatch({ type: 'GAME_DRAW', payload: computerAttempts })
+    dispatch({ type: GameActionType.GAME_DRAW, payload: computerAttempts })
   }, [])
 
   const switchToPlayer = useCallback(() => {
-    dispatch({ type: 'SWITCH_TO_PLAYER' })
+    dispatch({ type: GameActionType.SWITCH_TO_PLAYER })
   }, [])
 
   const switchToComputer = useCallback(() => {
-    dispatch({ type: 'SWITCH_TO_COMPUTER' })
+    dispatch({ type: GameActionType.SWITCH_TO_COMPUTER })
   }, [])
 
   return {
