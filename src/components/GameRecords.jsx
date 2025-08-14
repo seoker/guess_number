@@ -1,7 +1,33 @@
 import React from 'react'
+import Swal from 'sweetalert2'
 import './GameRecords.css'
 
 const GameRecords = ({ gameRecords, clearAllRecords, t }) => {
+  const handleClearRecords = async () => {
+    const result = await Swal.fire({
+      title: t('confirmClearRecords'),
+      text: t('clearRecordsWarning'),
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#ff4757',
+      cancelButtonColor: '#747d8c',
+      confirmButtonText: t('confirmClear'),
+      cancelButtonText: t('cancel'),
+      reverseButtons: true
+    })
+
+    if (result.isConfirmed) {
+      clearAllRecords()
+      Swal.fire({
+        title: t('recordsCleared'),
+        text: t('allRecordsDeleted'),
+        icon: 'success',
+        timer: 2000,
+        showConfirmButton: false
+      })
+    }
+  }
+
   const formatDate = (timestamp) => {
     const date = new Date(timestamp)
     return date.toLocaleString()
@@ -55,7 +81,7 @@ const GameRecords = ({ gameRecords, clearAllRecords, t }) => {
         <h2>{t('gameRecords')}</h2>
         <button 
           className="clear-records-btn btn-danger"
-          onClick={clearAllRecords}
+          onClick={handleClearRecords}
           title={t('clearAllRecords')}
         >
           {t('clearAllRecords')}
