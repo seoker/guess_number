@@ -49,6 +49,10 @@ coverage/
 # nyc test coverage
 .nyc_output
 
+# Test results and artifacts
+test-results/
+playwright-report/
+
 # Dependency directories
 jspm_packages/
 
