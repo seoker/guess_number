@@ -42,15 +42,78 @@ export const GameUI = ({
     }
   }, [history.computer])
 
-  const handleKeyPress = (e) => {
-    if (e.key === 'Enter' && gameState.currentTurn === 'player') {
-      handlePlayerGuess()
+
+  const handleDigitChange = (index, value) => {
+    // Only allow single digits 0-9
+    const digit = value.replace(/\D/g, '').slice(-1)
+    
+    // Build a 4-position array representing the current state
+    const currentGuess = gameState.playerGuess || ''
+    const newDigits = new Array(4).fill('')
+    
+    // Parse current guess into digit positions, handling spaces correctly
+    for (let i = 0; i < Math.min(currentGuess.length, 4); i++) {
+      if (currentGuess[i] && currentGuess[i] !== ' ') {
+        newDigits[i] = currentGuess[i]
+      }
+    }
+    
+    // Update the specific position with the new digit
+    newDigits[index] = digit
+    
+    // Build the updated guess string with proper spacing
+    let updatedGuess = ''
+    for (let i = 0; i < 4; i++) {
+      if (newDigits[i]) {
+        // Ensure we pad with spaces to maintain correct positions
+        while (updatedGuess.length < i) {
+          updatedGuess += ' '
+        }
+        updatedGuess += newDigits[i]
+      }
+    }
+    
+    updatePlayerGuess(updatedGuess)
+    
+    // Auto-focus next input if digit was entered
+    if (digit && index < 3) {
+      const nextInput = document.getElementById(`digit-${index + 1}`)
+      if (nextInput) nextInput.focus()
     }
   }
 
-  const handlePlayerGuessChange = (e) => {
-    const value = e.target.value.replace(/\D/g, '').slice(0, 4)
-    updatePlayerGuess(value)
+  const handleDigitKeyDown = (index, e) => {
+    // Handle backspace to move to previous input
+    if (e.key === 'Backspace') {
+      const currentGuess = gameState.playerGuess.padEnd(4, ' ')
+      if (!currentGuess[index] || currentGuess[index] === ' ') {
+        if (index > 0) {
+          const prevInput = document.getElementById(`digit-${index - 1}`)
+          if (prevInput) {
+            prevInput.focus()
+            // Clear the previous digit
+            handleDigitChange(index - 1, '')
+          }
+        }
+      } else {
+        // Clear current digit
+        handleDigitChange(index, '')
+      }
+      e.preventDefault()
+    }
+    // Handle Enter to submit
+    else if (e.key === 'Enter' && gameState.currentTurn === 'player') {
+      handlePlayerGuess()
+    }
+    // Handle arrow keys for navigation
+    else if (e.key === 'ArrowLeft' && index > 0) {
+      const prevInput = document.getElementById(`digit-${index - 1}`)
+      if (prevInput) prevInput.focus()
+    }
+    else if (e.key === 'ArrowRight' && index < 3) {
+      const nextInput = document.getElementById(`digit-${index + 1}`)
+      if (nextInput) nextInput.focus()
+    }
   }
 
   const handleFeedbackClick = (type, value) => {
@@ -123,17 +186,25 @@ export const GameUI = ({
             ) : (
               <div className="guess-section">
                 <div className="input-section">
-                  <input
-                    ref={inputRef}
-                    type="text"
-                    value={gameState.playerGuess}
-                    onChange={handlePlayerGuessChange}
-                    onKeyPress={handleKeyPress}
-                    placeholder={t('guessPlaceholder')}
-                    className="guess-input"
-                    disabled={gameState.gameWon || gameState.currentTurn !== 'player'}
-                    maxLength={4}
-                  />
+                  <div className="digit-inputs">
+                    {[0, 1, 2, 3].map(index => (
+                      <input
+                        key={index}
+                        id={`digit-${index}`}
+                        ref={index === 0 ? inputRef : null}
+                        type="text"
+                        inputMode="numeric"
+                        pattern="[0-9]"
+                        value={gameState.playerGuess[index] && gameState.playerGuess[index] !== ' ' ? gameState.playerGuess[index] : ''}
+                        onChange={(e) => handleDigitChange(index, e.target.value)}
+                        onKeyDown={(e) => handleDigitKeyDown(index, e)}
+                        className="digit-input"
+                        disabled={gameState.gameWon || gameState.currentTurn !== 'player'}
+                        maxLength={1}
+                        placeholder="?"
+                      />
+                    ))}
+                  </div>
                   <button 
                     onClick={handlePlayerGuess} 
                     className="guess-button"

@@ -45,20 +45,28 @@ describe('complete game flow tests', () => {
 
   describe('player guess flow', () => {
     it('should handle player guess input', async () => {
-      render(<App />)
+      const { container } = render(<App />)
       
       // Start game
       const startButton = screen.getByRole('button', { name: 'startGame' })
       await user.click(startButton)
       
-      // Wait for game to start, check player input interface
+      // Wait for game to start, check for digit inputs
       await waitFor(() => {
-        expect(screen.getByPlaceholderText('guessPlaceholder')).toBeInTheDocument()
+        expect(container.querySelector('#digit-0')).toBeInTheDocument()
       })
       
-      // Player enters guess
-      const input = screen.getByPlaceholderText('guessPlaceholder')
-      await user.type(input, '1234')
+      // Find digit inputs
+      const digit0 = container.querySelector('#digit-0')
+      const digit1 = container.querySelector('#digit-1')
+      const digit2 = container.querySelector('#digit-2')
+      const digit3 = container.querySelector('#digit-3')
+      
+      // Player enters guess in 4 separate inputs
+      await user.type(digit0, '1')
+      await user.type(digit1, '2')
+      await user.type(digit2, '3')
+      await user.type(digit3, '4')
       
       // Check if button is enabled
       const guessButton = screen.getByRole('button', { name: 'guess' })
@@ -66,7 +74,7 @@ describe('complete game flow tests', () => {
     })
 
     it('should handle player invalid input', async () => {
-      render(<App />)
+      const { container } = render(<App />)
       
       // Start game
       const startButton = screen.getByRole('button', { name: 'startGame' })
@@ -74,12 +82,17 @@ describe('complete game flow tests', () => {
       
       // Wait for game to start
       await waitFor(() => {
-        expect(screen.getByPlaceholderText('guessPlaceholder')).toBeInTheDocument()
+        expect(container.querySelector('#digit-0')).toBeInTheDocument()
       })
       
-      // Player enters invalid guess
-      const input = screen.getByPlaceholderText('guessPlaceholder')
-      await user.type(input, '123')
+      // Player enters incomplete guess (only 3 digits)
+      const digit0 = container.querySelector('#digit-0')
+      const digit1 = container.querySelector('#digit-1')
+      const digit2 = container.querySelector('#digit-2')
+      
+      await user.type(digit0, '1')
+      await user.type(digit1, '2')
+      await user.type(digit2, '3')
       
       const guessButton = screen.getByRole('button', { name: 'guess' })
       expect(guessButton).toBeDisabled()
@@ -88,7 +101,7 @@ describe('complete game flow tests', () => {
 
   describe('game interface', () => {
     it('should display basic game interface elements', async () => {
-      render(<App />)
+      const { container } = render(<App />)
       
       // Start game
       const startButton = screen.getByRole('button', { name: 'startGame' })
@@ -99,7 +112,7 @@ describe('complete game flow tests', () => {
         expect(screen.getByText(/playerAttempts/)).toBeInTheDocument()
         expect(screen.getByText(/computerAttempts/)).toBeInTheDocument()
         expect(screen.getByText(/currentTurn/)).toBeInTheDocument()
-        expect(screen.getByPlaceholderText('guessPlaceholder')).toBeInTheDocument()
+        expect(container.querySelector('#digit-0')).toBeInTheDocument()
       })
     })
   })

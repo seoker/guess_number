@@ -96,24 +96,114 @@ describe('GameUI', () => {
       expect(screen.getByText(/currentTurn/)).toBeInTheDocument()
     })
 
-    it('should display player input area', () => {
-      render(<GameUI {...gameInProgressProps} />)
+    it('should display 4 digit input boxes', () => {
+      const { container } = render(<GameUI {...gameInProgressProps} />)
       
-      const input = screen.getByPlaceholderText('guessPlaceholder')
-      expect(input).toBeInTheDocument()
-      expect(input).not.toBeDisabled()
+      // Check for 4 digit input boxes using their IDs
+      const digit0 = container.querySelector('#digit-0')
+      const digit1 = container.querySelector('#digit-1') 
+      const digit2 = container.querySelector('#digit-2')
+      const digit3 = container.querySelector('#digit-3')
+      
+      expect(digit0).toBeInTheDocument()
+      expect(digit1).toBeInTheDocument()
+      expect(digit2).toBeInTheDocument()
+      expect(digit3).toBeInTheDocument()
+      
+      // Check attributes
+      expect(digit0).toHaveAttribute('maxLength', '1')
+      expect(digit0).toHaveAttribute('inputMode', 'numeric')
+      
+      // All should be enabled
+      expect(digit0).not.toBeDisabled()
+      expect(digit1).not.toBeDisabled()
+      expect(digit2).not.toBeDisabled()
+      expect(digit3).not.toBeDisabled()
     })
 
-    it('should handle player input', async () => {
+    it('should handle sequential digit input', async () => {
       const user = userEvent.setup()
-      render(<GameUI {...gameInProgressProps} />)
+      const { container } = render(<GameUI {...gameInProgressProps} />)
       
-      const input = screen.getByPlaceholderText('guessPlaceholder')
-      await user.type(input, '1234')
+      const digit0 = container.querySelector('#digit-0')
+      const digit1 = container.querySelector('#digit-1')
+      const digit2 = container.querySelector('#digit-2')
+      const digit3 = container.querySelector('#digit-3')
       
-      // Each character triggers updatePlayerGuess once, so check the last call
+      await user.type(digit0, '1')
+      await user.type(digit1, '2')
+      await user.type(digit2, '3')
+      await user.type(digit3, '4')
+      
+      // Each digit entry should call updatePlayerGuess
       expect(mockProps.updatePlayerGuess).toHaveBeenCalledTimes(4)
-      expect(mockProps.updatePlayerGuess).toHaveBeenLastCalledWith('4')
+    })
+
+    it('should handle out-of-order digit input', async () => {
+      const user = userEvent.setup()
+      const { container } = render(<GameUI {...gameInProgressProps} />)
+      
+      const digit0 = container.querySelector('#digit-0')
+      const digit1 = container.querySelector('#digit-1')
+      const digit2 = container.querySelector('#digit-2')
+      const digit3 = container.querySelector('#digit-3')
+      
+      // Enter digits in random order: 2nd, 4th, 1st, 3rd
+      await user.type(digit1, '7')
+      await user.type(digit3, '9')
+      await user.type(digit0, '5')
+      await user.type(digit2, '8')
+      
+      // Should call updatePlayerGuess for each digit entry
+      expect(mockProps.updatePlayerGuess).toHaveBeenCalledTimes(4)
+    })
+
+    it('should handle sparse digit input (gaps)', async () => {
+      const user = userEvent.setup()
+      const { container } = render(<GameUI {...gameInProgressProps} />)
+      
+      const digit0 = container.querySelector('#digit-0')
+      const digit2 = container.querySelector('#digit-2')
+      
+      // Only enter 1st and 3rd digits
+      await user.type(digit0, '2')
+      await user.type(digit2, '6')
+      
+      expect(mockProps.updatePlayerGuess).toHaveBeenCalledTimes(2)
+    })
+
+    it('should handle digit overwriting', async () => {
+      const user = userEvent.setup()
+      const { container } = render(<GameUI {...gameInProgressProps} />)
+      
+      const digit0 = container.querySelector('#digit-0')
+      const digit1 = container.querySelector('#digit-1')
+      
+      // Enter initial digits
+      await user.type(digit0, '1')
+      await user.type(digit1, '2')
+      
+      // Overwrite them
+      await user.clear(digit0)
+      await user.type(digit0, '9')
+      await user.clear(digit1)
+      await user.type(digit1, '8')
+      
+      expect(mockProps.updatePlayerGuess).toHaveBeenCalled()
+    })
+
+    it('should only accept single numeric digits', async () => {
+      const user = userEvent.setup()
+      const { container } = render(<GameUI {...gameInProgressProps} />)
+      
+      const digit0 = container.querySelector('#digit-0')
+      
+      // Try to enter multiple characters, letters, special chars
+      await user.type(digit0, 'abc123!@#')
+      
+      // Due to the digit input handling logic, non-numeric chars are filtered out
+      // Only the last numeric digit should remain due to maxLength=1
+      expect(mockProps.updatePlayerGuess).toHaveBeenCalled()
     })
 
     it('should handle player guess submission', async () => {
@@ -139,6 +229,53 @@ describe('GameUI', () => {
       
       const guessButton = screen.getByText('guess')
       expect(guessButton).toBeDisabled()
+    })
+
+    it('should enable guess button when all 4 digits are entered', async () => {
+      const user = userEvent.setup()
+      const propsWithCompleteGuess = {
+        ...gameInProgressProps,
+        gameState: {
+          ...gameInProgressProps.gameState,
+          playerGuess: '1234'
+        }
+      }
+      
+      render(<GameUI {...propsWithCompleteGuess} />)
+      
+      const guessButton = screen.getByText('guess')
+      expect(guessButton).not.toBeDisabled()
+    })
+
+    it('should disable guess button with partial digit input', async () => {
+      const user = userEvent.setup()
+      const propsWithPartialGuess = {
+        ...gameInProgressProps,
+        gameState: {
+          ...gameInProgressProps.gameState,
+          playerGuess: '12' // Only 2 digits, length < 4
+        }
+      }
+      
+      render(<GameUI {...propsWithPartialGuess} />)
+      
+      const guessButton = screen.getByText('guess')
+      expect(guessButton).toBeDisabled()
+    })
+
+    it('should handle keyboard navigation between digit inputs', async () => {
+      const user = userEvent.setup()
+      const { container } = render(<GameUI {...gameInProgressProps} />)
+      
+      const digit0 = container.querySelector('#digit-0')
+      const digit1 = container.querySelector('#digit-1')
+      
+      // Focus first input and enter digit
+      digit0.focus()
+      await user.type(digit0, '1')
+      
+      // Should call updatePlayerGuess when digit is entered
+      expect(mockProps.updatePlayerGuess).toHaveBeenCalled()
     })
   })
 

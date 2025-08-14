@@ -74,7 +74,7 @@
 .game-screen {
   display: flex;
   flex-direction: column;
-  gap: 1.5rem;
+  gap: 0.75rem;
 }
 
 .game-info {
@@ -82,9 +82,9 @@
   flex-direction: column;
   align-items: center;
   background: #f8f9fa;
-  padding: 1.5rem;
+  padding: 1rem;
   border-radius: 10px;
-  margin-bottom: 1rem;
+  margin-bottom: 0.5rem;
   max-width: 1200px;
   margin-left: auto;
   margin-right: auto;
@@ -102,15 +102,19 @@
 }
 
 .guess-section {
-  margin-bottom: 0.5rem;
+  background: #e3f2fd;
+  border-radius: 15px;
+  padding: 1rem;
+  margin-bottom: 0.25rem;
+  border-left: 4px solid #2196f3;
 }
 
 /* 反饋表單樣式 */
 .feedback-section {
   background: #fff3cd;
   border-radius: 15px;
-  padding: 1.5rem;
-  margin-bottom: 0.5rem;
+  padding: 1rem;
+  margin-bottom: 0.25rem;
   border-left: 4px solid #ffc107;
 }
 
@@ -310,6 +314,54 @@
   cursor: not-allowed;
 }
 
+/* Digit inputs styling */
+.digit-inputs {
+  display: flex;
+  gap: 0.8rem;
+  align-items: center;
+  justify-content: center;
+}
+
+.digit-input {
+  width: 60px;
+  height: 60px;
+  padding: 0;
+  border: 2px solid #e9ecef;
+  border-radius: 10px;
+  font-size: 1.8rem;
+  font-weight: 700;
+  text-align: center;
+  font-family: 'Courier New', monospace;
+  transition: all 0.3s ease;
+  outline: none;
+  background: white;
+  color: #333;
+  caret-color: #667eea;
+}
+
+.digit-input:focus {
+  border-color: #667eea;
+  box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+  transform: scale(1.05);
+}
+
+.digit-input:hover:not(:disabled) {
+  border-color: #667eea;
+  transform: translateY(-1px);
+}
+
+.digit-input:disabled {
+  background-color: #f8f9fa;
+  color: #6c757d;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.digit-input::placeholder {
+  color: #adb5bd;
+  font-weight: 400;
+}
+
 .guess-button {
   background: linear-gradient(45deg, #667eea, #764ba2);
   color: white;
@@ -382,7 +434,7 @@
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 2rem;
-  margin-top: 1rem;
+  margin-top: 0.5rem;
   max-width: 1400px;
   margin-left: auto;
   margin-right: auto;
@@ -546,7 +598,7 @@
   flex-direction: column;
   align-items: center;
   gap: 1rem;
-  margin-top: 1rem;
+  margin-top: 0.5rem;
 }
 
 .win-message {
@@ -784,6 +836,11 @@
     border-radius: 15px;
   }
   
+  .guess-section {
+    padding: 0.8rem;
+    border-radius: 12px;
+  }
+  
   .title {
     font-size: 1.8rem;
     margin-bottom: 1rem;
@@ -802,7 +859,7 @@
   }
   
   .game-info {
-    padding: 1rem;
+    padding: 0.8rem;
     gap: 0.3rem;
   }
   
@@ -816,6 +873,16 @@
     width: 160px;
     padding: 0.8rem;
     font-size: 1rem;
+  }
+  
+  .digit-inputs {
+    gap: 0.5rem;
+  }
+  
+  .digit-input {
+    width: 50px;
+    height: 50px;
+    font-size: 1.5rem;
   }
   
   .guess-button {
@@ -862,7 +929,7 @@
   .history-container {
     grid-template-columns: 1fr;
     gap: 1rem;
-    margin-top: 1rem;
+    margin-top: 0.5rem;
   }
   
   .history-section {
@@ -938,6 +1005,11 @@
     width: calc(100vw - 2rem);
   }
   
+  .guess-section {
+    padding: 1rem;
+    border-radius: 12px;
+  }
+  
   .title {
     font-size: 2rem;
   }
@@ -950,6 +1022,16 @@
   
   .guess-input {
     width: 180px;
+  }
+  
+  .digit-inputs {
+    gap: 0.6rem;
+  }
+  
+  .digit-input {
+    width: 55px;
+    height: 55px;
+    font-size: 1.6rem;
   }
   
   .game-info {
@@ -986,7 +1068,7 @@
   
   .history-container {
     grid-template-columns: 1fr;
-    gap: 1.5rem;
+    gap: 0.75rem;
   }
   
   .history-section {
@@ -1030,11 +1112,13 @@
   }
   
   .history-container {
-    gap: 1.8rem;
+    gap: 1rem;
+    max-width: 100%;
   }
   
   .history-section {
     height: 380px;
+    min-width: 250px;
   }
   
   .number-button {
