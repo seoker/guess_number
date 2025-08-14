@@ -19,6 +19,8 @@ const GameRecords = ({ gameRecords, clearAllRecords, t }) => {
       return t('playerWonShort')
     } else if (record.winner === 'computer') {
       return t('computerWonShort')
+    } else if (record.winner === 'draw') {
+      return t('drawShort')
     }
     return t('gameIncomplete')
   }
@@ -28,6 +30,8 @@ const GameRecords = ({ gameRecords, clearAllRecords, t }) => {
       return 'winner-player'
     } else if (record.winner === 'computer') {
       return 'winner-computer'
+    } else if (record.winner === 'draw') {
+      return 'winner-draw'
     }
     return 'winner-none'
   }
@@ -98,7 +102,11 @@ const GameRecords = ({ gameRecords, clearAllRecords, t }) => {
                 <span className="result-text">
                   {record.winner === 'player' 
                     ? t('playerWonInRounds', { rounds: record.playerAttempts })
-                    : t('computerWonInRounds', { rounds: record.computerAttempts })
+                    : record.winner === 'computer'
+                    ? t('computerWonInRounds', { rounds: record.computerAttempts })
+                    : record.winner === 'draw'
+                    ? t('drawInRounds', { rounds: record.totalRounds })
+                    : ''
                   }
                 </span>
               </div>

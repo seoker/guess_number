@@ -35,6 +35,9 @@
   
   "playerWon": "おめでとうございます！あなたの勝利です！コンピュータの数字を正しく当てました！",
   "computerWon": "コンピュータの勝利です！コンピュータがあなたの数字を正しく当てました！コンピュータの数字は：{{computerNumber}}",
+  "gameDraw": "引き分けです！あなたとコンピュータが同じラウンドで正解を見つけました！",
+  "playerFoundAnswer": "答えを見つけました！コンピュータに最後の推測の機会を与えます。",
+  "computerFinalGuess": "コンピュータの最終推測：",
   
   "yourHint": "あなたのヒント：",
   "computerThinking": "AとBのフィードバックを入力してください",
@@ -66,7 +69,9 @@
   "totalRounds": "総ラウンド数",
   "playerWonShort": "プレイヤー勝ち",
   "computerWonShort": "コンピュータ勝ち",
+  "drawShort": "引き分け",
   "gameIncomplete": "ゲーム未完了",
   "playerWonInRounds": "プレイヤーが{{rounds}}ラウンドで勝利",
-  "computerWonInRounds": "コンピュータが{{rounds}}ラウンドで勝利"
+  "computerWonInRounds": "コンピュータが{{rounds}}ラウンドで勝利",
+  "drawInRounds": "{{rounds}}ラウンドで引き分け"
 }

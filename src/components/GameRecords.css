@@ -81,6 +81,11 @@
   border-left-color: #ff4757;
 }
 
+.record-item.winner-draw-bg {
+  background: linear-gradient(135deg, #fff8e8 0%, #fffaf0 100%);
+  border-left-color: #ffa502;
+}
+
 .record-item.winner-none-bg {
   background: linear-gradient(135deg, #f0f0f0 0%, #f8f8f8 100%);
   border-left-color: #747d8c;
@@ -110,6 +115,11 @@
 
 .winner-computer {
   background: #ff4757;
+  color: white;
+}
+
+.winner-draw {
+  background: #ffa502;
   color: white;
 }
 

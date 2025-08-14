@@ -35,6 +35,9 @@
   
   "playerWon": "Congratulations! You won! You guessed the computer's number correctly!",
   "computerWon": "Computer won! The computer guessed your number correctly! The computer's number was: {{computerNumber}}",
+  "gameDraw": "It's a draw! Both you and the computer found the correct numbers in the same round!",
+  "playerFoundAnswer": "You found the answer! Computer gets one final guess.",
+  "computerFinalGuess": "Computer's final guess:",
   
   "yourHint": "Your hint:",
   "computerThinking": "Please enter the A and B feedback",
@@ -66,7 +69,9 @@
   "totalRounds": "Total Rounds",
   "playerWonShort": "Player Won",
   "computerWonShort": "Computer Won",
+  "drawShort": "Draw",
   "gameIncomplete": "Game Incomplete",
   "playerWonInRounds": "Player won in {{rounds}} rounds",
-  "computerWonInRounds": "Computer won in {{rounds}} rounds"
+  "computerWonInRounds": "Computer won in {{rounds}} rounds",
+  "drawInRounds": "Draw in {{rounds}} rounds"
 }

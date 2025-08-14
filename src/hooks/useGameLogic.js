@@ -211,12 +211,7 @@ export const useGameLogic = (addGameRecord) => {
     }))
 
     if (gameState.playerGuess === gameState.computerTarget) {
-      setGameState(prev => ({ 
-        ...prev,
-        message: t('playerWon'),
-        messageType: 'success',
-        gameWon: true 
-      }))
+      // Player found the correct number
       setHistory(prev => ({
         ...prev,
         player: [...prev.player, { 
@@ -226,14 +221,51 @@ export const useGameLogic = (addGameRecord) => {
         }]
       }))
       
-      // Save game record
-      if (addGameRecord) {
-        addGameRecord({
-          winner: 'player',
-          playerAttempts: gameState.playerAttempts + 1,
-          computerAttempts: gameState.computerAttempts,
-          totalRounds: gameState.playerAttempts + 1 + gameState.computerAttempts
-        })
+      // Check if computer should get a final turn (fair play - equal attempts)
+      if (gameState.playerAttempts >= gameState.computerAttempts) {
+        // Give computer one final guess since player went first
+        setGameState(prev => ({ 
+          ...prev,
+          message: t('playerFoundAnswer'),
+          messageType: 'info',
+          playerAttempts: prev.playerAttempts + 1,
+          currentTurn: 'computer',
+          playerGuess: ''
+        }))
+        
+        // Trigger computer's final turn
+        setTimeout(() => {
+          const computerGuessNum = computerMakeGuess()
+          setComputerAI(prev => ({ 
+            ...prev,
+            currentGuess: computerGuessNum,
+            showFeedbackForm: true 
+          }))
+          setGameState(prev => ({ 
+            ...prev,
+            message: t('computerFinalGuess'),
+            messageType: 'info'
+          }))
+        }, GAME_CONFIG.COMPUTER_THINKING_TIME)
+      } else {
+        // Game ends - player wins
+        setGameState(prev => ({ 
+          ...prev,
+          message: t('playerWon'),
+          messageType: 'success',
+          gameWon: true,
+          playerAttempts: prev.playerAttempts + 1
+        }))
+        
+        // Save game record
+        if (addGameRecord) {
+          addGameRecord({
+            winner: 'player',
+            playerAttempts: gameState.playerAttempts + 1,
+            computerAttempts: gameState.computerAttempts,
+            totalRounds: gameState.playerAttempts + 1 + gameState.computerAttempts
+          })
+        }
       }
     } else {
       const { A, B } = calculateAB(gameState.playerGuess, gameState.computerTarget)
@@ -304,39 +336,93 @@ export const useGameLogic = (addGameRecord) => {
     }))
     
     if (A === GAME_CONFIG.DIGIT_COUNT) {
-      setGameState(prev => ({ 
-        ...prev,
-        gameWon: true,
-        message: t('computerWon', { computerNumber: prev.computerTarget }),
-        messageType: 'success'
-      }))
+      // Computer found the correct number
+      // Check if player has already found the answer (same round = draw)
+      const playerAlreadyWon = history.player.some(record => record.isCorrect)
       
-      // Save game record
-      if (addGameRecord) {
-        addGameRecord({
-          winner: 'computer',
-          playerAttempts: gameState.playerAttempts,
-          computerAttempts: gameState.computerAttempts + 1,
-          totalRounds: gameState.playerAttempts + gameState.computerAttempts + 1
-        })
-      }
-    } else {
-      const remainingNumbers = updateComputerPossibleNumbers(computerAI.currentGuess, result)
-      if (remainingNumbers.length === 0) {
+      if (playerAlreadyWon) {
+        // Both players succeeded in the same round - it's a draw!
         setGameState(prev => ({ 
           ...prev,
-          message: t('noPossibleNumbers'),
+          gameWon: true,
+          computerAttempts: prev.computerAttempts + 1,
+          message: t('gameDraw'),
+          messageType: 'success'
+        }))
+        
+        // Save game record - draw
+        if (addGameRecord) {
+          addGameRecord({
+            winner: 'draw',
+            playerAttempts: gameState.playerAttempts,
+            computerAttempts: gameState.computerAttempts + 1,
+            totalRounds: gameState.playerAttempts + gameState.computerAttempts + 1,
+            timestamp: Date.now()
+          })
+        }
+      } else {
+        // Computer wins - player hasn't found the answer yet
+        setGameState(prev => ({ 
+          ...prev,
+          gameWon: true,
+          computerAttempts: prev.computerAttempts + 1,
+          message: t('computerWon', { computerNumber: prev.computerTarget }),
+          messageType: 'success'
+        }))
+        
+        // Save game record
+        if (addGameRecord) {
+          addGameRecord({
+            winner: 'computer',
+            playerAttempts: gameState.playerAttempts,
+            computerAttempts: gameState.computerAttempts + 1,
+            totalRounds: gameState.playerAttempts + gameState.computerAttempts + 1
+          })
+        }
+      }
+    } else {
+      // Check if player has already found the answer (computer's final turn)
+      const playerAlreadyWon = history.player.some(record => record.isCorrect)
+      
+      if (playerAlreadyWon) {
+        // This was computer's final attempt after player won - player wins
+        setGameState(prev => ({ 
+          ...prev,
+          gameWon: true,
+          computerAttempts: prev.computerAttempts + 1,
+          message: t('playerWon'),
+          messageType: 'success'
+        }))
+        
+        // Save game record - player wins
+        if (addGameRecord) {
+          addGameRecord({
+            winner: 'player',
+            playerAttempts: gameState.playerAttempts,
+            computerAttempts: gameState.computerAttempts + 1,
+            totalRounds: gameState.playerAttempts + gameState.computerAttempts + 1,
+            timestamp: Date.now()
+          })
+        }
+      } else {
+        // Normal game continues
+        const remainingNumbers = updateComputerPossibleNumbers(computerAI.currentGuess, result)
+        if (remainingNumbers.length === 0) {
+          setGameState(prev => ({ 
+            ...prev,
+            message: t('noPossibleNumbers'),
+            messageType: 'info'
+          }))
+          return
+        }
+        setGameState(prev => ({ 
+          ...prev,
+          computerAttempts: prev.computerAttempts + 1,
+          currentTurn: 'player',
+          message: '',
           messageType: 'info'
         }))
-        return
       }
-      setGameState(prev => ({ 
-        ...prev,
-        computerAttempts: prev.computerAttempts + 1,
-        currentTurn: 'player',
-        message: '',
-        messageType: 'info'
-      }))
     }
     
     // Reset computer AI state
@@ -345,7 +431,7 @@ export const useGameLogic = (addGameRecord) => {
       showFeedbackForm: false,
       playerFeedback: { A: '', B: '' }
     }))
-  }, [computerAI.playerFeedback, computerAI.currentGuess, gameState.playerAttempts, gameState.computerAttempts, validateFeedback, checkFeedbackConsistency, generateComplaint, updateComputerPossibleNumbers, t, addGameRecord])
+  }, [computerAI.playerFeedback, computerAI.currentGuess, gameState.playerAttempts, gameState.computerAttempts, history.player, validateFeedback, checkFeedbackConsistency, generateComplaint, updateComputerPossibleNumbers, t, addGameRecord])
 
   // Update player guess
   const updatePlayerGuess = useCallback((guess) => {

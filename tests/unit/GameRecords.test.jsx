@@ -18,9 +18,11 @@ vi.mock('react-i18next', () => ({
         computerAttempts: 'Computer Attempts',
         playerWonShort: 'Player Won',
         computerWonShort: 'Computer Won',
+        drawShort: 'Draw',
         gameIncomplete: 'Game Incomplete',
         playerWonInRounds: `Player won in ${options?.rounds || 0} rounds`,
-        computerWonInRounds: `Computer won in ${options?.rounds || 0} rounds`
+        computerWonInRounds: `Computer won in ${options?.rounds || 0} rounds`,
+        drawInRounds: `Draw in ${options?.rounds || 0} rounds`
       }
       return translations[key] || key
     }
@@ -40,9 +42,11 @@ describe('GameRecords', () => {
       computerAttempts: 'Computer Attempts',
       playerWonShort: 'Player Won',
       computerWonShort: 'Computer Won',
+      drawShort: 'Draw',
       gameIncomplete: 'Game Incomplete',
       playerWonInRounds: `Player won in ${options?.rounds || 0} rounds`,
-      computerWonInRounds: `Computer won in ${options?.rounds || 0} rounds`
+      computerWonInRounds: `Computer won in ${options?.rounds || 0} rounds`,
+      drawInRounds: `Draw in ${options?.rounds || 0} rounds`
     }
     return translations[key] || key
   })
@@ -211,7 +215,8 @@ describe('GameRecords', () => {
       render(<GameRecords gameRecords={recordWithDate} clearAllRecords={mockClearAllRecords} t={mockT} />)
       
       // The exact date format depends on locale, but it should contain the date
-      expect(screen.getByText(/2023/)).toBeInTheDocument()
+      // There are multiple elements with 2023 (desktop and mobile views)
+      expect(screen.getAllByText(/2023/)).toHaveLength(2)
     })
   })
 })
