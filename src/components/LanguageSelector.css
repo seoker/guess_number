@@ -115,7 +115,7 @@
   }
 }
 
-/* 響應式設計 */
+/* Responsive design */
 @media (max-width: 768px) {
   .language-selector {
     gap: 4px;

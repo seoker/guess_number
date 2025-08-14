@@ -12,6 +12,7 @@
 - Follow existing code patterns and conventions in the codebase
 - Use existing libraries and utilities already present
 - No comments unless explicitly requested by the user
+- **Always use English in comments** - never use Chinese, Japanese, or other languages in code comments
 - Maintain responsive design across all screen sizes
 - Support all existing languages (English, Chinese, Japanese)
 
