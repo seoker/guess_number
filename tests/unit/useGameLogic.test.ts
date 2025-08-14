@@ -1,19 +1,21 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest'
-import { renderHook, act } from '@testing-library/react'
+import { renderHook, act, RenderHookResult } from '@testing-library/react'
 import { useGameLogic } from '../../src/hooks/useGameLogic'
 
 // Mock react-i18next
 vi.mock('react-i18next', () => ({
   useTranslation: () => ({
-    t: (key) => key
+    t: (key: string) => key
   })
 }))
 
 describe('useGameLogic', () => {
-  let hookResult
+  let hookResult: RenderHookResult<ReturnType<typeof useGameLogic>, unknown>
+  const mockAddGameRecord = vi.fn()
 
   beforeEach(() => {
-    hookResult = renderHook(() => useGameLogic())
+    mockAddGameRecord.mockClear()
+    hookResult = renderHook(() => useGameLogic(mockAddGameRecord))
   })
 
   describe('game initialization', () => {

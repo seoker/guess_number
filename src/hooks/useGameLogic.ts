@@ -1,6 +1,6 @@
 import { useState, useEffect, useCallback } from 'react'
 import { useTranslation } from 'react-i18next'
-import { GameState, GameHistory, ComputerAI, FeedbackCorrection, SavedGameRecord, GameResult } from '../types'
+import { GameState, GameHistory, ComputerAI, FeedbackCorrection, SavedGameRecord, GameResult, MessageType, CurrentTurn, GameWinner } from '../types'
 
 // Game configuration
 const GAME_CONFIG = {
@@ -16,12 +16,12 @@ export const useGameLogic = (addGameRecord: (record: Omit<SavedGameRecord, 'id' 
     computerTarget: '',
     playerGuess: '',
     message: '',
-    messageType: 'info',
+    messageType: MessageType.INFO,
     playerAttempts: 0,
     computerAttempts: 0,
     gameWon: false,
     gameStarted: false,
-    currentTurn: 'player'
+    currentTurn: CurrentTurn.PLAYER
   })
 
   // History records
@@ -167,8 +167,8 @@ export const useGameLogic = (addGameRecord: (record: Omit<SavedGameRecord, 'id' 
   }, [t])
 
   // Determine message type
-  const getMessageType = useCallback((): 'info' | 'success' | 'complaint' => {
-    if (gameState.gameWon) return 'success'
+  const getMessageType = useCallback((): MessageType => {
+    if (gameState.gameWon) return MessageType.SUCCESS
     return gameState.messageType
   }, [gameState.gameWon, gameState.messageType])
 
@@ -178,12 +178,12 @@ export const useGameLogic = (addGameRecord: (record: Omit<SavedGameRecord, 'id' 
       computerTarget: generateTargetNumber(),
       playerGuess: '',
       message: '',
-      messageType: 'info',
+      messageType: MessageType.INFO,
       playerAttempts: 0,
       computerAttempts: 0,
       gameWon: false,
       gameStarted: true,
-      currentTurn: 'player' // Start with player
+      currentTurn: CurrentTurn.PLAYER // Start with player
     })
     
     setHistory({ player: [], computer: [] })
@@ -200,7 +200,7 @@ export const useGameLogic = (addGameRecord: (record: Omit<SavedGameRecord, 'id' 
   const handlePlayerGuess = useCallback((): void => {
     const validation = validateNumber(gameState.playerGuess)
     if (!validation.valid) {
-      setGameState(prev => ({ ...prev, message: validation.message || '', messageType: 'info' }))
+      setGameState(prev => ({ ...prev, message: validation.message || '', messageType: MessageType.INFO }))
       return
     }
 
@@ -211,7 +211,7 @@ export const useGameLogic = (addGameRecord: (record: Omit<SavedGameRecord, 'id' 
       ...prev,
       playerAttempts: currentPlayerAttempt,
       message: '',
-      messageType: 'info'
+      messageType: MessageType.INFO
     }))
 
     if (gameState.playerGuess === gameState.computerTarget) {
@@ -231,8 +231,8 @@ export const useGameLogic = (addGameRecord: (record: Omit<SavedGameRecord, 'id' 
         setGameState(prev => ({ 
           ...prev,
           message: t('playerFoundAnswer'),
-          messageType: 'info',
-          currentTurn: 'computer',
+          messageType: MessageType.INFO,
+          currentTurn: CurrentTurn.COMPUTER,
           playerGuess: ''
         }))
         
@@ -247,7 +247,7 @@ export const useGameLogic = (addGameRecord: (record: Omit<SavedGameRecord, 'id' 
           setGameState(prev => ({ 
             ...prev,
             message: `${t('computerFinalGuess')}${computerGuessNum}`,
-            messageType: 'info'
+            messageType: MessageType.INFO
           }))
         }, GAME_CONFIG.COMPUTER_THINKING_TIME)
       } else {
@@ -255,14 +255,14 @@ export const useGameLogic = (addGameRecord: (record: Omit<SavedGameRecord, 'id' 
         setGameState(prev => ({ 
           ...prev,
           message: t('playerWon'),
-          messageType: 'success',
+          messageType: MessageType.SUCCESS,
           gameWon: true
         }))
         
         // Save game record
         if (addGameRecord) {
           addGameRecord({
-            winner: 'player',
+            winner: GameWinner.PLAYER,
             playerAttempts: currentPlayerAttempt,
             computerAttempts: gameState.computerAttempts,
             totalRounds: currentPlayerAttempt + gameState.computerAttempts,
@@ -281,8 +281,8 @@ export const useGameLogic = (addGameRecord: (record: Omit<SavedGameRecord, 'id' 
       setGameState(prev => ({ 
         ...prev,
         message: `${t('yourHint')}${result}`,
-        messageType: 'info',
-        currentTurn: 'computer',
+        messageType: MessageType.INFO,
+        currentTurn: CurrentTurn.COMPUTER,
         playerGuess: ''
       }))
       setHistory(prev => ({
@@ -305,7 +305,7 @@ export const useGameLogic = (addGameRecord: (record: Omit<SavedGameRecord, 'id' 
         setGameState(prev => ({ 
           ...prev,
           message: t('computerThinking'),
-          messageType: 'info'
+          messageType: MessageType.INFO
         }))
       }, GAME_CONFIG.COMPUTER_THINKING_TIME)
     }
@@ -318,7 +318,7 @@ export const useGameLogic = (addGameRecord: (record: Omit<SavedGameRecord, 'id' 
     
     const validation = validateFeedback(A, B)
     if (!validation.valid) {
-      setGameState(prev => ({ ...prev, message: validation.message || '', messageType: 'info' }))
+      setGameState(prev => ({ ...prev, message: validation.message || '', messageType: MessageType.INFO }))
       return
     }
 
@@ -327,7 +327,7 @@ export const useGameLogic = (addGameRecord: (record: Omit<SavedGameRecord, 'id' 
     // Check if feedback is reasonable
     if (!checkFeedbackConsistency(computerAI.currentGuess, feedback)) {
       const complaint = generateComplaint(computerAI.currentGuess, feedback)
-      setGameState(prev => ({ ...prev, message: complaint, messageType: 'complaint' }))
+      setGameState(prev => ({ ...prev, message: complaint, messageType: MessageType.COMPLAINT }))
       setFeedbackCorrection(prev => ({ ...prev, isActive: true }))
       return
     }
@@ -356,7 +356,7 @@ export const useGameLogic = (addGameRecord: (record: Omit<SavedGameRecord, 'id' 
           gameWon: true,
           computerAttempts: currentComputerAttempt,
           message: t('gameDraw'),
-          messageType: 'success'
+          messageType: MessageType.SUCCESS
         }))
         
         // Save game record - draw
@@ -364,7 +364,7 @@ export const useGameLogic = (addGameRecord: (record: Omit<SavedGameRecord, 'id' 
           // Find player's winning round from history (they already won)
           const playerWinningRound = history.player.length
           addGameRecord({
-            winner: 'draw',
+            winner: GameWinner.DRAW,
             playerAttempts: playerWinningRound,
             computerAttempts: currentComputerAttempt,
             totalRounds: Math.max(playerWinningRound, currentComputerAttempt),  // Max rounds reached
@@ -383,13 +383,13 @@ export const useGameLogic = (addGameRecord: (record: Omit<SavedGameRecord, 'id' 
           gameWon: true,
           computerAttempts: currentComputerAttempt,
           message: t('computerWon', { computerNumber: prev.computerTarget }),
-          messageType: 'success'
+          messageType: MessageType.SUCCESS
         }))
         
         // Save game record
         if (addGameRecord) {
           addGameRecord({
-            winner: 'computer',
+            winner: GameWinner.COMPUTER,
             playerAttempts: history.player.length,  // Player attempts made
             computerAttempts: currentComputerAttempt,  // Computer's winning round
             totalRounds: history.player.length + currentComputerAttempt,
@@ -413,13 +413,13 @@ export const useGameLogic = (addGameRecord: (record: Omit<SavedGameRecord, 'id' 
           gameWon: true,
           computerAttempts: currentComputerAttempt,
           message: t('playerWon'),
-          messageType: 'success'
+          messageType: MessageType.SUCCESS
         }))
         
         // Save game record - player wins
         if (addGameRecord) {
           addGameRecord({
-            winner: 'player',
+            winner: GameWinner.PLAYER,
             playerAttempts: history.player.length,  // Player's winning round count
             computerAttempts: currentComputerAttempt,  // Computer's final attempt
             totalRounds: history.player.length + currentComputerAttempt,
@@ -438,16 +438,16 @@ export const useGameLogic = (addGameRecord: (record: Omit<SavedGameRecord, 'id' 
           setGameState(prev => ({ 
             ...prev,
             message: t('noPossibleNumbers'),
-            messageType: 'info'
+            messageType: MessageType.INFO
           }))
           return
         }
         setGameState(prev => ({ 
           ...prev,
           computerAttempts: currentComputerAttempt,
-          currentTurn: 'player',
+          currentTurn: CurrentTurn.PLAYER,
           message: '',
-          messageType: 'info'
+          messageType: MessageType.INFO
         }))
       }
     }
@@ -484,12 +484,12 @@ export const useGameLogic = (addGameRecord: (record: Omit<SavedGameRecord, 'id' 
       computerTarget: generateTargetNumber(),
       playerGuess: '',
       message: '',
-      messageType: 'info',
+      messageType: MessageType.INFO,
       playerAttempts: 0,
       computerAttempts: 0,
       gameWon: false,
       gameStarted: true,
-      currentTurn: 'player'
+      currentTurn: CurrentTurn.PLAYER
     })
     
     setHistory({ player: [], computer: [] })
@@ -530,15 +530,15 @@ export const useGameLogic = (addGameRecord: (record: Omit<SavedGameRecord, 'id' 
     setGameState(prev => ({ 
       ...prev, 
       message: '',
-      messageType: 'info',
-      currentTurn: 'player'
+      messageType: MessageType.INFO,
+      currentTurn: CurrentTurn.PLAYER
     }))
   }, [history.computer, initializeComputerPossibleNumbers, calculateAB])
 
   // Cancel correction
   const cancelFeedbackCorrection = useCallback(() => {
     setFeedbackCorrection({ isActive: false, showHistory: false })
-    setGameState(prev => ({ ...prev, message: '', messageType: 'info' }))
+    setGameState(prev => ({ ...prev, message: '', messageType: MessageType.INFO }))
   }, [])
 
   // Initialize game

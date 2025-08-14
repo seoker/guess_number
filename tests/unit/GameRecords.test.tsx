@@ -1,15 +1,15 @@
-import React from 'react'
 import { describe, it, expect, vi, beforeEach } from 'vitest'
 import { render, screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { GameRecords } from '../../src/components/GameRecords'
+import { GameWinner } from '../../src/types/index'
 
 // Mock react-i18next
 vi.mock('react-i18next', () => ({
   useTranslation: () => ({
-    t: (key, options) => {
+    t: (key: string, options?: any) => {
       // Mock translations for testing
-      const translations = {
+      const translations: Record<string, string> = {
         gameRecords: 'Game Records',
         noRecordsYet: 'No game records yet',
         clearAllRecords: 'Clear All Records',
@@ -32,8 +32,8 @@ vi.mock('react-i18next', () => ({
 // eslint-disable-next-line vitest/prefer-lowercase-title
 describe('GameRecords', () => {
   const mockClearAllRecords = vi.fn()
-  const mockT = vi.fn((key, options) => {
-    const translations = {
+  const mockT = vi.fn((key: string, options?: any) => {
+    const translations: Record<string, string> = {
       gameRecords: 'Game Records',
       noRecordsYet: 'No game records yet',
       clearAllRecords: 'Clear All Records',
@@ -75,18 +75,22 @@ describe('GameRecords', () => {
       {
         id: '1',
         timestamp: 1700000000000,
-        winner: 'player',
+        winner: GameWinner.PLAYER,
         playerAttempts: 3,
         computerAttempts: 2,
-        totalRounds: 5
+        totalRounds: 5,
+        playerHistory: [],
+        computerHistory: []
       },
       {
         id: '2',
         timestamp: 1700000001000,
-        winner: 'computer',
+        winner: GameWinner.COMPUTER,
         playerAttempts: 5,
         computerAttempts: 4,
-        totalRounds: 9
+        totalRounds: 9,
+        playerHistory: [],
+        computerHistory: []
       },
       {
         id: '3',
@@ -94,7 +98,9 @@ describe('GameRecords', () => {
         winner: null,
         playerAttempts: 2,
         computerAttempts: 1,
-        totalRounds: 3
+        totalRounds: 3,
+        playerHistory: [],
+        computerHistory: []
       }
     ]
 
@@ -152,10 +158,12 @@ describe('GameRecords', () => {
       const sampleRecord = [{
         id: '1',
         timestamp: 1700000000000,
-        winner: 'player',
+        winner: GameWinner.PLAYER,
         playerAttempts: 3,
         computerAttempts: 2,
-        totalRounds: 5
+        totalRounds: 5,
+        playerHistory: [],
+        computerHistory: []
       }]
 
       render(<GameRecords gameRecords={sampleRecord} clearAllRecords={mockClearAllRecords} t={mockT} />)
@@ -174,10 +182,12 @@ describe('GameRecords', () => {
       const computerWonRecord = [{
         id: '1',
         timestamp: 1700000000000,
-        winner: 'computer',
+        winner: GameWinner.COMPUTER,
         playerAttempts: 5,
         computerAttempts: 3,
-        totalRounds: 8
+        totalRounds: 8,
+        playerHistory: [],
+        computerHistory: []
       }]
 
       render(<GameRecords gameRecords={computerWonRecord} clearAllRecords={mockClearAllRecords} t={mockT} />)
@@ -193,7 +203,9 @@ describe('GameRecords', () => {
         winner: null,
         playerAttempts: 2,
         computerAttempts: 1,
-        totalRounds: 3
+        totalRounds: 3,
+        playerHistory: [],
+        computerHistory: []
       }]
 
       render(<GameRecords gameRecords={incompleteRecord} clearAllRecords={mockClearAllRecords} t={mockT} />)
@@ -207,10 +219,12 @@ describe('GameRecords', () => {
       const recordWithDate = [{
         id: '1',
         timestamp: 1700000000000, // Nov 14, 2023
-        winner: 'player',
+        winner: GameWinner.PLAYER,
         playerAttempts: 3,
         computerAttempts: 2,
-        totalRounds: 5
+        totalRounds: 5,
+        playerHistory: [],
+        computerHistory: []
       }]
 
       render(<GameRecords gameRecords={recordWithDate} clearAllRecords={mockClearAllRecords} t={mockT} />)

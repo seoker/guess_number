@@ -1,3 +1,22 @@
+/* Enums */
+
+export enum CurrentTurn {
+  PLAYER = 'player',
+  COMPUTER = 'computer'
+}
+
+export enum MessageType {
+  INFO = 'info',
+  SUCCESS = 'success',
+  COMPLAINT = 'complaint'
+}
+
+export enum GameWinner {
+  PLAYER = 'player',
+  COMPUTER = 'computer',
+  DRAW = 'draw'
+}
+
 /* Game state and logic types */
 
 export interface GameState {
@@ -7,9 +26,9 @@ export interface GameState {
   playerGuess: string;
   playerAttempts: number;
   computerAttempts: number;
-  currentTurn: 'player' | 'computer';
+  currentTurn: CurrentTurn;
   message: string;
-  messageType: 'info' | 'success' | 'complaint';
+  messageType: MessageType;
 }
 
 export interface GameRecord {
@@ -41,7 +60,7 @@ export interface FeedbackCorrection {
 export interface SavedGameRecord {
   id: string;
   timestamp: number;
-  winner: 'player' | 'computer' | 'draw' | null;
+  winner: GameWinner | null;
   playerAttempts: number;
   computerAttempts: number;
   totalRounds: number;
@@ -87,7 +106,7 @@ export interface GameUIProps {
   handleFeedbackSubmit: () => void;
   updatePlayerGuess: (guess: string) => void;
   updatePlayerFeedback: (type: 'A' | 'B', value: string) => void;
-  getMessageType: () => 'info' | 'success' | 'complaint';
+  getMessageType: () => MessageType;
   startFeedbackCorrection: () => void;
   resetGame: () => void;
   correctHistoryFeedback: (index: number, A: number, B: number) => void;

@@ -1,13 +1,12 @@
-import React from 'react'
 import { describe, it, expect, vi, beforeEach } from 'vitest'
 import { render, screen, waitFor } from '@testing-library/react'
-import userEvent from '@testing-library/user-event'
-import App from '../../src/App.jsx'
+import userEvent, { UserEvent } from '@testing-library/user-event'
+import App from '../../src/App'
 
 // Mock react-i18next
 vi.mock('react-i18next', () => ({
   useTranslation: () => ({
-    t: (key) => key,
+    t: (key: string) => key,
     i18n: {
       language: 'zh',
       changeLanguage: vi.fn()
@@ -16,7 +15,7 @@ vi.mock('react-i18next', () => ({
 }))
 
 describe('complete game flow tests', () => {
-  let user
+  let user: UserEvent
 
   beforeEach(() => {
     user = userEvent.setup()
@@ -63,10 +62,10 @@ describe('complete game flow tests', () => {
       const digit3 = container.querySelector('#digit-3')
       
       // Player enters guess in 4 separate inputs
-      await user.type(digit0, '1')
-      await user.type(digit1, '2')
-      await user.type(digit2, '3')
-      await user.type(digit3, '4')
+      await user.type(digit0!, '1')
+      await user.type(digit1!, '2')
+      await user.type(digit2!, '3')
+      await user.type(digit3!, '4')
       
       // Check if button is enabled
       const guessButton = screen.getByRole('button', { name: 'guess' })
@@ -90,9 +89,9 @@ describe('complete game flow tests', () => {
       const digit1 = container.querySelector('#digit-1')
       const digit2 = container.querySelector('#digit-2')
       
-      await user.type(digit0, '1')
-      await user.type(digit1, '2')
-      await user.type(digit2, '3')
+      await user.type(digit0!, '1')
+      await user.type(digit1!, '2')
+      await user.type(digit2!, '3')
       
       const guessButton = screen.getByRole('button', { name: 'guess' })
       expect(guessButton).toBeDisabled()

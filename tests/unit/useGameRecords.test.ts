@@ -1,6 +1,7 @@
 import { describe, test, expect, beforeEach, vi } from 'vitest'
 import { renderHook, act } from '@testing-library/react'
 import { useGameRecords } from '../../src/hooks/useGameRecords'
+import { GameWinner } from '../../src/types'
 
 // Mock localStorage
 const localStorageMock = {
@@ -8,13 +9,18 @@ const localStorageMock = {
   setItem: vi.fn(),
   removeItem: vi.fn(),
   clear: vi.fn(),
+  key: vi.fn(),
+  length: 0,
 }
-global.localStorage = localStorageMock
 
 describe('useGameRecords', () => {
   beforeEach(() => {
     vi.clearAllMocks()
     localStorageMock.getItem.mockReturnValue(null)
+    Object.defineProperty(global, 'localStorage', {
+      value: localStorageMock,
+      writable: true,
+    })
   })
 
   test('should initialize with empty records', () => {
@@ -38,10 +44,12 @@ describe('useGameRecords', () => {
     const { result } = renderHook(() => useGameRecords())
     
     const newRecord = {
-      winner: 'computer',
+      winner: GameWinner.COMPUTER,
       playerAttempts: 4,
       computerAttempts: 6,
-      totalRounds: 10
+      totalRounds: 10,
+      playerHistory: [],
+      computerHistory: []
     }
     
     act(() => {
@@ -61,10 +69,12 @@ describe('useGameRecords', () => {
     // First add a record
     act(() => {
       result.current.addGameRecord({
-        winner: 'player',
+        winner: GameWinner.PLAYER,
         playerAttempts: 3,
         computerAttempts: 2,
-        totalRounds: 5
+        totalRounds: 5,
+        playerHistory: [],
+        computerHistory: []
       })
     })
     
@@ -90,10 +100,12 @@ describe('useGameRecords', () => {
     
     act(() => {
       result.current.addGameRecord({
-        winner: 'player',
+        winner: GameWinner.PLAYER,
         playerAttempts: 2,
         computerAttempts: 1,
-        totalRounds: 3
+        totalRounds: 3,
+        playerHistory: [],
+        computerHistory: []
       })
     })
     

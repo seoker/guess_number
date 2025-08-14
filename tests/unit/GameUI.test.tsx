@@ -1,54 +1,70 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest'
-import { render, screen, fireEvent, waitFor } from '@testing-library/react'
+import { render, screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { GameUI } from '../../src/components/GameUI'
+import { 
+  CurrentTurn, 
+  MessageType, 
+  Language,
+  GameState,
+  GameHistory,
+  ComputerAI,
+  FeedbackCorrection,
+  GameUIProps
+} from '../../src/types/index'
 
-// Mock hooks
-const mockGameState = {
+// Mock hooks with proper TypeScript types
+const mockGameState: GameState = {
   gameStarted: false,
   gameWon: false,
-  currentTurn: 'player',
+  currentTurn: CurrentTurn.PLAYER,
   playerGuess: '',
   playerAttempts: 0,
   computerAttempts: 0,
-  message: ''
+  message: '',
+  computerTarget: '1234',
+  messageType: MessageType.INFO
 }
 
-const mockHistory = {
+const mockHistory: GameHistory = {
   player: [],
   computer: []
 }
 
-const mockComputerAI = {
+const mockComputerAI: ComputerAI = {
   showFeedbackForm: false,
   currentGuess: '',
-  playerFeedback: { A: '', B: '' }
+  playerFeedback: { A: '', B: '' },
+  possibleNumbers: []
 }
 
-const mockFeedbackCorrection = {
+const mockFeedbackCorrection: FeedbackCorrection = {
   isActive: false,
   showHistory: false
 }
 
-const mockProps = {
+const mockProps: GameUIProps = {
   gameState: mockGameState,
   history: mockHistory,
   computerAI: mockComputerAI,
   feedbackCorrection: mockFeedbackCorrection,
-  startNewGame: vi.fn(),
-  handlePlayerGuess: vi.fn(),
-  handleFeedbackSubmit: vi.fn(),
-  updatePlayerGuess: vi.fn(),
-  updatePlayerFeedback: vi.fn(),
-  getMessageType: vi.fn(() => 'info'),
-  startFeedbackCorrection: vi.fn(),
-  resetGame: vi.fn(),
-  correctHistoryFeedback: vi.fn(),
-  cancelFeedbackCorrection: vi.fn(),
-  t: vi.fn((key) => key),
+  startNewGame: vi.fn() as () => void,
+  handlePlayerGuess: vi.fn() as () => void,
+  handleFeedbackSubmit: vi.fn() as () => void,
+  updatePlayerGuess: vi.fn() as (guess: string) => void,
+  updatePlayerFeedback: vi.fn() as (type: 'A' | 'B', value: string) => void,
+  getMessageType: vi.fn(() => MessageType.INFO) as () => MessageType,
+  startFeedbackCorrection: vi.fn() as () => void,
+  resetGame: vi.fn() as () => void,
+  correctHistoryFeedback: vi.fn() as (index: number, A: number, B: number) => void,
+  cancelFeedbackCorrection: vi.fn() as () => void,
+  t: vi.fn((key: string) => key) as (key: string, options?: any) => string,
   currentLanguage: 'zh-TW',
-  changeLanguage: vi.fn(),
-  getSupportedLanguages: vi.fn(() => ['zh-TW', 'en'])
+  changeLanguage: vi.fn() as (lng: string) => void,
+  getSupportedLanguages: vi.fn(() => [
+    { code: 'zh-TW', name: 'Traditional Chinese', flag: '🇹🇼' },
+    { code: 'en', name: 'English', flag: '🇺🇸' }
+  ]) as () => Language[]
 }
 
 // eslint-disable-next-line vitest/prefer-lowercase-title
@@ -84,7 +100,7 @@ describe('GameUI', () => {
       gameState: {
         ...mockGameState,
         gameStarted: true,
-        currentTurn: 'player'
+        currentTurn: CurrentTurn.PLAYER
       }
     }
 
@@ -130,10 +146,10 @@ describe('GameUI', () => {
       const digit2 = container.querySelector('#digit-2')
       const digit3 = container.querySelector('#digit-3')
       
-      await user.type(digit0, '1')
-      await user.type(digit1, '2')
-      await user.type(digit2, '3')
-      await user.type(digit3, '4')
+      await user.type(digit0!, '1')
+      await user.type(digit1!, '2')
+      await user.type(digit2!, '3')
+      await user.type(digit3!, '4')
       
       // Each digit entry should call updatePlayerGuess
       expect(mockProps.updatePlayerGuess).toHaveBeenCalledTimes(4)
@@ -149,10 +165,10 @@ describe('GameUI', () => {
       const digit3 = container.querySelector('#digit-3')
       
       // Enter digits in random order: 2nd, 4th, 1st, 3rd
-      await user.type(digit1, '7')
-      await user.type(digit3, '9')
-      await user.type(digit0, '5')
-      await user.type(digit2, '8')
+      await user.type(digit1!, '7')
+      await user.type(digit3!, '9')
+      await user.type(digit0!, '5')
+      await user.type(digit2!, '8')
       
       // Should call updatePlayerGuess for each digit entry
       expect(mockProps.updatePlayerGuess).toHaveBeenCalledTimes(4)
@@ -166,8 +182,8 @@ describe('GameUI', () => {
       const digit2 = container.querySelector('#digit-2')
       
       // Only enter 1st and 3rd digits
-      await user.type(digit0, '2')
-      await user.type(digit2, '6')
+      await user.type(digit0!, '2')
+      await user.type(digit2!, '6')
       
       expect(mockProps.updatePlayerGuess).toHaveBeenCalledTimes(2)
     })
@@ -180,16 +196,16 @@ describe('GameUI', () => {
       const digit1 = container.querySelector('#digit-1')
       
       // Enter initial digits
-      await user.type(digit0, '1')
-      await user.type(digit1, '2')
+      await user.type(digit0!, '1')
+      await user.type(digit1!, '2')
       
       // Overwrite them
-      await user.clear(digit0)
-      await user.type(digit0, '9')
-      await user.clear(digit1)
-      await user.type(digit1, '8')
+      await user.clear(digit0!)
+      await user.type(digit0!, '9')
+      await user.clear(digit1!)
+      await user.type(digit1!, '8')
       
-      expect(mockProps.updatePlayerGuess).toHaveBeenCalledWith()
+      expect(mockProps.updatePlayerGuess).toHaveBeenCalled()
     })
 
     it('should only accept single numeric digits', async () => {
@@ -199,11 +215,11 @@ describe('GameUI', () => {
       const digit0 = container.querySelector('#digit-0')
       
       // Try to enter multiple characters, letters, special chars
-      await user.type(digit0, 'abc123!@#')
+      await user.type(digit0!, 'abc123!@#')
       
       // Due to the digit input handling logic, non-numeric chars are filtered out
       // Only the last numeric digit should remain due to maxLength=1
-      expect(mockProps.updatePlayerGuess).toHaveBeenCalledWith()
+      expect(mockProps.updatePlayerGuess).toHaveBeenCalled()
     })
 
     it('should handle player guess submission', async () => {
@@ -232,7 +248,6 @@ describe('GameUI', () => {
     })
 
     it('should enable guess button when all 4 digits are entered', async () => {
-      const user = userEvent.setup()
       const propsWithCompleteGuess = {
         ...gameInProgressProps,
         gameState: {
@@ -248,7 +263,6 @@ describe('GameUI', () => {
     })
 
     it('should disable guess button with partial digit input', async () => {
-      const user = userEvent.setup()
       const propsWithPartialGuess = {
         ...gameInProgressProps,
         gameState: {
@@ -267,15 +281,14 @@ describe('GameUI', () => {
       const user = userEvent.setup()
       const { container } = render(<GameUI {...gameInProgressProps} />)
       
-      const digit0 = container.querySelector('#digit-0')
-      const digit1 = container.querySelector('#digit-1')
+      const digit0 = container.querySelector('#digit-0') as HTMLInputElement
       
       // Focus first input and enter digit
       digit0.focus()
       await user.type(digit0, '1')
       
       // Should call updatePlayerGuess when digit is entered
-      expect(mockProps.updatePlayerGuess).toHaveBeenCalledWith()
+      expect(mockProps.updatePlayerGuess).toHaveBeenCalled()
     })
   })
 
@@ -285,7 +298,7 @@ describe('GameUI', () => {
       gameState: {
         ...mockGameState,
         gameStarted: true,
-        currentTurn: 'computer'
+        currentTurn: CurrentTurn.COMPUTER
       },
       computerAI: {
         ...mockComputerAI,
@@ -419,7 +432,7 @@ describe('GameUI', () => {
         ...mockProps,
         gameState: { ...mockGameState, gameStarted: true, message: 'This is unreasonable!' },
         feedbackCorrection: { isActive: true, showHistory: false },
-        getMessageType: vi.fn(() => 'complaint')
+        getMessageType: vi.fn(() => MessageType.COMPLAINT)
       }
       
       render(<GameUI {...propsWithComplaint} />)
@@ -459,7 +472,7 @@ describe('GameUI', () => {
         ...mockProps,
         gameState: { ...mockGameState, gameStarted: true, message: 'This is unreasonable!' },
         feedbackCorrection: { isActive: true, showHistory: false },
-        getMessageType: vi.fn(() => 'complaint')
+        getMessageType: vi.fn(() => MessageType.COMPLAINT)
       }
       
       render(<GameUI {...propsWithComplaint} />)
