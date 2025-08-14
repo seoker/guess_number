@@ -130,9 +130,15 @@
 
 .record-date {
   font-size: 0.9rem;
+  text-align: right;
+  line-height: 1.2;
 }
 
 .date-mobile {
+  display: block;
+}
+
+.date-desktop {
   display: none;
 }
 
