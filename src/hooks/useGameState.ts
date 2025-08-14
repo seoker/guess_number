@@ -10,6 +10,7 @@ type GameAction =
   | { type: 'CLEAR_MESSAGE' }
   | { type: 'PLAYER_TURN_SUCCESS'; payload: { attempts: number; result: string } }
   | { type: 'PLAYER_WINS'; payload: number }
+  | { type: 'PLAYER_WINS_WITH_COMPUTER_ATTEMPTS'; payload: { playerAttempts: number; computerAttempts: number } }
   | { type: 'COMPUTER_TURN'; payload: number }
   | { type: 'COMPUTER_FINAL_TURN'; payload: number }
   | { type: 'COMPUTER_WINS'; payload: { computerAttempts: number; computerTarget: string } }
@@ -87,6 +88,17 @@ const gameStateReducer = (state: GameState, action: GameAction): GameState => {
         playerGuess: ''
       }
 
+    case 'PLAYER_WINS_WITH_COMPUTER_ATTEMPTS':
+      return {
+        ...state,
+        playerAttempts: action.payload.playerAttempts,
+        computerAttempts: action.payload.computerAttempts,
+        gameWon: true,
+        message: '',
+        messageType: MessageType.SUCCESS,
+        playerGuess: ''
+      }
+
     case 'COMPUTER_TURN':
       return {
         ...state,
@@ -128,6 +140,7 @@ const gameStateReducer = (state: GameState, action: GameAction): GameState => {
     case 'SWITCH_TO_PLAYER':
       return {
         ...state,
+        computerAttempts: state.computerAttempts + 1,
         currentTurn: CurrentTurn.PLAYER,
         message: '',
         messageType: MessageType.INFO
@@ -175,6 +188,10 @@ export const useGameState = () => {
     dispatch({ type: 'PLAYER_WINS', payload: attempts })
   }, [])
 
+  const playerWinsWithComputerAttempts = useCallback((playerAttempts: number, computerAttempts: number) => {
+    dispatch({ type: 'PLAYER_WINS_WITH_COMPUTER_ATTEMPTS', payload: { playerAttempts, computerAttempts } })
+  }, [])
+
   const computerTurn = useCallback((playerAttempts: number) => {
     dispatch({ type: 'COMPUTER_TURN', payload: playerAttempts })
   }, [])
@@ -208,6 +225,7 @@ export const useGameState = () => {
     clearMessage,
     playerTurnSuccess,
     playerWins,
+    playerWinsWithComputerAttempts,
     computerTurn,
     computerFinalTurn,
     computerWins,

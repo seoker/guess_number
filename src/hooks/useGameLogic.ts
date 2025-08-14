@@ -24,6 +24,7 @@ export const useGameLogic = (addGameRecord: (record: Omit<SavedGameRecord, 'id' 
     clearMessage,
     playerTurnSuccess,
     playerWins,
+    playerWinsWithComputerAttempts,
     computerFinalTurn,
     computerWins,
     gameDraw,
@@ -105,31 +106,7 @@ export const useGameLogic = (addGameRecord: (record: Omit<SavedGameRecord, 'id' 
         
         setTimeout(() => {
           const computerGuessNum = makeGuess()
-          const finalComputerAttempt = gameState.computerAttempts + 1
           setMessage(`${t('computerFinalGuess')}${computerGuessNum}`)
-          
-          // Add computer's final guess to history
-          const computerRecord = { 
-            guess: computerGuessNum, 
-            result: '0A0B', // Computer's final guess, player already won
-            isCorrect: false 
-          }
-          setHistory(prev => ({ ...prev, computer: [...prev.computer, computerRecord] }))
-          
-          // Game ends with player win
-          playerWins(currentPlayerAttempt)
-          setMessage(t('playerWon'), MessageType.SUCCESS)
-          
-          if (addGameRecord) {
-            addGameRecord({
-              winner: GameWinner.PLAYER,
-              playerAttempts: currentPlayerAttempt,
-              computerAttempts: finalComputerAttempt,
-              totalRounds: currentPlayerAttempt + finalComputerAttempt,
-              playerHistory: [...history.player, playerRecord],
-              computerHistory: [...history.computer, computerRecord]
-            })
-          }
         }, GAME_CONFIG.COMPUTER_THINKING_TIME)
       } else {
         playerWins(currentPlayerAttempt)
@@ -228,7 +205,7 @@ export const useGameLogic = (addGameRecord: (record: Omit<SavedGameRecord, 'id' 
       const playerAlreadyWon = history.player.some(record => record.isCorrect)
       
       if (playerAlreadyWon) {
-        playerWins(history.player.length)
+        playerWinsWithComputerAttempts(history.player.length, currentComputerAttempt)
         setMessage(t('playerWon'), MessageType.SUCCESS)
         
         if (addGameRecord) {
@@ -252,7 +229,7 @@ export const useGameLogic = (addGameRecord: (record: Omit<SavedGameRecord, 'id' 
     }
     
     resetFeedbackForm()
-  }, [computerAI.playerFeedback, computerAI.currentGuess, gameState.computerAttempts, gameState.computerTarget, history.player, history.computer, checkFeedbackIsConsistent, generateComplaint, startCorrection, gameDraw, computerWins, playerWins, processFeedback, switchToPlayer, resetFeedbackForm, setMessage, t, addGameRecord])
+  }, [computerAI.playerFeedback, computerAI.currentGuess, gameState.computerAttempts, gameState.computerTarget, history.player, history.computer, checkFeedbackIsConsistent, generateComplaint, startCorrection, gameDraw, computerWins, playerWinsWithComputerAttempts, processFeedback, switchToPlayer, resetFeedbackForm, setMessage, t, addGameRecord])
 
   // Start feedback correction
   const startFeedbackCorrection = useCallback(() => {
