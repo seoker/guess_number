@@ -345,18 +345,19 @@ export const useGameLogic = (addGameRecord) => {
         setGameState(prev => ({ 
           ...prev,
           gameWon: true,
-          computerAttempts: prev.computerAttempts + 1,
+          computerAttempts: prev.playerAttempts,
           message: t('gameDraw'),
           messageType: 'success'
         }))
         
         // Save game record - draw
         if (addGameRecord) {
+          const roundNumber = gameState.playerAttempts
           addGameRecord({
             winner: 'draw',
-            playerAttempts: gameState.playerAttempts,
-            computerAttempts: gameState.computerAttempts + 1,
-            totalRounds: gameState.playerAttempts + gameState.computerAttempts + 1,
+            playerAttempts: roundNumber,
+            computerAttempts: roundNumber,
+            totalRounds: roundNumber,
             timestamp: Date.now()
           })
         }

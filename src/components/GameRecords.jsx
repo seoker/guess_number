@@ -105,7 +105,7 @@ const GameRecords = ({ gameRecords, clearAllRecords, t }) => {
                     : record.winner === 'computer'
                     ? t('computerWonInRounds', { rounds: record.computerAttempts })
                     : record.winner === 'draw'
-                    ? t('drawInRounds', { rounds: record.totalRounds })
+                    ? t('drawInRounds', { rounds: record.playerAttempts })
                     : ''
                   }
                 </span>
