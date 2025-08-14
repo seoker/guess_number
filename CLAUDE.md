@@ -13,12 +13,13 @@
 - Use existing libraries and utilities already present
 - No comments unless explicitly requested by the user
 - **Always use English in comments** - never use Chinese, Japanese, or other languages in code comments
+- **Use TypeScript** - all new files should be .ts/.tsx with proper type annotations
 - Maintain responsive design across all screen sizes
 - Support all existing languages (English, Chinese, Japanese)
 
 ## Project Context
 
-This is a **1A2B Number Guessing Game** built with React + Vite:
+This is a **1A2B Number Guessing Game** built with React + Vite + TypeScript:
 - Players and computer try to guess each other's 4-digit numbers
 - A = correct digit in correct position
 - B = correct digit in wrong position
@@ -28,15 +29,16 @@ This is a **1A2B Number Guessing Game** built with React + Vite:
 ## Key Architecture
 
 ### Core Files
-- `src/components/GameUI.jsx` - Main game interface with 4-digit input system
-- `src/hooks/useGameLogic.js` - Game state management and AI logic
-- `src/hooks/useGameRecords.js` - Game history persistence
+- `src/components/GameUI.tsx` - Main game interface with 4-digit input system
+- `src/hooks/useGameLogic.ts` - Game state management and AI logic
+- `src/hooks/useGameRecords.ts` - Game history persistence
+- `src/types/index.ts` - TypeScript type definitions
 - `src/i18n/` - Internationalization files
 
 ### Testing Structure
-- `tests/unit/` - Component unit tests
-- `tests/integration/` - Full app integration tests  
-- `tests/e2e/` - End-to-end browser tests with Playwright
+- `tests/unit/` - Component unit tests (TypeScript)
+- `tests/integration/` - Full app integration tests (TypeScript)
+- `tests/e2e/` - End-to-end browser tests with Playwright (TypeScript)
 
 ## Testing Commands
 
@@ -88,7 +90,33 @@ npm run build
 - Add e2e regression tests for bug fixes
 - Ensure all existing tests still pass
 
+## TypeScript Configuration
+
+### Compiler Settings
+- `tsconfig.json` - Main TypeScript configuration with strict type checking
+- `tsconfig.node.json` - Node.js specific TypeScript configuration for build tools
+- `vite.config.ts` - Vite configuration with TypeScript support
+
+### Type Definitions
+- `src/types/index.ts` - Centralized type definitions for:
+  - Game state and logic types
+  - Component prop interfaces  
+  - API response types
+  - Hook return types
+
+### Best Practices
+- Use React.FC for functional components
+- Add return type annotations to all functions
+- Use proper TypeScript generics for hooks (useState, useRef, etc.)
+- Import types from centralized types file
+
 ## Recent Important Changes
+
+### TypeScript Migration (Completed)
+- Converted entire codebase from JavaScript to TypeScript
+- Added comprehensive type definitions for all components and hooks
+- Updated test files to TypeScript with proper typing
+- All builds and core functionality verified working
 
 ### Digit Input System (Fixed)
 - Bug: Couldn't enter digits out of order (e.g., 3rd then 1st)

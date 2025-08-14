@@ -1,8 +1,9 @@
 import React from 'react'
 import './NavigationBar.css'
 import { LanguageSelector } from './LanguageSelector'
+import { NavigationBarProps } from '../types'
 
-const NavigationBar = ({ currentView, onViewChange, t, currentLanguage, changeLanguage, getSupportedLanguages }) => {
+const NavigationBar: React.FC<NavigationBarProps> = ({ currentView, onViewChange, t, currentLanguage, changeLanguage, getSupportedLanguages }) => {
   return (
     <nav className="navigation-bar">
       <div className="nav-container">

@@ -5,21 +5,22 @@ import { useGameRecords } from './hooks/useGameRecords'
 import { NavigationBar } from './components/NavigationBar'
 import { GameUI } from './components/GameUI'
 import { GameRecords } from './components/GameRecords'
+import { Language } from './types'
 import './App.css'
 
-function App() {
+function App(): React.ReactElement {
   const { t, i18n } = useTranslation()
   const { gameRecords, addGameRecord, clearAllRecords } = useGameRecords()
-  const [currentView, setCurrentView] = useState('game')
+  const [currentView, setCurrentView] = useState<string>('game')
   
-  const changeLanguage = (lng) => {
+  const changeLanguage = (lng: string): void => {
     i18n.changeLanguage(lng)
   }
   
-  const getSupportedLanguages = () => [
-    { code: 'zh', name: '中文' },
-    { code: 'en', name: 'English' },
-    { code: 'ja', name: '日本語' }
+  const getSupportedLanguages = (): Language[] => [
+    { code: 'zh', name: '中文', flag: '🇨🇳' },
+    { code: 'en', name: 'English', flag: '🇺🇸' },
+    { code: 'ja', name: '日本語', flag: '🇯🇵' }
   ]
   
   const {
@@ -39,7 +40,7 @@ function App() {
     cancelFeedbackCorrection
   } = useGameLogic(addGameRecord)
 
-  const handleViewChange = (view) => {
+  const handleViewChange = (view: string): void => {
     setCurrentView(view)
   }
 

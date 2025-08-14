@@ -1,9 +1,10 @@
 import React from 'react'
 import Swal from 'sweetalert2'
 import './GameRecords.css'
+import { GameRecordsProps, SavedGameRecord } from '../types'
 
-const GameRecords = ({ gameRecords, clearAllRecords, t }) => {
-  const handleClearRecords = async () => {
+const GameRecords: React.FC<GameRecordsProps> = ({ gameRecords, clearAllRecords, t }) => {
+  const handleClearRecords = async (): Promise<void> => {
     const result = await Swal.fire({
       title: t('confirmClearRecords'),
       text: t('clearRecordsWarning'),
@@ -28,19 +29,19 @@ const GameRecords = ({ gameRecords, clearAllRecords, t }) => {
     }
   }
 
-  const formatDate = (timestamp) => {
+  const formatDate = (timestamp: number): string => {
     const date = new Date(timestamp)
     return date.toLocaleString()
   }
 
-  const formatMobileDate = (timestamp) => {
+  const formatMobileDate = (timestamp: number): { date: string; time: string } => {
     const date = new Date(timestamp)
     const dateStr = date.toLocaleDateString()
     const timeStr = date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
     return { date: dateStr, time: timeStr }
   }
 
-  const getWinnerText = (record) => {
+  const getWinnerText = (record: SavedGameRecord): string => {
     if (record.winner === 'player') {
       return t('playerWonShort')
     } else if (record.winner === 'computer') {
@@ -51,7 +52,7 @@ const GameRecords = ({ gameRecords, clearAllRecords, t }) => {
     return t('gameIncomplete')
   }
 
-  const getWinnerClass = (record) => {
+  const getWinnerClass = (record: SavedGameRecord): string => {
     if (record.winner === 'player') {
       return 'winner-player'
     } else if (record.winner === 'computer') {

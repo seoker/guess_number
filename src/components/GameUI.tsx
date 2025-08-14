@@ -1,8 +1,9 @@
 import { useRef, useEffect, useState } from 'react'
 import Swal from 'sweetalert2'
 import './GameUI.css'
+import { GameUIProps, FeedbackCorrectionPanelProps } from '../types'
 
-export const GameUI = ({ 
+export const GameUI: React.FC<GameUIProps> = ({ 
   gameState, 
   history, 
   computerAI,
@@ -19,9 +20,9 @@ export const GameUI = ({
   cancelFeedbackCorrection,
   t
 }) => {
-  const inputRef = useRef(null)
-  const playerHistoryRef = useRef(null)
-  const computerHistoryRef = useRef(null)
+  const inputRef = useRef<HTMLInputElement>(null)
+  const playerHistoryRef = useRef<HTMLDivElement>(null)
+  const computerHistoryRef = useRef<HTMLDivElement>(null)
 
   // Auto focus input field
   useEffect(() => {
@@ -44,7 +45,7 @@ export const GameUI = ({
   }, [history.computer])
 
 
-  const handleDigitChange = (index, value) => {
+  const handleDigitChange = (index: number, value: string): void => {
     // Only allow single digits 0-9
     const digit = value.replace(/\D/g, '').slice(-1)
     
@@ -78,18 +79,18 @@ export const GameUI = ({
     
     // Auto-focus next input if digit was entered
     if (digit && index < 3) {
-      const nextInput = document.getElementById(`digit-${index + 1}`)
+      const nextInput = document.getElementById(`digit-${index + 1}`) as HTMLInputElement | null
       if (nextInput) nextInput.focus()
     }
   }
 
-  const handleDigitKeyDown = (index, e) => {
+  const handleDigitKeyDown = (index: number, e: React.KeyboardEvent<HTMLInputElement>): void => {
     // Handle backspace to move to previous input
     if (e.key === 'Backspace') {
       const currentGuess = gameState.playerGuess.padEnd(4, ' ')
       if (!currentGuess[index] || currentGuess[index] === ' ') {
         if (index > 0) {
-          const prevInput = document.getElementById(`digit-${index - 1}`)
+          const prevInput = document.getElementById(`digit-${index - 1}`) as HTMLInputElement | null
           if (prevInput) {
             prevInput.focus()
             // Clear the previous digit
@@ -108,20 +109,20 @@ export const GameUI = ({
     }
     // Handle arrow keys for navigation
     else if (e.key === 'ArrowLeft' && index > 0) {
-      const prevInput = document.getElementById(`digit-${index - 1}`)
+      const prevInput = document.getElementById(`digit-${index - 1}`) as HTMLInputElement | null
       if (prevInput) prevInput.focus()
     }
     else if (e.key === 'ArrowRight' && index < 3) {
-      const nextInput = document.getElementById(`digit-${index + 1}`)
+      const nextInput = document.getElementById(`digit-${index + 1}`) as HTMLInputElement | null
       if (nextInput) nextInput.focus()
     }
   }
 
-  const handleFeedbackClick = (type, value) => {
+  const handleFeedbackClick = (type: 'A' | 'B', value: number): void => {
     updatePlayerFeedback(type, value.toString())
   }
 
-  const handleResetGame = async () => {
+  const handleResetGame = async (): Promise<void> => {
     const result = await Swal.fire({
       title: t('confirmResetGame'),
       text: t('resetGameWarning'),
@@ -146,7 +147,7 @@ export const GameUI = ({
     }
   }
 
-  const handleRestartGame = async () => {
+  const handleRestartGame = async (): Promise<void> => {
     const result = await Swal.fire({
       title: t('confirmRestartGame'),
       text: t('restartGameWarning'),
@@ -357,22 +358,25 @@ export const GameUI = ({
 }
 
 // Feedback correction panel component
-const FeedbackCorrectionPanel = ({ history, correctHistoryFeedback, cancelFeedbackCorrection, t }) => {
-  const [selectedIndex, setSelectedIndex] = useState(null)
-  const [editingFeedback, setEditingFeedback] = useState({ A: '', B: '' })
+const FeedbackCorrectionPanel: React.FC<FeedbackCorrectionPanelProps> = ({ history, correctHistoryFeedback, cancelFeedbackCorrection, t }) => {
+  const [selectedIndex, setSelectedIndex] = useState<number | null>(null)
+  const [editingFeedback, setEditingFeedback] = useState<{ A: string; B: string }>({ A: '', B: '' })
 
-  const handleRecordClick = (index) => {
+  const handleRecordClick = (index: number): void => {
     setSelectedIndex(index)
     const record = history[index]
-    const [A, B] = record.result.match(/(\d+)A(\d+)B/).slice(1, 3)
-    setEditingFeedback({ A, B })
+    const match = record.result.match(/(\d+)A(\d+)B/)
+    if (match) {
+      const [, A, B] = match
+      setEditingFeedback({ A, B })
+    }
   }
 
-  const handleFeedbackChange = (type, value) => {
+  const handleFeedbackChange = (type: 'A' | 'B', value: number): void => {
     setEditingFeedback(prev => ({ ...prev, [type]: value.toString() }))
   }
 
-  const handleConfirmCorrection = () => {
+  const handleConfirmCorrection = (): void => {
     if (selectedIndex !== null) {
       correctHistoryFeedback(selectedIndex, parseInt(editingFeedback.A), parseInt(editingFeedback.B))
     }

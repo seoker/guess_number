@@ -1,5 +1,6 @@
 import { useState, useEffect, useCallback } from 'react'
 import { useTranslation } from 'react-i18next'
+import { GameState, GameHistory, ComputerAI, FeedbackCorrection, SavedGameRecord, GameResult } from '../types'
 
 // Game configuration
 const GAME_CONFIG = {
@@ -8,29 +9,29 @@ const GAME_CONFIG = {
   COMPUTER_THINKING_TIME: 1000
 }
 
-export const useGameLogic = (addGameRecord) => {
+export const useGameLogic = (addGameRecord: (record: Omit<SavedGameRecord, 'id' | 'timestamp'>) => void) => {
   const { t } = useTranslation()
   // Game state
-  const [gameState, setGameState] = useState({
+  const [gameState, setGameState] = useState<GameState>({
     computerTarget: '',
     playerGuess: '',
     message: '',
-    messageType: 'info', // Store message type directly
+    messageType: 'info',
     playerAttempts: 0,
     computerAttempts: 0,
     gameWon: false,
     gameStarted: false,
-    currentTurn: 'player' // Start with player turn
+    currentTurn: 'player'
   })
 
   // History records
-  const [history, setHistory] = useState({
+  const [history, setHistory] = useState<GameHistory>({
     player: [],
     computer: []
   })
 
   // Computer AI state
-  const [computerAI, setComputerAI] = useState({
+  const [computerAI, setComputerAI] = useState<ComputerAI>({
     possibleNumbers: [],
     currentGuess: '',
     playerFeedback: { A: '', B: '' },
@@ -38,14 +39,14 @@ export const useGameLogic = (addGameRecord) => {
   })
 
   // Feedback correction state
-  const [feedbackCorrection, setFeedbackCorrection] = useState({
+  const [feedbackCorrection, setFeedbackCorrection] = useState<FeedbackCorrection>({
     isActive: false,
     showHistory: false
   })
 
   // Generate four unique digits
-  const generateTargetNumber = useCallback(() => {
-    const digits = []
+  const generateTargetNumber = useCallback((): string => {
+    const digits: number[] = []
     while (digits.length < GAME_CONFIG.DIGIT_COUNT) {
       const digit = Math.floor(Math.random() * GAME_CONFIG.MAX_DIGIT)
       if (!digits.includes(digit)) {
@@ -56,8 +57,8 @@ export const useGameLogic = (addGameRecord) => {
   }, [])
 
   // Initialize computer possible numbers list
-  const initializeComputerPossibleNumbers = useCallback(() => {
-    const numbers = []
+  const initializeComputerPossibleNumbers = useCallback((): string[] => {
+    const numbers: string[] = []
     for (let i = 0; i < 10000; i++) {
       const num = i.toString().padStart(GAME_CONFIG.DIGIT_COUNT, '0')
       const digits = num.split('')
@@ -69,7 +70,7 @@ export const useGameLogic = (addGameRecord) => {
   }, [])
 
   // Validate number format
-  const validateNumber = useCallback((number) => {
+  const validateNumber = useCallback((number: string): { valid: boolean; message?: string } => {
     if (number.length !== GAME_CONFIG.DIGIT_COUNT) {
       return { valid: false, message: t('fourDigitsRequired') }
     }
@@ -88,7 +89,7 @@ export const useGameLogic = (addGameRecord) => {
   }, [t])
 
   // Validate A and B values
-  const validateFeedback = useCallback((A, B) => {
+  const validateFeedback = useCallback((A: number, B: number): { valid: boolean; message?: string } => {
     if (A < 0 || A > GAME_CONFIG.DIGIT_COUNT || B < 0 || B > GAME_CONFIG.DIGIT_COUNT || A + B > GAME_CONFIG.DIGIT_COUNT) {
       return { valid: false, message: t('invalidFeedback') }
     }
@@ -96,7 +97,7 @@ export const useGameLogic = (addGameRecord) => {
   }, [t])
 
   // Calculate A and B numbers
-  const calculateAB = useCallback((guess, target) => {
+  const calculateAB = useCallback((guess: string, target: string): GameResult => {
     let A = 0
     let B = 0
     const guessDigits = guess.split('')
@@ -120,7 +121,7 @@ export const useGameLogic = (addGameRecord) => {
   }, [])
 
   // Computer reasoning for next guess
-  const computerMakeGuess = useCallback(() => {
+  const computerMakeGuess = useCallback((): string => {
     if (computerAI.possibleNumbers.length === 0) {
       return generateTargetNumber()
     }
@@ -130,8 +131,8 @@ export const useGameLogic = (addGameRecord) => {
   }, [computerAI.possibleNumbers, generateTargetNumber])
 
   // Update computer possible numbers based on feedback
-  const updateComputerPossibleNumbers = useCallback((guess, result) => {
-    const newPossibleNumbers = computerAI.possibleNumbers.filter(num => {
+  const updateComputerPossibleNumbers = useCallback((guess: string, result: string): string[] => {
+    const newPossibleNumbers = computerAI.possibleNumbers.filter((num: string) => {
       const { A, B } = calculateAB(guess, num)
       return `${A}A${B}B` === result
     })
@@ -140,11 +141,11 @@ export const useGameLogic = (addGameRecord) => {
   }, [computerAI.possibleNumbers, calculateAB])
 
   // Check if feedback is reasonable
-  const checkFeedbackConsistency = useCallback((guess, feedback) => {
+  const checkFeedbackConsistency = useCallback((guess: string, feedback: GameResult): boolean => {
     const { A, B } = feedback
     const result = `${A}A${B}B`
     
-    const possibleNumbers = computerAI.possibleNumbers.filter(num => {
+    const possibleNumbers = computerAI.possibleNumbers.filter((num: string) => {
       const calculatedAB = calculateAB(guess, num)
       return `${calculatedAB.A}A${calculatedAB.B}B` === result
     })
@@ -153,7 +154,7 @@ export const useGameLogic = (addGameRecord) => {
   }, [computerAI.possibleNumbers, calculateAB])
 
   // Generate computer complaint message
-  const generateComplaint = useCallback((guess, feedback) => {
+  const generateComplaint = useCallback((guess: string, feedback: GameResult): string => {
     const complaints = [
       t('complaints.inconsistent', { guess, feedback: `${feedback.A}A${feedback.B}B` }),
       t('complaints.unreasonable', { guess, feedback: `${feedback.A}A${feedback.B}B` }),
@@ -166,13 +167,13 @@ export const useGameLogic = (addGameRecord) => {
   }, [t])
 
   // Determine message type
-  const getMessageType = useCallback(() => {
+  const getMessageType = useCallback((): 'info' | 'success' | 'complaint' => {
     if (gameState.gameWon) return 'success'
     return gameState.messageType
   }, [gameState.gameWon, gameState.messageType])
 
   // Start new game
-  const startNewGame = useCallback(() => {
+  const startNewGame = useCallback((): void => {
     setGameState({
       computerTarget: generateTargetNumber(),
       playerGuess: '',
@@ -196,16 +197,19 @@ export const useGameLogic = (addGameRecord) => {
   }, [generateTargetNumber, initializeComputerPossibleNumbers])
 
   // Handle player guess
-  const handlePlayerGuess = useCallback(() => {
+  const handlePlayerGuess = useCallback((): void => {
     const validation = validateNumber(gameState.playerGuess)
     if (!validation.valid) {
-      setGameState(prev => ({ ...prev, message: validation.message, messageType: 'info' }))
+      setGameState(prev => ({ ...prev, message: validation.message || '', messageType: 'info' }))
       return
     }
 
+    // Calculate current attempt number (will be used for record keeping)
+    const currentPlayerAttempt = gameState.playerAttempts + 1
+
     setGameState(prev => ({ 
       ...prev,
-      playerAttempts: prev.playerAttempts + 1,
+      playerAttempts: currentPlayerAttempt,
       message: '',
       messageType: 'info'
     }))
@@ -222,13 +226,12 @@ export const useGameLogic = (addGameRecord) => {
       }))
       
       // Check if computer should get a final turn (fair play - equal attempts)
-      if (gameState.playerAttempts >= gameState.computerAttempts) {
+      if (currentPlayerAttempt > gameState.computerAttempts) {
         // Give computer one final guess since player went first
         setGameState(prev => ({ 
           ...prev,
           message: t('playerFoundAnswer'),
           messageType: 'info',
-          playerAttempts: prev.playerAttempts + 1,
           currentTurn: 'computer',
           playerGuess: ''
         }))
@@ -253,17 +256,22 @@ export const useGameLogic = (addGameRecord) => {
           ...prev,
           message: t('playerWon'),
           messageType: 'success',
-          gameWon: true,
-          playerAttempts: prev.playerAttempts + 1
+          gameWon: true
         }))
         
         // Save game record
         if (addGameRecord) {
           addGameRecord({
             winner: 'player',
-            playerAttempts: gameState.playerAttempts + 1,
+            playerAttempts: currentPlayerAttempt,
             computerAttempts: gameState.computerAttempts,
-            totalRounds: gameState.playerAttempts + 1 + gameState.computerAttempts
+            totalRounds: currentPlayerAttempt + gameState.computerAttempts,
+            playerHistory: [...history.player, { 
+              guess: gameState.playerGuess, 
+              result: '4A0B', 
+              isCorrect: true 
+            }],
+            computerHistory: history.computer
           })
         }
       }
@@ -301,7 +309,7 @@ export const useGameLogic = (addGameRecord) => {
         }))
       }, GAME_CONFIG.COMPUTER_THINKING_TIME)
     }
-  }, [gameState.playerGuess, gameState.computerTarget, gameState.playerAttempts, gameState.computerAttempts, validateNumber, calculateAB, computerMakeGuess, t, addGameRecord])
+  }, [gameState.playerGuess, gameState.computerTarget, gameState.playerAttempts, gameState.computerAttempts, history.player, history.computer, validateNumber, calculateAB, computerMakeGuess, t, addGameRecord])
 
   // Handle player feedback
   const handleFeedbackSubmit = useCallback(() => {
@@ -310,7 +318,7 @@ export const useGameLogic = (addGameRecord) => {
     
     const validation = validateFeedback(A, B)
     if (!validation.valid) {
-      setGameState(prev => ({ ...prev, message: validation.message, messageType: 'info' }))
+      setGameState(prev => ({ ...prev, message: validation.message || '', messageType: 'info' }))
       return
     }
 
@@ -325,6 +333,7 @@ export const useGameLogic = (addGameRecord) => {
     }
 
     const result = `${A}A${B}B`
+    const currentComputerAttempt = gameState.computerAttempts + 1
     
     setHistory(prev => ({
       ...prev,
@@ -345,20 +354,26 @@ export const useGameLogic = (addGameRecord) => {
         setGameState(prev => ({ 
           ...prev,
           gameWon: true,
-          computerAttempts: prev.playerAttempts,
+          computerAttempts: currentComputerAttempt,
           message: t('gameDraw'),
           messageType: 'success'
         }))
         
         // Save game record - draw
         if (addGameRecord) {
-          const roundNumber = gameState.playerAttempts
+          // Find player's winning round from history (they already won)
+          const playerWinningRound = history.player.length
           addGameRecord({
             winner: 'draw',
-            playerAttempts: roundNumber,
-            computerAttempts: roundNumber,
-            totalRounds: roundNumber,
-            timestamp: Date.now()
+            playerAttempts: playerWinningRound,
+            computerAttempts: currentComputerAttempt,
+            totalRounds: Math.max(playerWinningRound, currentComputerAttempt),  // Max rounds reached
+            playerHistory: history.player,
+            computerHistory: [...history.computer, { 
+              guess: computerAI.currentGuess, 
+              result: `${A}A${B}B`, 
+              isCorrect: true 
+            }]
           })
         }
       } else {
@@ -366,7 +381,7 @@ export const useGameLogic = (addGameRecord) => {
         setGameState(prev => ({ 
           ...prev,
           gameWon: true,
-          computerAttempts: prev.computerAttempts + 1,
+          computerAttempts: currentComputerAttempt,
           message: t('computerWon', { computerNumber: prev.computerTarget }),
           messageType: 'success'
         }))
@@ -375,9 +390,15 @@ export const useGameLogic = (addGameRecord) => {
         if (addGameRecord) {
           addGameRecord({
             winner: 'computer',
-            playerAttempts: gameState.playerAttempts,
-            computerAttempts: gameState.computerAttempts + 1,
-            totalRounds: gameState.playerAttempts + gameState.computerAttempts + 1
+            playerAttempts: history.player.length,  // Player attempts made
+            computerAttempts: currentComputerAttempt,  // Computer's winning round
+            totalRounds: history.player.length + currentComputerAttempt,
+            playerHistory: history.player,
+            computerHistory: [...history.computer, { 
+              guess: computerAI.currentGuess, 
+              result: `${A}A${B}B`, 
+              isCorrect: true 
+            }]
           })
         }
       }
@@ -390,7 +411,7 @@ export const useGameLogic = (addGameRecord) => {
         setGameState(prev => ({ 
           ...prev,
           gameWon: true,
-          computerAttempts: prev.computerAttempts + 1,
+          computerAttempts: currentComputerAttempt,
           message: t('playerWon'),
           messageType: 'success'
         }))
@@ -399,10 +420,15 @@ export const useGameLogic = (addGameRecord) => {
         if (addGameRecord) {
           addGameRecord({
             winner: 'player',
-            playerAttempts: gameState.playerAttempts,
-            computerAttempts: gameState.computerAttempts + 1,
-            totalRounds: gameState.playerAttempts + gameState.computerAttempts + 1,
-            timestamp: Date.now()
+            playerAttempts: history.player.length,  // Player's winning round count
+            computerAttempts: currentComputerAttempt,  // Computer's final attempt
+            totalRounds: history.player.length + currentComputerAttempt,
+            playerHistory: history.player,
+            computerHistory: [...history.computer, { 
+              guess: computerAI.currentGuess, 
+              result: `${A}A${B}B`, 
+              isCorrect: false 
+            }]
           })
         }
       } else {
@@ -418,7 +444,7 @@ export const useGameLogic = (addGameRecord) => {
         }
         setGameState(prev => ({ 
           ...prev,
-          computerAttempts: prev.computerAttempts + 1,
+          computerAttempts: currentComputerAttempt,
           currentTurn: 'player',
           message: '',
           messageType: 'info'
@@ -432,15 +458,15 @@ export const useGameLogic = (addGameRecord) => {
       showFeedbackForm: false,
       playerFeedback: { A: '', B: '' }
     }))
-  }, [computerAI.playerFeedback, computerAI.currentGuess, gameState.playerAttempts, gameState.computerAttempts, history.player, validateFeedback, checkFeedbackConsistency, generateComplaint, updateComputerPossibleNumbers, t, addGameRecord])
+  }, [computerAI.playerFeedback, computerAI.currentGuess, gameState.computerAttempts, history.player, history.computer, validateFeedback, checkFeedbackConsistency, generateComplaint, updateComputerPossibleNumbers, t, addGameRecord])
 
   // Update player guess
-  const updatePlayerGuess = useCallback((guess) => {
+  const updatePlayerGuess = useCallback((guess: string) => {
     setGameState(prev => ({ ...prev, playerGuess: guess }))
   }, [])
 
   // Update player feedback
-  const updatePlayerFeedback = useCallback((type, value) => {
+  const updatePlayerFeedback = useCallback((type: 'A' | 'B', value: string) => {
     setComputerAI(prev => ({
       ...prev,
       playerFeedback: { ...prev.playerFeedback, [type]: value }
@@ -482,7 +508,7 @@ export const useGameLogic = (addGameRecord) => {
   }, [generateTargetNumber, initializeComputerPossibleNumbers])
 
   // Correct history feedback
-  const correctHistoryFeedback = useCallback((index, newA, newB) => {
+  const correctHistoryFeedback = useCallback((index: number, newA: number, newB: number) => {
     const updatedHistory = [...history.computer]
     updatedHistory[index].result = `${newA}A${newB}B`
     

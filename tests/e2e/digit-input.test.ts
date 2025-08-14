@@ -1,9 +1,9 @@
 import { describe, test, expect, beforeEach, afterEach } from 'vitest'
-import { chromium } from 'playwright'
+import { chromium, Browser, Page } from 'playwright'
 
 describe('digit Input System E2E', () => {
-  let browser
-  let page
+  let browser: Browser
+  let page: Page
   
   beforeEach(async () => {
     browser = await chromium.launch()

@@ -135,14 +135,15 @@ describe('GameRecords', () => {
       expect(screen.getByText('1')).toBeInTheDocument() // computerAttempts for third record (unique)
     })
 
-    it('clear button click should call correct function', async () => {
+    it('clear button click should show confirmation dialog', async () => {
       const user = userEvent.setup()
       render(<GameRecords gameRecords={sampleRecords} clearAllRecords={mockClearAllRecords} t={mockT} />)
       
       const clearButton = screen.getByText('Clear All Records')
       await user.click(clearButton)
       
-      expect(mockClearAllRecords).toHaveBeenCalledTimes(1)
+      // The function should not be called immediately due to confirmation dialog
+      expect(mockClearAllRecords).toHaveBeenCalledTimes(0)
     })
   })
 

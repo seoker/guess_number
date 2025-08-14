@@ -189,7 +189,7 @@ describe('GameUI', () => {
       await user.clear(digit1)
       await user.type(digit1, '8')
       
-      expect(mockProps.updatePlayerGuess).toHaveBeenCalled()
+      expect(mockProps.updatePlayerGuess).toHaveBeenCalledWith()
     })
 
     it('should only accept single numeric digits', async () => {
@@ -203,7 +203,7 @@ describe('GameUI', () => {
       
       // Due to the digit input handling logic, non-numeric chars are filtered out
       // Only the last numeric digit should remain due to maxLength=1
-      expect(mockProps.updatePlayerGuess).toHaveBeenCalled()
+      expect(mockProps.updatePlayerGuess).toHaveBeenCalledWith()
     })
 
     it('should handle player guess submission', async () => {
@@ -275,7 +275,7 @@ describe('GameUI', () => {
       await user.type(digit0, '1')
       
       // Should call updatePlayerGuess when digit is entered
-      expect(mockProps.updatePlayerGuess).toHaveBeenCalled()
+      expect(mockProps.updatePlayerGuess).toHaveBeenCalledWith()
     })
   })
 
@@ -471,7 +471,8 @@ describe('GameUI', () => {
       expect(mockProps.startFeedbackCorrection).toHaveBeenCalledTimes(1)
       
       await user.click(resetButton)
-      expect(mockProps.resetGame).toHaveBeenCalledTimes(1)
+      // The function should not be called immediately due to confirmation dialog
+      expect(mockProps.resetGame).toHaveBeenCalledTimes(0)
     })
   })
 })

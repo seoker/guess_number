@@ -1,14 +1,15 @@
 import { useState, useEffect } from 'react'
+import { SavedGameRecord } from '../types'
 
 export const useGameRecords = () => {
-  const [gameRecords, setGameRecords] = useState([])
+  const [gameRecords, setGameRecords] = useState<SavedGameRecord[]>([])
 
   // Load records from localStorage
-  const loadRecords = () => {
+  const loadRecords = (): SavedGameRecord[] => {
     try {
       const saved = localStorage.getItem('guessNumberGameRecords')
       if (saved) {
-        return JSON.parse(saved)
+        return JSON.parse(saved) as SavedGameRecord[]
       }
     } catch (error) {
       console.error('Failed to load game records:', error)
@@ -17,7 +18,7 @@ export const useGameRecords = () => {
   }
 
   // Save records to localStorage
-  const saveRecords = (records) => {
+  const saveRecords = (records: SavedGameRecord[]): void => {
     try {
       localStorage.setItem('guessNumberGameRecords', JSON.stringify(records))
     } catch (error) {
@@ -26,10 +27,10 @@ export const useGameRecords = () => {
   }
 
   // Add new game record
-  const addGameRecord = (record) => {
-    const newRecord = {
-      id: Date.now(),
-      timestamp: new Date().toISOString(),
+  const addGameRecord = (record: Omit<SavedGameRecord, 'id' | 'timestamp'>): void => {
+    const newRecord: SavedGameRecord = {
+      id: Date.now().toString(),
+      timestamp: Date.now(),
       ...record
     }
     
@@ -39,7 +40,7 @@ export const useGameRecords = () => {
   }
 
   // Clear all records
-  const clearAllRecords = () => {
+  const clearAllRecords = (): void => {
     setGameRecords([])
     localStorage.removeItem('guessNumberGameRecords')
   }

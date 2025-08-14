@@ -1,9 +1,10 @@
 import './LanguageSelector.css'
 import { useState, useRef, useEffect } from 'react'
+import { LanguageSelectorProps, Language } from '../types'
 
 // Flag icon component
-const FlagIcon = ({ countryCode }) => {
-  const flagEmojis = {
+const FlagIcon: React.FC<{ countryCode: string }> = ({ countryCode }) => {
+  const flagEmojis: Record<string, string> = {
     'zh': '🇹🇼',
     'en': '🇺🇸',
     'ja': '🇯🇵',
@@ -19,14 +20,14 @@ const FlagIcon = ({ countryCode }) => {
   return <span className="flag-icon">{flagEmojis[countryCode] || '🌐'}</span>
 }
 
-export const LanguageSelector = ({ currentLanguage, changeLanguage, getSupportedLanguages }) => {
+export const LanguageSelector: React.FC<LanguageSelectorProps> = ({ currentLanguage, changeLanguage, getSupportedLanguages }) => {
   const languages = getSupportedLanguages()
-  const [isOpen, setIsOpen] = useState(false)
-  const dropdownRef = useRef(null)
+  const [isOpen, setIsOpen] = useState<boolean>(false)
+  const dropdownRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
-    const handleClickOutside = (event) => {
-      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
         setIsOpen(false)
       }
     }
@@ -35,12 +36,12 @@ export const LanguageSelector = ({ currentLanguage, changeLanguage, getSupported
     return () => document.removeEventListener('mousedown', handleClickOutside)
   }, [])
 
-  const handleLanguageSelect = (languageCode) => {
+  const handleLanguageSelect = (languageCode: string): void => {
     changeLanguage(languageCode)
     setIsOpen(false)
   }
 
-  const currentLanguageData = languages.find(lang => lang.code === currentLanguage)
+  const currentLanguageData = languages.find((lang: Language) => lang.code === currentLanguage)
 
   return (
     <div className="language-selector">
