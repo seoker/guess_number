@@ -146,6 +146,31 @@ export const GameUI = ({
     }
   }
 
+  const handleRestartGame = async () => {
+    const result = await Swal.fire({
+      title: t('confirmRestartGame'),
+      text: t('restartGameWarning'),
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#ff4757',
+      cancelButtonColor: '#747d8c',
+      confirmButtonText: t('confirmRestart'),
+      cancelButtonText: t('cancel'),
+      reverseButtons: true
+    })
+
+    if (result.isConfirmed) {
+      startNewGame()
+      Swal.fire({
+        title: t('gameRestarted'),
+        text: t('freshGameStarted'),
+        icon: 'success',
+        timer: 2000,
+        showConfirmButton: false
+      })
+    }
+  }
+
   return (
     <div className="main-container">
         <h1 className="title">{t('title')}</h1>
@@ -168,6 +193,7 @@ export const GameUI = ({
               <p className="attempts">{t('playerAttempts')}: {gameState.playerAttempts} | {t('computerAttempts')}: {gameState.computerAttempts}</p>
               <p className="hint">{t('currentTurn')}: {gameState.currentTurn === 'player' ? t('player') : t('computer')}</p>
             </div>
+
 
             {computerAI.showFeedbackForm ? (
               <div className="feedback-section">
@@ -231,13 +257,22 @@ export const GameUI = ({
                       />
                     ))}
                   </div>
-                  <button 
-                    onClick={handlePlayerGuess} 
-                    className="guess-button"
-                    disabled={gameState.gameWon || gameState.currentTurn !== 'player' || gameState.playerGuess.length !== 4}
-                  >
-                    {t('guess')}
-                  </button>
+                  <div className="button-group">
+                    <button 
+                      onClick={handlePlayerGuess} 
+                      className="game-button guess-button"
+                      disabled={gameState.gameWon || gameState.currentTurn !== 'player' || gameState.playerGuess.length !== 4}
+                    >
+                      {t('guess')}
+                    </button>
+                    <button 
+                      className="restart-link"
+                      onClick={handleRestartGame}
+                      title={t('restartGame')}
+                    >
+                      {t('restartGame')}
+                    </button>
+                  </div>
                 </div>
               </div>
             )}

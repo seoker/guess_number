@@ -177,6 +177,23 @@
   font-size: 1rem;
 }
 
+.clear-records-link {
+  background: none;
+  border: none;
+  color: #6c757d;
+  font-size: 0.9rem;
+  font-weight: 500;
+  cursor: pointer;
+  text-decoration: underline;
+  padding: 0.5rem;
+  transition: all 0.3s ease;
+}
+
+.clear-records-link:hover {
+  color: #495057;
+  text-decoration-thickness: 2px;
+}
+
 @media (max-width: 768px) {
   .records-header {
     flex-direction: column;

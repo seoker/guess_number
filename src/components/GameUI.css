@@ -101,6 +101,39 @@
   font-size: 0.9rem;
 }
 
+.button-group {
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+/* Base button class for consistent styling */
+.game-button {
+  border: none;
+  padding: 1rem 1.5rem;
+  border-radius: 10px;
+  cursor: pointer;
+  font-weight: 600;
+  transition: all 0.3s ease;
+  min-width: 100px;
+  color: white;
+}
+
+.game-button:hover:not(:disabled) {
+  transform: translateY(-1px);
+}
+
+.game-button:active {
+  transform: translateY(0);
+}
+
+.game-button:disabled {
+  cursor: not-allowed;
+  transform: none;
+}
+
 .guess-section {
   background: #e3f2fd;
   border-radius: 15px;
@@ -364,25 +397,31 @@
 
 .guess-button {
   background: linear-gradient(45deg, #667eea, #764ba2);
-  color: white;
-  border: none;
-  padding: 1rem 1.5rem;
-  border-radius: 10px;
-  cursor: pointer;
-  font-weight: 600;
-  transition: all 0.3s ease;
-  min-width: 100px;
 }
 
 .guess-button:hover:not(:disabled) {
-  transform: translateY(-1px);
   box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
 }
 
 .guess-button:disabled {
   background: #6c757d;
-  cursor: not-allowed;
-  transform: none;
+}
+
+.restart-link {
+  background: none;
+  border: none;
+  color: #6c757d;
+  font-size: 0.9rem;
+  font-weight: 500;
+  cursor: pointer;
+  text-decoration: underline;
+  padding: 0.5rem;
+  transition: all 0.3s ease;
+}
+
+.restart-link:hover {
+  color: #495057;
+  text-decoration-thickness: 2px;
 }
 
 .message {
@@ -608,21 +647,23 @@
 }
 
 .restart-button {
-  background: linear-gradient(45deg, #4caf50, #45a049);
+  background: linear-gradient(45deg, #2e7d32, #4caf50);
   color: white;
   border: none;
   padding: 1rem 2rem;
-  border-radius: 50px;
+  border-radius: 10px;
   cursor: pointer;
   font-weight: 600;
+  font-size: 1.1rem;
   transition: all 0.3s ease;
-  box-shadow: 0 4px 15px rgba(76, 175, 80, 0.3);
+  box-shadow: 0 4px 15px rgba(46, 125, 50, 0.3);
 }
 
 .restart-button:hover {
   transform: translateY(-2px);
-  box-shadow: 0 6px 20px rgba(76, 175, 80, 0.4);
+  box-shadow: 0 6px 20px rgba(46, 125, 50, 0.4);
 }
+
 
 @keyframes slideIn {
   from {
@@ -868,6 +909,19 @@
     gap: 1rem;
     align-items: center;
   }
+
+  .button-group {
+    flex-direction: column;
+    gap: 0.5rem;
+    width: 100%;
+    align-items: center;
+  }
+
+  .restart-link {
+    font-size: 0.85rem;
+    padding: 0.4rem;
+  }
+
   
   .guess-input {
     width: 160px;
@@ -885,7 +939,7 @@
     font-size: 1.5rem;
   }
   
-  .guess-button {
+  .game-button {
     padding: 0.8rem 1.2rem;
     min-width: 80px;
   }

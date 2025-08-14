@@ -80,7 +80,7 @@ const GameRecords = ({ gameRecords, clearAllRecords, t }) => {
       <div className="records-header flex-between">
         <h2>{t('gameRecords')}</h2>
         <button 
-          className="clear-records-btn btn-danger"
+          className="clear-records-link"
           onClick={handleClearRecords}
           title={t('clearAllRecords')}
         >
