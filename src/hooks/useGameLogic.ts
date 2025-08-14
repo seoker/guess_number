@@ -105,7 +105,31 @@ export const useGameLogic = (addGameRecord: (record: Omit<SavedGameRecord, 'id' 
         
         setTimeout(() => {
           const computerGuessNum = makeGuess()
+          const finalComputerAttempt = gameState.computerAttempts + 1
           setMessage(`${t('computerFinalGuess')}${computerGuessNum}`)
+          
+          // Add computer's final guess to history
+          const computerRecord = { 
+            guess: computerGuessNum, 
+            result: '0A0B', // Computer's final guess, player already won
+            isCorrect: false 
+          }
+          setHistory(prev => ({ ...prev, computer: [...prev.computer, computerRecord] }))
+          
+          // Game ends with player win
+          playerWins(currentPlayerAttempt)
+          setMessage(t('playerWon'), MessageType.SUCCESS)
+          
+          if (addGameRecord) {
+            addGameRecord({
+              winner: GameWinner.PLAYER,
+              playerAttempts: currentPlayerAttempt,
+              computerAttempts: finalComputerAttempt,
+              totalRounds: currentPlayerAttempt + finalComputerAttempt,
+              playerHistory: [...history.player, playerRecord],
+              computerHistory: [...history.computer, computerRecord]
+            })
+          }
         }, GAME_CONFIG.COMPUTER_THINKING_TIME)
       } else {
         playerWins(currentPlayerAttempt)
