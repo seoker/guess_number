@@ -54,6 +54,11 @@
 
   "fixFeedback": "Fix Feedback",
   "resetGame": "Reset Game",
+  "confirmResetGame": "Reset Current Game?",
+  "resetGameWarning": "This will clear your current progress and start a completely new game. All guesses and history will be lost.",
+  "confirmReset": "Yes, Reset Game",
+  "gameReset": "Game Reset!",
+  "newGameStarted": "A new game has been started. Good luck!",
   "correctFeedback": "Correct my previous guess feedback:",
   "correctFeedbackFor": "Correct feedback for {{guess}}",
   "selectCorrection": "Click the guess record you want to correct:",

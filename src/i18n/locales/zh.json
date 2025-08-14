@@ -54,6 +54,11 @@
 
   "fixFeedback": "修正反饋",
   "resetGame": "重新開始",
+  "confirmResetGame": "重置當前遊戲？",
+  "resetGameWarning": "這將清除你當前的進度並開始一個全新的遊戲。所有猜測和歷史記錄將會丟失。",
+  "confirmReset": "確認重置",
+  "gameReset": "遊戲已重置！",
+  "newGameStarted": "新遊戲已開始。祝你好運！",
   "correctFeedback": "修正我之前的猜測反饋：",
   "correctFeedbackFor": "修正 {{guess}} 的反饋",
   "selectCorrection": "點擊要修正的猜測記錄：",

@@ -54,6 +54,11 @@
 
   "fixFeedback": "フィードバック修正",
   "resetGame": "ゲームリセット",
+  "confirmResetGame": "現在のゲームをリセットしますか？",
+  "resetGameWarning": "現在の進行状況がクリアされ、完全に新しいゲームが開始されます。すべての推測と履歴が失われます。",
+  "confirmReset": "はい、リセットする",
+  "gameReset": "ゲームがリセットされました！",
+  "newGameStarted": "新しいゲームが開始されました。頑張って！",
   "correctFeedback": "私の以前の推測フィードバックを修正：",
   "correctFeedbackFor": "{{guess}} のフィードバックを修正",
   "selectCorrection": "修正したい推測記録をクリック：",

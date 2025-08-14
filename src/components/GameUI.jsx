@@ -1,4 +1,5 @@
 import { useRef, useEffect, useState } from 'react'
+import Swal from 'sweetalert2'
 import './GameUI.css'
 
 export const GameUI = ({ 
@@ -120,6 +121,31 @@ export const GameUI = ({
     updatePlayerFeedback(type, value.toString())
   }
 
+  const handleResetGame = async () => {
+    const result = await Swal.fire({
+      title: t('confirmResetGame'),
+      text: t('resetGameWarning'),
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#ff4757',
+      cancelButtonColor: '#747d8c',
+      confirmButtonText: t('confirmReset'),
+      cancelButtonText: t('cancel'),
+      reverseButtons: true
+    })
+
+    if (result.isConfirmed) {
+      resetGame()
+      Swal.fire({
+        title: t('gameReset'),
+        text: t('newGameStarted'),
+        icon: 'success',
+        timer: 2000,
+        showConfirmButton: false
+      })
+    }
+  }
+
   return (
     <div className="main-container">
         <h1 className="title">{t('title')}</h1>
@@ -229,7 +255,7 @@ export const GameUI = ({
                     </button>
                     <button 
                       className="reset-button"
-                      onClick={resetGame}
+                      onClick={handleResetGame}
                     >
                       {t('resetGame')}
                     </button>
