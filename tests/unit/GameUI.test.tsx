@@ -2,6 +2,7 @@ import { describe, it, expect, vi, beforeEach } from 'vitest'
 import { render, screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { GameUI } from '../../src/components/GameUI'
+import { formatResultString } from '../../src/utils/gameUtils'
 import { 
   CurrentTurn, 
   MessageType, 
@@ -120,7 +121,7 @@ vi.mock('../../src/components/GameHistory', () => ({
           {playerHistory.map((record: any, index: number) => (
             <div key={index} className={`history-item ${record.isCorrect ? 'correct' : ''}`}>
               <span>{record.guess}</span>
-              <span>{record.result}</span>
+              <span>{formatResultString(record.result)}</span>
             </div>
           ))}
         </div>
@@ -131,7 +132,7 @@ vi.mock('../../src/components/GameHistory', () => ({
           {computerHistory.map((record: any, index: number) => (
             <div key={index} className={`history-item ${record.isCorrect ? 'correct' : ''}`}>
               <span>{record.guess}</span>
-              <span>{record.result}</span>
+              <span>{formatResultString(record.result)}</span>
             </div>
           ))}
         </div>
@@ -157,7 +158,7 @@ vi.mock('../../src/components/FeedbackCorrectionPanel', () => ({
       {history.map((record: any, index: number) => (
         <div key={index} className="correction-item">
           <span>{record.guess}</span>
-          <span>{record.result}</span>
+          <span>{formatResultString(record.result)}</span>
         </div>
       ))}
     </div>
@@ -515,11 +516,11 @@ describe('GameUI', () => {
       },
       history: {
         player: [
-          { guess: '1234', result: '2A2B', isCorrect: false },
-          { guess: '5678', result: '0A0B', isCorrect: false }
+          { guess: '1234', result: { A: 2, B: 2 }, isCorrect: false },
+          { guess: '5678', result: { A: 0, B: 0 }, isCorrect: false }
         ],
         computer: [
-          { guess: '5678', result: '1A1B', isCorrect: false }
+          { guess: '5678', result: { A: 1, B: 1 }, isCorrect: false }
         ]
       }
     }
@@ -602,8 +603,8 @@ describe('GameUI', () => {
         history: {
           ...mockHistory,
           computer: [
-            { guess: '1234', result: '1A2B', isCorrect: false },
-            { guess: '5678', result: '0A1B', isCorrect: false }
+            { guess: '1234', result: { A: 1, B: 2 }, isCorrect: false },
+            { guess: '5678', result: { A: 0, B: 1 }, isCorrect: false }
           ]
         }
       }
@@ -653,7 +654,7 @@ describe('GameUI', () => {
         hintsRemaining: 3
       },
       history: {
-        player: [{ guess: '5678', result: '0A2B', isCorrect: false }],
+        player: [{ guess: '5678', result: { A: 0, B: 2 }, isCorrect: false }],
         computer: []
       }
     }

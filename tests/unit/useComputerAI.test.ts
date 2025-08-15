@@ -9,7 +9,8 @@ vi.mock('../../src/utils/gameUtils', () => ({
   makeComputerGuess: vi.fn(),
   updatePossibleNumbers: vi.fn(),
   checkFeedbackConsistency: vi.fn(),
-  calculateAB: vi.fn()
+  calculateAB: vi.fn(),
+  calculatePossibleTargets: vi.fn()
 }))
 
 describe('useComputerAI', () => {
@@ -23,15 +24,16 @@ describe('useComputerAI', () => {
     vi.mocked(gameUtils.updatePossibleNumbers).mockReturnValue(mockPossibleNumbers)
     vi.mocked(gameUtils.checkFeedbackConsistency).mockReturnValue(true)
     vi.mocked(gameUtils.calculateAB).mockReturnValue({ A: 1, B: 2 })
+    vi.mocked(gameUtils.calculatePossibleTargets).mockReturnValue(mockPossibleNumbers)
   })
 
   describe('initialization', () => {
     it('should initialize with empty state', () => {
       const { result } = renderHook(() => useComputerAI())
       
-      expect(result.current.computerAI.possibleNumbers).toEqual([])
+      expect(result.current.computerAI.possibleNumbers).toStrictEqual([])
       expect(result.current.computerAI.currentGuess).toBe('')
-      expect(result.current.computerAI.playerFeedback).toEqual({ A: '', B: '' })
+      expect(result.current.computerAI.playerFeedback).toStrictEqual({ A: 0, B: 0 })
       expect(result.current.computerAI.showFeedbackForm).toBe(false)
     })
 
@@ -43,9 +45,9 @@ describe('useComputerAI', () => {
       })
 
       expect(gameUtils.generateAllPossibleNumbers).toHaveBeenCalled()
-      expect(result.current.computerAI.possibleNumbers).toEqual(mockAllPossibleNumbers)
+      expect(result.current.computerAI.possibleNumbers).toStrictEqual(mockAllPossibleNumbers)
       expect(result.current.computerAI.currentGuess).toBe('')
-      expect(result.current.computerAI.playerFeedback).toEqual({ A: '', B: '' })
+      expect(result.current.computerAI.playerFeedback).toStrictEqual({ A: 0, B: 0 })
       expect(result.current.computerAI.showFeedbackForm).toBe(false)
     })
   })
@@ -78,8 +80,8 @@ describe('useComputerAI', () => {
         result.current.updateFeedback('A', '2')
       })
 
-      expect(result.current.computerAI.playerFeedback.A).toBe('2')
-      expect(result.current.computerAI.playerFeedback.B).toBe('')
+      expect(result.current.computerAI.playerFeedback.A).toBe(2)
+      expect(result.current.computerAI.playerFeedback.B).toBe(0)
     })
 
     it('should update B feedback', () => {
@@ -89,8 +91,8 @@ describe('useComputerAI', () => {
         result.current.updateFeedback('B', '1')
       })
 
-      expect(result.current.computerAI.playerFeedback.A).toBe('')
-      expect(result.current.computerAI.playerFeedback.B).toBe('1')
+      expect(result.current.computerAI.playerFeedback.A).toBe(0)
+      expect(result.current.computerAI.playerFeedback.B).toBe(1)
     })
 
     it('should update both A and B feedback independently', () => {
@@ -104,8 +106,8 @@ describe('useComputerAI', () => {
         result.current.updateFeedback('B', '1')
       })
 
-      expect(result.current.computerAI.playerFeedback.A).toBe('3')
-      expect(result.current.computerAI.playerFeedback.B).toBe('1')
+      expect(result.current.computerAI.playerFeedback.A).toBe(3)
+      expect(result.current.computerAI.playerFeedback.B).toBe(1)
     })
   })
 
@@ -127,10 +129,10 @@ describe('useComputerAI', () => {
       })
 
       expect(gameUtils.updatePossibleNumbers).toHaveBeenCalledWith('1234', '1A2B', mockAllPossibleNumbers)
-      expect(newPossibleNumbers!).toEqual(mockPossibleNumbers)
-      expect(result.current.computerAI.possibleNumbers).toEqual(mockPossibleNumbers)
+      expect(newPossibleNumbers!).toStrictEqual(mockPossibleNumbers)
+      expect(result.current.computerAI.possibleNumbers).toStrictEqual(mockPossibleNumbers)
       expect(result.current.computerAI.showFeedbackForm).toBe(false)
-      expect(result.current.computerAI.playerFeedback).toEqual({ A: '', B: '' })
+      expect(result.current.computerAI.playerFeedback).toStrictEqual({ A: 0, B: 0 })
     })
   })
 
@@ -202,7 +204,7 @@ describe('useComputerAI', () => {
       })
 
       expect(result.current.computerAI.showFeedbackForm).toBe(false)
-      expect(result.current.computerAI.playerFeedback).toEqual({ A: '', B: '' })
+      expect(result.current.computerAI.playerFeedback).toStrictEqual({ A: 0, B: 0 })
     })
   })
 
@@ -219,10 +221,9 @@ describe('useComputerAI', () => {
         newPossibleNumbers = result.current.recalculatePossibleNumbers(history)
       })
 
-      expect(gameUtils.generateAllPossibleNumbers).toHaveBeenCalled()
-      expect(gameUtils.calculateAB).toHaveBeenCalled()
+      expect(gameUtils.calculatePossibleTargets).toHaveBeenCalledWith(history)
       expect(Array.isArray(newPossibleNumbers!)).toBe(true)
-      expect(result.current.computerAI.possibleNumbers).toEqual(newPossibleNumbers!)
+      expect(result.current.computerAI.possibleNumbers).toStrictEqual(newPossibleNumbers!)
     })
 
     it('should handle empty history', () => {
@@ -233,8 +234,9 @@ describe('useComputerAI', () => {
         newPossibleNumbers = result.current.recalculatePossibleNumbers([])
       })
 
-      expect(result.current.computerAI.possibleNumbers).toEqual(mockAllPossibleNumbers)
-      expect(newPossibleNumbers!).toEqual(mockAllPossibleNumbers)
+      expect(gameUtils.calculatePossibleTargets).toHaveBeenCalledWith([])
+      expect(result.current.computerAI.possibleNumbers).toStrictEqual(mockPossibleNumbers)
+      expect(newPossibleNumbers!).toStrictEqual(mockPossibleNumbers)
     })
   })
 })

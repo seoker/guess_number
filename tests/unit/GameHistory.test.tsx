@@ -1,18 +1,18 @@
 import { render, screen } from '@testing-library/react'
 import { vi, describe, it, expect, beforeEach } from 'vitest'
 import { GameHistory } from '../../src/components/GameHistory'
-import { GameRecord } from '../../src/types'
+import { GuessRecord } from '../../src/types'
 
 describe('GameHistory', () => {
   const mockT = vi.fn((key: string) => key)
 
-  const playerHistory: GameRecord[] = [
-    { guess: '1234', result: '2A1B', isCorrect: false },
-    { guess: '5678', result: '4A0B', isCorrect: true }
+  const playerHistory: GuessRecord[] = [
+    { guess: '1234', result: { A: 2, B: 1 }, isCorrect: false },
+    { guess: '5678', result: { A: 4, B: 0 }, isCorrect: true }
   ]
 
-  const computerHistory: GameRecord[] = [
-    { guess: '9876', result: '1A2B', isCorrect: false }
+  const computerHistory: GuessRecord[] = [
+    { guess: '9876', result: { A: 1, B: 2 }, isCorrect: false }
   ]
 
   beforeEach(() => {

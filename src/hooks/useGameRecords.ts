@@ -4,15 +4,49 @@ import { SavedGameRecord } from '../types'
 export const useGameRecords = () => {
   const [gameRecords, setGameRecords] = useState<SavedGameRecord[]>([])
 
-  // Load records from localStorage
+  // Load records from localStorage, validating structure and discarding incompatible data
   const loadRecords = (): SavedGameRecord[] => {
     try {
       const saved = localStorage.getItem('guessNumberGameRecords')
       if (saved) {
-        return JSON.parse(saved) as SavedGameRecord[]
+        const parsed = JSON.parse(saved)
+        
+        // Validate the data structure - discard if incompatible
+        if (Array.isArray(parsed)) {
+          const validRecords = parsed.filter(record => {
+            // Check if record has required structure
+            if (!record || typeof record !== 'object') return false
+            
+            // Check if playerHistory and computerHistory exist and are arrays
+            if (!Array.isArray(record.playerHistory) || !Array.isArray(record.computerHistory)) return false
+            
+            // Check if history records have the new structure (result as object with A/B)
+            const hasValidHistory = record.playerHistory.every((hist: any) => 
+              hist && typeof hist === 'object' && 
+              hist.result && typeof hist.result === 'object' &&
+              typeof hist.result.A === 'number' && typeof hist.result.B === 'number'
+            ) && record.computerHistory.every((hist: any) => 
+              hist && typeof hist === 'object' && 
+              hist.result && typeof hist.result === 'object' &&
+              typeof hist.result.A === 'number' && typeof hist.result.B === 'number'
+            )
+            
+            return hasValidHistory
+          })
+          
+          // If we filtered out some records, save the cleaned version
+          if (validRecords.length !== parsed.length) {
+            console.log(`Discarded ${parsed.length - validRecords.length} incompatible game records`)
+            localStorage.setItem('guessNumberGameRecords', JSON.stringify(validRecords))
+          }
+          
+          return validRecords as SavedGameRecord[]
+        }
       }
     } catch (error) {
       console.error('Failed to load game records:', error)
+      // Clear corrupted data
+      localStorage.removeItem('guessNumberGameRecords')
     }
     return []
   }

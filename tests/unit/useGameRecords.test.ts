@@ -31,13 +31,36 @@ describe('useGameRecords', () => {
 
   test('should load existing records from localStorage', () => {
     const mockRecords = [
-      { id: 1, winner: 'player', playerAttempts: 5, computerAttempts: 3, totalRounds: 8 }
+      { 
+        id: 1, 
+        winner: 'player', 
+        playerAttempts: 5, 
+        computerAttempts: 3, 
+        totalRounds: 8,
+        playerHistory: [{ guess: '1234', result: { A: 2, B: 1 }, isCorrect: false }],
+        computerHistory: [{ guess: '5678', result: { A: 1, B: 2 }, isCorrect: false }]
+      }
     ]
     localStorageMock.getItem.mockReturnValue(JSON.stringify(mockRecords))
     
     const { result } = renderHook(() => useGameRecords())
     
     expect(result.current.gameRecords).toStrictEqual(mockRecords)
+  })
+
+  test('should discard incompatible legacy records from localStorage', () => {
+    const legacyRecords = [
+      { id: 1, winner: 'player', playerAttempts: 5, computerAttempts: 3, totalRounds: 8 }
+    ]
+    localStorageMock.getItem.mockReturnValue(JSON.stringify(legacyRecords))
+    
+    const consoleSpy = vi.spyOn(console, 'log').mockImplementation(() => {})
+    
+    const { result } = renderHook(() => useGameRecords())
+    
+    expect(result.current.gameRecords).toStrictEqual([])
+    expect(consoleSpy).toHaveBeenCalledWith('Discarded 1 incompatible game records')
+    consoleSpy.mockRestore()
   })
 
   test('should add new game record', () => {

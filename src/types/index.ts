@@ -32,24 +32,47 @@ export interface GameState {
   hintsRemaining: number;
 }
 
-export interface GameRecord {
+// Base interface for any history entry (minimal shared structure)
+export interface BaseHistoryEntry {
   guess: string;
-  result: string;
+}
+
+// Modern structured approach using GuessResult for A/B values
+export interface GameGuess extends BaseHistoryEntry {
+  result: GuessResult;  // Use existing GuessResult type
+  attemptNumber: number;
+  timestamp: number;
+}
+
+// Computed properties helper
+export interface GameGuessComputed extends GameGuess {
+  readonly isCorrect: boolean;
+  readonly resultString: string; // "1A2B" format for display
+}
+
+// Updated GuessRecord to use structured result (no more string parsing!)
+export interface GuessRecord extends BaseHistoryEntry {
+  result: GuessResult;  // Now uses GuessResult instead of string
   isCorrect: boolean;
 }
 
+// Type alias for common history entry patterns
+export type HistoryEntry = GuessRecord | GameGuess;
+
+// Type alias for arrays of history entries
+export type HistoryArray = GuessRecord[] | GameGuess[];
+
+
+// Legacy interface for backward compatibility
 export interface GameHistory {
-  player: GameRecord[];
-  computer: GameRecord[];
+  player: GuessRecord[];
+  computer: GuessRecord[];
 }
 
 export interface ComputerAI {
   possibleNumbers: string[];
   currentGuess: string;
-  playerFeedback: {
-    A: string;
-    B: string;
-  };
+  playerFeedback: GuessResult;  // Now uses GuessResult instead of string values
   showFeedbackForm: boolean;
 }
 
@@ -65,11 +88,11 @@ export interface SavedGameRecord {
   playerAttempts: number;
   computerAttempts: number;
   totalRounds: number;
-  playerHistory: GameRecord[];
-  computerHistory: GameRecord[];
+  playerHistory: GuessRecord[];
+  computerHistory: GuessRecord[];
 }
 
-export interface GameResult {
+export interface GuessResult {
   A: number;
   B: number;
 }
@@ -126,7 +149,7 @@ export interface GameRecordsProps {
 }
 
 export interface FeedbackCorrectionPanelProps {
-  history: GameRecord[];
+  history: GuessRecord[];
   correctHistoryFeedback: (index: number, A: number, B: number) => void;
   cancelFeedbackCorrection: () => void;
   t: (key: string, options?: any) => string;

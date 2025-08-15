@@ -1,8 +1,9 @@
 import React, { useState } from 'react'
-import { GameRecord } from '../types'
+import { GuessRecord } from '../types'
+import { formatResultString } from '../utils/gameUtils'
 
 export interface FeedbackCorrectionPanelProps {
-  history: GameRecord[]
+  history: GuessRecord[]
   correctHistoryFeedback: (index: number, A: number, B: number) => void
   cancelFeedbackCorrection: () => void
   t: (key: string, options?: any) => string
@@ -20,11 +21,7 @@ export const FeedbackCorrectionPanel: React.FC<FeedbackCorrectionPanelProps> = (
   const handleRecordClick = (index: number): void => {
     setSelectedIndex(index)
     const record = history[index]
-    const match = record.result.match(/(\d+)A(\d+)B/)
-    if (match) {
-      const [, A, B] = match
-      setEditingFeedback({ A, B })
-    }
+    setEditingFeedback({ A: record.result.A.toString(), B: record.result.B.toString() })
   }
 
   const handleFeedbackChange = (type: 'A' | 'B', value: number): void => {
@@ -52,7 +49,7 @@ export const FeedbackCorrectionPanel: React.FC<FeedbackCorrectionPanelProps> = (
             <span className="ordinal-base correction-ordinal">{index + 1}</span>
             <div className="content-base correction-content">
               <span className="correction-guess">{record.guess}</span>
-              <span className="correction-result">{record.result}</span>
+              <span className="correction-result">{formatResultString(record.result)}</span>
             </div>
           </div>
         ))}

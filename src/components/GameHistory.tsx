@@ -1,9 +1,10 @@
 import React, { useRef, useEffect } from 'react'
-import { GameRecord } from '../types'
+import { GuessRecord } from '../types'
+import { formatResultString } from '../utils/gameUtils'
 
 export interface GameHistoryProps {
-  playerHistory: GameRecord[]
-  computerHistory: GameRecord[]
+  playerHistory: GuessRecord[]
+  computerHistory: GuessRecord[]
   t: (key: string) => string
 }
 
@@ -37,7 +38,7 @@ export const GameHistory: React.FC<GameHistoryProps> = ({
               <span className="ordinal-base history-ordinal">{index + 1}</span>
               <div className="content-base history-content">
                 <span className="history-guess">{record.guess}</span>
-                <span className="history-result">{record.result}</span>
+                <span className="history-result">{formatResultString(record.result)}</span>
               </div>
             </div>
           ))}
@@ -52,7 +53,7 @@ export const GameHistory: React.FC<GameHistoryProps> = ({
               <span className="ordinal-base history-ordinal">{index + 1}</span>
               <div className="content-base history-content">
                 <span className="history-guess">{record.guess}</span>
-                <span className="history-result">{record.result}</span>
+                <span className="history-result">{formatResultString(record.result)}</span>
               </div>
             </div>
           ))}

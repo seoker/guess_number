@@ -2,7 +2,7 @@ import { render, screen } from '@testing-library/react'
 import { vi, describe, it, expect, beforeEach } from 'vitest'
 import userEvent from '@testing-library/user-event'
 import { FeedbackCorrectionPanel } from '../../src/components/FeedbackCorrectionPanel'
-import { GameRecord } from '../../src/types'
+import { GuessRecord } from '../../src/types'
 
 describe('FeedbackCorrectionPanel', () => {
   const mockCorrectHistoryFeedback = vi.fn()
@@ -11,9 +11,9 @@ describe('FeedbackCorrectionPanel', () => {
     options ? `${key}_${options.guess}` : key
   )
 
-  const history: GameRecord[] = [
-    { guess: '1234', result: '2A1B', isCorrect: false },
-    { guess: '5678', result: '1A3B', isCorrect: false }
+  const history: GuessRecord[] = [
+    { guess: '1234', result: { A: 2, B: 1 }, isCorrect: false },
+    { guess: '5678', result: { A: 1, B: 3 }, isCorrect: false }
   ]
 
   beforeEach(() => {
@@ -135,7 +135,7 @@ describe('FeedbackCorrectionPanel', () => {
 
   it('should cycle feedback values from 4 to 0', async () => {
     const user = userEvent.setup()
-    const historyWith4 = [{ guess: '1234', result: '4A4B', isCorrect: false }]
+    const historyWith4 = [{ guess: '1234', result: { A: 4, B: 4 }, isCorrect: false }]
     
     render(
       <FeedbackCorrectionPanel

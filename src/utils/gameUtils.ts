@@ -1,4 +1,4 @@
-import { GameResult } from '../types'
+import { GuessResult, GameGuess, GuessRecord, GameGuessComputed } from '../types'
 
 export const GAME_CONFIG = {
   DIGIT_COUNT: 4,
@@ -29,21 +29,36 @@ export const generateAllPossibleNumbers = (): string[] => {
   return numbers
 }
 
-export const calculateAB = (guess: string, target: string): GameResult => {
+export const calculateAB = (guess: string, target: string): GuessResult => {
   let A = 0
   let B = 0
   const guessDigits = guess.split('')
   const targetDigits = target.split('')
 
+  // Calculate A: exact position matches
   for (let i = 0; i < GAME_CONFIG.DIGIT_COUNT; i++) {
     if (guessDigits[i] === targetDigits[i]) {
       A++
     }
   }
 
+  // Calculate B: digits in target but wrong position
+  // Use counting approach to handle duplicates correctly
+  const guessCounts: Record<string, number> = {}
+  const targetCounts: Record<string, number> = {}
+  
+  // Count digits in both strings, excluding exact matches
   for (let i = 0; i < GAME_CONFIG.DIGIT_COUNT; i++) {
-    if (targetDigits.includes(guessDigits[i]) && guessDigits[i] !== targetDigits[i]) {
-      B++
+    if (guessDigits[i] !== targetDigits[i]) {
+      guessCounts[guessDigits[i]] = (guessCounts[guessDigits[i]] || 0) + 1
+      targetCounts[targetDigits[i]] = (targetCounts[targetDigits[i]] || 0) + 1
+    }
+  }
+  
+  // B is the sum of minimum counts for each digit
+  for (const digit in guessCounts) {
+    if (targetCounts[digit]) {
+      B += Math.min(guessCounts[digit], targetCounts[digit])
     }
   }
 
@@ -77,7 +92,7 @@ export const validateFeedback = (A: number, B: number): { valid: boolean; messag
 
 export const checkFeedbackConsistency = (
   guess: string, 
-  feedback: GameResult, 
+  feedback: GuessResult, 
   possibleNumbers: string[]
 ): boolean => {
   const { A, B } = feedback
@@ -110,3 +125,117 @@ export const makeComputerGuess = (possibleNumbers: string[]): string => {
   const randomIndex = Math.floor(Math.random() * possibleNumbers.length)
   return possibleNumbers[randomIndex]
 }
+
+// Function that works with structured history formats
+export const calculatePossibleTargets = (playerHistory: GuessRecord[] | GameGuess[]): string[] => {
+  let possibleNumbers = generateAllPossibleNumbers()
+  
+  for (const record of playerHistory) {
+    possibleNumbers = possibleNumbers.filter(num => {
+      const { A, B } = calculateAB(record.guess, num)
+      return A === record.result.A && B === record.result.B
+    })
+  }
+  
+  return possibleNumbers
+}
+
+export const isGuessConsistentWithHistory = (
+  guess: string, 
+  playerHistory: GuessRecord[] | GameGuess[]
+): boolean => {
+  if (playerHistory.length === 0) {
+    return true
+  }
+  
+  const possibleTargets = calculatePossibleTargets(playerHistory)
+  return possibleTargets.includes(guess)
+}
+
+// === NEW STRUCTURE UTILITY FUNCTIONS ===
+
+// Create a GameGuess from individual components
+export const createGameGuess = (
+  guess: string,
+  result: GuessResult,
+  attemptNumber: number,
+  timestamp = Date.now()
+): GameGuess => ({
+  guess,
+  result,
+  attemptNumber,
+  timestamp
+})
+
+// Create GameGuess from guess and target (calculate A/B automatically)
+export const createGameGuessFromTarget = (
+  guess: string,
+  target: string,
+  attemptNumber: number,
+  timestamp = Date.now()
+): GameGuess => {
+  const result = calculateAB(guess, target)
+  return createGameGuess(guess, result, attemptNumber, timestamp)
+}
+
+// Convenience function to create GameGuess with A/B values directly
+export const createGameGuessFromAB = (
+  guess: string,
+  A: number,
+  B: number,
+  attemptNumber: number,
+  timestamp = Date.now()
+): GameGuess => createGameGuess(guess, { A, B }, attemptNumber, timestamp)
+
+// Add computed properties to GameGuess
+export const withComputedProperties = (gameGuess: GameGuess): GameGuessComputed => ({
+  ...gameGuess,
+  get isCorrect(): boolean {
+    return this.result.A === GAME_CONFIG.DIGIT_COUNT
+  },
+  get resultString(): string {
+    return `${this.result.A}A${this.result.B}B`
+  }
+})
+
+// Convert GuessRecord to GameGuess (both now use GuessResult)
+export const gameRecordToGameGuess = (
+  record: GuessRecord, 
+  attemptNumber: number,
+  timestamp = Date.now()
+): GameGuess => {
+  return createGameGuess(
+    record.guess,
+    record.result,  // Direct assignment since both use GuessResult
+    attemptNumber,
+    timestamp
+  )
+}
+
+// Convert GameGuess to GuessRecord (both now use GuessResult)
+export const gameGuessToGameRecord = (gameGuess: GameGuess): GuessRecord => ({
+  guess: gameGuess.guess,
+  result: gameGuess.result,  // Direct assignment since both use GuessResult
+  isCorrect: gameGuess.result.A === GAME_CONFIG.DIGIT_COUNT
+})
+
+// Helper function to convert legacy string results to GuessResult (for migration)
+export const parseResultString = (result: string): GuessResult => {
+  const match = result.match(/(\d+)A(\d+)B/)
+  if (!match) {
+    throw new Error(`Invalid result format: ${result}`)
+  }
+  
+  const [, A, B] = match
+  return { A: parseInt(A, 10), B: parseInt(B, 10) }
+}
+
+// Helper function to convert GuessResult to string (for display)
+export const formatResultString = (result: GuessResult): string => {
+  return `${result.A}A${result.B}B`
+}
+
+// Note: calculatePossibleTargetsV2 and isGuessConsistentWithHistoryV2 are no longer needed
+// since both GuessRecord and GameGuess now use the same GuessResult structure.
+// The main functions calculatePossibleTargets and isGuessConsistentWithHistory 
+// now work with both formats seamlessly.

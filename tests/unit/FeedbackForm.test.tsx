@@ -10,7 +10,7 @@ describe('FeedbackForm', () => {
 
   const defaultProps = {
     computerGuess: '1234',
-    playerFeedback: { A: '1', B: '2' },
+    playerFeedback: { A: 1, B: 2 },
     onFeedbackClick: mockOnFeedbackClick,
     onSubmit: mockOnSubmit,
     t: mockT
@@ -65,7 +65,7 @@ describe('FeedbackForm', () => {
     const user = userEvent.setup()
     const props = {
       ...defaultProps,
-      playerFeedback: { A: '4', B: '4' }
+      playerFeedback: { A: 4, B: 4 }
     }
     render(<FeedbackForm {...props} />)
 
@@ -98,7 +98,7 @@ describe('FeedbackForm', () => {
   it('should handle zero values in feedback', () => {
     const props = {
       ...defaultProps,
-      playerFeedback: { A: '', B: '' }
+      playerFeedback: { A: 0, B: 0 }
     }
     render(<FeedbackForm {...props} />)
 

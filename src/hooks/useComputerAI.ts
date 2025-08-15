@@ -1,18 +1,19 @@
 import { useState, useCallback } from 'react'
-import { ComputerAI, GameResult } from '../types'
+import { ComputerAI, GuessResult } from '../types'
+import { GuessRecord } from '../types'
 import { 
   generateAllPossibleNumbers, 
   makeComputerGuess, 
   updatePossibleNumbers,
   checkFeedbackConsistency,
-  calculateAB 
+  calculatePossibleTargets
 } from '../utils/gameUtils'
 
 export const useComputerAI = () => {
   const [computerAI, setComputerAI] = useState<ComputerAI>({
     possibleNumbers: [],
     currentGuess: '',
-    playerFeedback: { A: '', B: '' },
+    playerFeedback: { A: 0, B: 0 },
     showFeedbackForm: false
   })
 
@@ -20,7 +21,7 @@ export const useComputerAI = () => {
     setComputerAI({
       possibleNumbers: generateAllPossibleNumbers(),
       currentGuess: '',
-      playerFeedback: { A: '', B: '' },
+      playerFeedback: { A: 0, B: 0 },
       showFeedbackForm: false
     })
   }, [])
@@ -36,9 +37,10 @@ export const useComputerAI = () => {
   }, [computerAI.possibleNumbers])
 
   const updateFeedback = useCallback((type: 'A' | 'B', value: string) => {
+    const numValue = parseInt(value) || 0
     setComputerAI(prev => ({
       ...prev,
-      playerFeedback: { ...prev.playerFeedback, [type]: value }
+      playerFeedback: { ...prev.playerFeedback, [type]: numValue }
     }))
   }, [])
 
@@ -53,13 +55,13 @@ export const useComputerAI = () => {
       ...prev,
       possibleNumbers: newPossibleNumbers,
       showFeedbackForm: false,
-      playerFeedback: { A: '', B: '' }
+      playerFeedback: { A: 0, B: 0 }
     }))
     
     return newPossibleNumbers
   }, [computerAI.currentGuess, computerAI.possibleNumbers])
 
-  const checkFeedbackIsConsistent = useCallback((feedback: GameResult): boolean => {
+  const checkFeedbackIsConsistent = useCallback((feedback: GuessResult): boolean => {
     return checkFeedbackConsistency(
       computerAI.currentGuess, 
       feedback, 
@@ -71,20 +73,12 @@ export const useComputerAI = () => {
     setComputerAI(prev => ({
       ...prev,
       showFeedbackForm: false,
-      playerFeedback: { A: '', B: '' }
+      playerFeedback: { A: 0, B: 0 }
     }))
   }, [])
 
-  const recalculatePossibleNumbers = useCallback((history: Array<{ guess: string; result: string }>) => {
-    let possibleNumbers = generateAllPossibleNumbers()
-    
-    for (const record of history) {
-      possibleNumbers = possibleNumbers.filter(num => {
-        const { A, B } = calculateAB(record.guess, num)
-        return `${A}A${B}B` === record.result
-      })
-    }
-    
+  const recalculatePossibleNumbers = useCallback((history: GuessRecord[]) => {
+    const possibleNumbers = calculatePossibleTargets(history)
     setComputerAI(prev => ({ ...prev, possibleNumbers }))
     return possibleNumbers
   }, [])
