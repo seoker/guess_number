@@ -56,6 +56,81 @@ npm run build
 npm run deploy
 ```
 
+## 📝 Commit Message Policy
+
+This project follows a structured commit message format to maintain clear project history and enable automated changelog generation.
+
+### Commit Message Format
+
+```
+<type>(<scope>): <description>
+
+[optional body]
+
+[optional footer]
+```
+
+### Types
+
+- **`feat`** - New features or enhancements
+- **`fix`** - Bug fixes and corrections
+- **`docs`** - Documentation updates
+- **`style`** - Code style changes (formatting, missing semicolons, etc.)
+- **`refactor`** - Code refactoring without changing functionality
+- **`perf`** - Performance improvements
+- **`test`** - Adding or updating tests
+- **`chore`** - Maintenance tasks, dependencies, build processes
+- **`ci`** - Continuous integration changes
+- **`build`** - Build system or external dependencies
+
+### Scope (Optional)
+
+- **`ui`** - User interface changes
+- **`api`** - API or data layer changes
+- **`auth`** - Authentication related changes
+- **`i18n`** - Internationalization changes
+- **`test`** - Testing framework changes
+- **`deps`** - Dependency updates
+
+### Examples
+
+```bash
+# Feature addition
+feat(ui): add dark mode toggle to navigation bar
+
+# Bug fix
+fix(game): resolve infinite loop in computer AI logic
+
+# Documentation
+docs: update README with new deployment instructions
+
+# Test improvements
+test(unit): add comprehensive tests for useGameLogic hook
+
+# Dependency update
+chore(deps): update vitest to version 3.2.4
+
+# Performance improvement
+perf(game): optimize number generation algorithm
+```
+
+### Guidelines
+
+1. **Use present tense** ("add" not "added")
+2. **Use imperative mood** ("move cursor" not "moves cursor")
+3. **Keep first line under 72 characters**
+4. **Capitalize first letter of description**
+5. **No period at the end of description**
+6. **Reference issues in footer when applicable**
+
+### Benefits
+
+- **Clear History**: Easy to understand what each commit does
+- **Automated Changelogs**: Tools can generate release notes automatically
+- **Better Collaboration**: Team members can quickly understand changes
+- **Easier Debugging**: Clear commit history helps track down issues
+- **Professional Standards**: Follows industry best practices
+
 ## 🛠️ Technical Features
 
 - **React 18** - Modern frontend framework
