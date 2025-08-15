@@ -56,6 +56,26 @@
     transform: scale(0.95) !important;
     transition: all 0.05s ease !important;
   }
+  
+  /* Global disabled button styling for mobile */
+  button:disabled,
+  .game-button:disabled,
+  .hint-button:disabled {
+    background: #6c757d !important;
+    color: #ffffff !important;
+    opacity: 0.7 !important;
+    box-shadow: none !important;
+    -webkit-filter: grayscale(0.3);
+    filter: grayscale(0.3);
+    cursor: not-allowed !important;
+  }
+  
+  button:disabled:active,
+  .game-button:disabled:active,
+  .hint-button:disabled:active {
+    transform: none !important;
+    scale: 1 !important;
+  }
 }
 
 /* Utility Classes for Common Patterns */
