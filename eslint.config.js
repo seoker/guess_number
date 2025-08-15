@@ -100,7 +100,7 @@ export default defineConfig([
       'vitest/prefer-comparison-matcher': 'error',
       'vitest/prefer-equality-matcher': 'error',
       'vitest/prefer-hooks-in-order': 'error',
-      'vitest/prefer-lowercase-title': 'error',
+      'vitest/prefer-lowercase-title': 'off', // Allow descriptive test suite names
       'vitest/prefer-spy-on': 'error',
       'vitest/prefer-strict-equal': 'error',
       'vitest/prefer-to-be': 'error',

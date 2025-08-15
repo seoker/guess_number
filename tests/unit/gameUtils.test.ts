@@ -12,7 +12,7 @@ import {
 // This function is tested through integration tests instead
 
 describe('gameUtils', () => {
-  // eslint-disable-next-line vitest/prefer-lowercase-title
+   
   describe('GAME_CONFIG', () => {
     it('should have correct configuration values', () => {
       expect(GAME_CONFIG.DIGIT_COUNT).toBe(4)

@@ -29,7 +29,7 @@ vi.mock('react-i18next', () => ({
   })
 }))
 
-// eslint-disable-next-line vitest/prefer-lowercase-title
+ 
 describe('GameRecords', () => {
   const mockClearAllRecords = vi.fn()
   const mockT = vi.fn((key: string, options?: any) => {
