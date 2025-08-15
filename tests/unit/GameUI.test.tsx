@@ -13,6 +13,157 @@ import {
   GameUIProps
 } from '../../src/types/index'
 
+// Mock the custom hooks
+vi.mock('../../src/hooks/useConfirmationDialogs', () => ({
+  useConfirmationDialogs: vi.fn(() => ({
+    showResetConfirmation: vi.fn(),
+    showRestartConfirmation: vi.fn()
+  }))
+}))
+
+// Mock all the individual components
+vi.mock('../../src/components/StartScreen', () => ({
+  StartScreen: vi.fn(({ startNewGame, t }) => (
+    <div className="start-screen">
+      <p className="description">
+        {t('description')}<br/>
+        <strong>{t('rules')}</strong>{t('rulesDetail')}<br/>
+        <strong>{t('aExplanation')}</strong><br/>
+        <strong>{t('bExplanation')}</strong>
+      </p>
+      <button className="start-button" onClick={startNewGame}>{t('startGame')}</button>
+    </div>
+  ))
+}))
+
+vi.mock('../../src/components/FeedbackForm', () => ({
+  FeedbackForm: vi.fn(({ computerGuess, playerFeedback, onFeedbackClick, onSubmit, t }) => (
+    <div className="feedback-section">
+      <h3>{t('computerGuess')}{computerGuess}</h3>
+      <p>{t('feedbackHint')}</p>
+      <div className="feedback-display">
+        <button 
+          className="feedback-element clickable"
+          onClick={() => {
+            const currentA = parseInt(playerFeedback.A || '0');
+            const nextA = (currentA + 1) % 5;
+            onFeedbackClick('A', nextA);
+          }}
+        >
+          {playerFeedback.A || '0'}
+        </button>
+        <span className="feedback-element static">A</span>
+        <button 
+          className="feedback-element clickable"
+          onClick={() => {
+            const currentB = parseInt(playerFeedback.B || '0');
+            const nextB = (currentB + 1) % 5;
+            onFeedbackClick('B', nextB);
+          }}
+        >
+          {playerFeedback.B || '0'}
+        </button>
+        <span className="feedback-element static">B</span>
+      </div>
+      <button onClick={onSubmit}>{t('submitFeedback')}</button>
+    </div>
+  ))
+}))
+
+vi.mock('../../src/components/DigitInputs', () => ({
+  DigitInputs: vi.fn(({ playerGuess, updatePlayerGuess, handlePlayerGuess, disabled }) => (
+    <div className="digit-inputs">
+      {[0, 1, 2, 3].map(index => (
+        <input
+          key={index}
+          id={`digit-${index}`}
+          type="text"
+          inputMode="numeric"
+          pattern="[0-9]"
+          value={playerGuess[index] && playerGuess[index] !== ' ' ? playerGuess[index] : ''}
+          onChange={(e) => {
+            const digit = e.target.value.replace(/\D/g, '').slice(-1)
+            const newDigits = new Array(4).fill('')
+            for (let i = 0; i < Math.min(playerGuess.length, 4); i++) {
+              if (playerGuess[i] && playerGuess[i] !== ' ') {
+                newDigits[i] = playerGuess[i]
+              }
+            }
+            newDigits[index] = digit
+            let updatedGuess = ''
+            for (let i = 0; i < 4; i++) {
+              if (newDigits[i]) {
+                while (updatedGuess.length < i) {
+                  updatedGuess += ' '
+                }
+                updatedGuess += newDigits[i]
+              }
+            }
+            updatePlayerGuess(updatedGuess)
+          }}
+          className="digit-input"
+          disabled={disabled}
+          maxLength={1}
+          placeholder="?"
+        />
+      ))}
+    </div>
+  ))
+}))
+
+vi.mock('../../src/components/GameHistory', () => ({
+  GameHistory: vi.fn(({ playerHistory, computerHistory, t }) => (
+    <div className="history-container">
+      <div className="history-section">
+        <h3>{t('playerHistory')}</h3>
+        <div className="history-list">
+          {playerHistory.map((record: any, index: number) => (
+            <div key={index} className={`history-item ${record.isCorrect ? 'correct' : ''}`}>
+              <span>{record.guess}</span>
+              <span>{record.result}</span>
+            </div>
+          ))}
+        </div>
+      </div>
+      <div className="history-section">
+        <h3>{t('computerHistory')}</h3>
+        <div className="history-list">
+          {computerHistory.map((record: any, index: number) => (
+            <div key={index} className={`history-item ${record.isCorrect ? 'correct' : ''}`}>
+              <span>{record.guess}</span>
+              <span>{record.result}</span>
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
+  ))
+}))
+
+vi.mock('../../src/components/WinScreen', () => ({
+  WinScreen: vi.fn(({ startNewGame, t }) => (
+    <div className="win-section">
+      <p>{t('gameOver')}</p>
+      <button onClick={startNewGame}>{t('playAgain')}</button>
+    </div>
+  ))
+}))
+
+vi.mock('../../src/components/FeedbackCorrectionPanel', () => ({
+  FeedbackCorrectionPanel: vi.fn(({ history, correctHistoryFeedback, cancelFeedbackCorrection, t }) => (
+    <div className="correction-panel">
+      <h3>{t('correctFeedback')}</h3>
+      <p>{t('selectCorrection')}</p>
+      {history.map((record: any, index: number) => (
+        <div key={index} className="correction-item">
+          <span>{record.guess}</span>
+          <span>{record.result}</span>
+        </div>
+      ))}
+    </div>
+  ))
+}))
+
 // Mock hooks with proper TypeScript types
 const mockGameState: GameState = {
   gameStarted: false,
@@ -69,7 +220,7 @@ const mockProps: GameUIProps = {
   ]) as () => Language[]
 }
 
-// eslint-disable-next-line vitest/prefer-lowercase-title
+ 
 describe('GameUI', () => {
   beforeEach(() => {
     vi.clearAllMocks()
