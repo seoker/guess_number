@@ -57,6 +57,12 @@
     transition: all 0.05s ease !important;
   }
   
+  /* Prevent unwanted movement for digit inputs on mobile */
+  .digit-input:active {
+    transform: none !important;
+    transition: all 0.05s ease !important;
+  }
+  
   /* Global disabled button styling for mobile */
   button:disabled,
   .game-button:disabled,

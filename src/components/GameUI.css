@@ -400,12 +400,12 @@
 .digit-input:focus {
   border-color: #667eea;
   box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
-  transform: scale(1.05);
+  /* Removed scale transform to prevent unwanted movement */
+  /* transform: scale(1.05); */
 }
 
 .digit-input:hover:not(:disabled) {
   border-color: #667eea;
-  transform: translateY(-1px);
 }
 
 .digit-input:disabled {
@@ -921,6 +921,12 @@
     transition: all 0.05s ease !important;
   }
   
+  /* Prevent unwanted movement for digit inputs on mobile */
+  .digit-input:active {
+    transform: none !important;
+    transition: all 0.05s ease !important;
+  }
+  
   /* Mobile-specific disabled button styling */
   .game-button:disabled,
   .hint-button:disabled {
@@ -1130,6 +1136,12 @@
   .number-button:active,
   .feedback-element:active {
     transform: scale(0.95) !important;
+    transition: all 0.05s ease !important;
+  }
+  
+  /* Prevent unwanted movement for digit inputs on mobile */
+  .digit-input:active {
+    transform: none !important;
     transition: all 0.05s ease !important;
   }
   
