@@ -1,3 +1,63 @@
+/* Global styles - consolidated from App.css and index.css */
+:root {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  line-height: 1.5;
+  font-weight: 400;
+  
+  /* Light mode defaults */
+  color-scheme: light dark;
+  color: #213547;
+  background-color: #ffffff;
+  
+  /* Font rendering optimizations */
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  -webkit-text-size-adjust: 100%;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+/* Mobile performance optimizations */
+@media (max-width: 768px) {
+  * {
+    -webkit-tap-highlight-color: transparent;
+  }
+  
+  button, input, select, textarea {
+    touch-action: manipulation;
+    -webkit-appearance: none;
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    user-select: none;
+  }
+  
+  /* Faster transitions on mobile */
+  .game-button,
+  .number-button,
+  .digit-input,
+  .feedback-element,
+  .feedback-display,
+  .guess-input,
+  .start-button,
+  .restart-link {
+    transition: all 0.15s ease !important;
+  }
+  
+  .game-button:active,
+  .number-button:active,
+  .feedback-element:active,
+  .start-button:active {
+    transform: scale(0.95) !important;
+    transition: all 0.05s ease !important;
+  }
+}
+
 /* Utility Classes for Common Patterns */
 
 /* Glass morphism containers */

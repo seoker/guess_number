@@ -3,7 +3,7 @@ import { GuessResult, GameGuess, GuessRecord, GameGuessComputed } from '../types
 export const GAME_CONFIG = {
   DIGIT_COUNT: 4,
   MAX_DIGIT: 10,
-  COMPUTER_THINKING_TIME: 1000
+  COMPUTER_THINKING_TIME: 100
 } as const
 
 export const generateTargetNumber = (): string => {

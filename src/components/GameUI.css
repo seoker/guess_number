@@ -877,6 +877,25 @@
     border-radius: 15px;
   }
   
+  /* Mobile performance optimizations */
+  .game-button,
+  .number-button,
+  .digit-input,
+  .feedback-element,
+  .feedback-display,
+  .guess-input {
+    transition: all 0.15s ease !important;
+    -webkit-tap-highlight-color: transparent;
+    touch-action: manipulation;
+  }
+  
+  .game-button:active,
+  .number-button:active,
+  .feedback-element:active {
+    transform: scale(0.95) !important;
+    transition: all 0.05s ease !important;
+  }
+  
   .guess-section {
     padding: 0.8rem;
     border-radius: 12px;
@@ -1053,6 +1072,25 @@
 
 /* Mobile phones - landscape & tablets - portrait */
 @media (max-width: 768px) and (min-width: 481px) {
+  /* Mobile performance optimizations */
+  .game-button,
+  .number-button,
+  .digit-input,
+  .feedback-element,
+  .feedback-display,
+  .guess-input {
+    transition: all 0.15s ease !important;
+    -webkit-tap-highlight-color: transparent;
+    touch-action: manipulation;
+  }
+  
+  .game-button:active,
+  .number-button:active,
+  .feedback-element:active {
+    transform: scale(0.95) !important;
+    transition: all 0.05s ease !important;
+  }
+  
   .main-container {
     padding: 1.5rem;
     margin: 1rem auto;
