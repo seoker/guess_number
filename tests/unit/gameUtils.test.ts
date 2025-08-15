@@ -2,9 +2,13 @@ import { describe, it, expect } from 'vitest'
 import {
   GAME_CONFIG,
   generateTargetNumber,
+  generateAllPossibleNumbers,
   calculateAB,
   validateNumber,
-  validateFeedback
+  validateFeedback,
+  updatePossibleNumbers,
+  makeComputerGuess,
+  checkFeedbackConsistency
 } from '../../src/utils/gameUtils'
 
 // NOTE: generateAllPossibleNumbers() tests are omitted due to memory constraints
@@ -189,6 +193,163 @@ describe('gameUtils', () => {
         valid: false, 
         message: 'invalidFeedback' 
       })
+    })
+  })
+
+  describe('generateAllPossibleNumbers', () => {
+    it('should generate a reasonable sample of valid numbers', () => {
+      // Test a smaller subset to avoid memory issues
+      const numbers = generateAllPossibleNumbers()
+      
+      // Should be an array
+      expect(Array.isArray(numbers)).toBe(true)
+      
+      // Should have substantial length (5040 total possible)
+      expect(numbers.length).toBeGreaterThan(4000)
+      
+      // Sample some numbers to verify they're valid
+      const sample = numbers.slice(0, 100)
+      sample.forEach(num => {
+        expect(num).toHaveLength(4)
+        expect(/^\d{4}$/.test(num)).toBe(true)
+        const digits = num.split('')
+        const uniqueDigits = new Set(digits)
+        expect(uniqueDigits.size).toBe(4) // All digits unique
+      })
+    })
+
+    it('should not include numbers with duplicate digits', () => {
+      const numbers = generateAllPossibleNumbers()
+      const sampledNumbers = numbers.slice(0, 200)
+      
+      sampledNumbers.forEach(num => {
+        const digits = num.split('')
+        const uniqueDigits = new Set(digits)
+        expect(uniqueDigits.size).toBe(4)
+      })
+    })
+  })
+
+  describe('updatePossibleNumbers', () => {
+    it('should filter numbers based on feedback result', () => {
+      const possibleNumbers = ['1234', '5678', '1243', '5687']
+      const guess = '1234'
+      const result = '4A0B' // Perfect match
+      
+      const updated = updatePossibleNumbers(guess, result, possibleNumbers)
+      expect(updated).toEqual(['1234'])
+    })
+
+    it('should handle partial matches correctly', () => {
+      const possibleNumbers = ['1234', '1243', '1324', '4321']
+      const guess = '1234'
+      const result = '2A2B' // 2 correct positions, 2 wrong positions
+      
+      const updated = updatePossibleNumbers(guess, result, possibleNumbers)
+      // Both '1243' and '1324' match the pattern: 
+      // '1243': positions 0,2 match (1,4), positions 1,3 are swapped (2,3) = 2A2B
+      // '1324': positions 0,2 match (1,2), positions 1,3 contain 3,4 from guess = 2A2B
+      expect(updated).toEqual(['1243', '1324'])
+    })
+
+    it('should handle no matches', () => {
+      const possibleNumbers = ['1234', '5678']
+      const guess = '1234'
+      const result = '0A0B' // No matches
+      
+      const updated = updatePossibleNumbers(guess, result, possibleNumbers)
+      expect(updated).toEqual(['5678'])
+    })
+
+    it('should return empty array when no numbers match', () => {
+      const possibleNumbers = ['1234', '1243']
+      const guess = '5678'
+      const result = '4A0B' // Impossible result
+      
+      const updated = updatePossibleNumbers(guess, result, possibleNumbers)
+      expect(updated).toEqual([])
+    })
+  })
+
+  describe('makeComputerGuess', () => {
+    it('should return a random number from possible numbers', () => {
+      const possibleNumbers = ['1234', '5678', '9012']
+      const guess = makeComputerGuess(possibleNumbers)
+      
+      expect(possibleNumbers).toContain(guess)
+    })
+
+    it('should handle single possible number', () => {
+      const possibleNumbers = ['1234']
+      const guess = makeComputerGuess(possibleNumbers)
+      
+      expect(guess).toBe('1234')
+    })
+
+    it('should generate target number when no possible numbers', () => {
+      const possibleNumbers: string[] = []
+      const guess = makeComputerGuess(possibleNumbers)
+      
+      expect(guess).toHaveLength(4)
+      expect(/^\d{4}$/.test(guess)).toBe(true)
+      
+      // Should have unique digits
+      const digits = guess.split('')
+      const uniqueDigits = new Set(digits)
+      expect(uniqueDigits.size).toBe(4)
+    })
+
+    it('should return different guesses for multiple calls with multiple options', () => {
+      const possibleNumbers = ['1234', '5678', '9012', '3456', '7890', '2345']
+      const guesses = new Set()
+      
+      // Make multiple guesses to test randomness
+      for (let i = 0; i < 20; i++) {
+        const guess = makeComputerGuess(possibleNumbers)
+        guesses.add(guess)
+        expect(possibleNumbers).toContain(guess)
+      }
+      
+      // Should get some variety (not always the same number)
+      expect(guesses.size).toBeGreaterThan(1)
+    })
+  })
+
+  describe('checkFeedbackConsistency', () => {
+    it('should return true for consistent feedback', () => {
+      const possibleNumbers = ['1234', '1243', '5678']
+      const guess = '1234'
+      const feedback = { A: 4, B: 0 }
+      
+      const isConsistent = checkFeedbackConsistency(guess, feedback, possibleNumbers)
+      expect(isConsistent).toBe(true)
+    })
+
+    it('should return false for inconsistent feedback', () => {
+      const possibleNumbers = ['1234', '1243']
+      const guess = '5678'
+      const feedback = { A: 4, B: 0 } // Impossible with these possible numbers
+      
+      const isConsistent = checkFeedbackConsistency(guess, feedback, possibleNumbers)
+      expect(isConsistent).toBe(false)
+    })
+
+    it('should handle edge case with empty possible numbers', () => {
+      const possibleNumbers: string[] = []
+      const guess = '1234'
+      const feedback = { A: 2, B: 1 }
+      
+      const isConsistent = checkFeedbackConsistency(guess, feedback, possibleNumbers)
+      expect(isConsistent).toBe(false)
+    })
+
+    it('should validate complex feedback patterns', () => {
+      const possibleNumbers = ['1234', '1324', '2341', '3241']
+      const guess = '1243'
+      const feedback = { A: 1, B: 3 } // 1 in correct position, 3 in wrong positions
+      
+      const isConsistent = checkFeedbackConsistency(guess, feedback, possibleNumbers)
+      expect(isConsistent).toBe(true)
     })
   })
 
