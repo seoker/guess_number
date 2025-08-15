@@ -29,6 +29,7 @@ export interface GameState {
   currentTurn: CurrentTurn;
   message: string;
   messageType: MessageType;
+  hintsRemaining: number;
 }
 
 export interface GameRecord {
@@ -111,6 +112,7 @@ export interface GameUIProps {
   resetGame: () => void;
   correctHistoryFeedback: (index: number, A: number, B: number) => void;
   cancelFeedbackCorrection: () => void;
+  handleHintCheck: () => void;
   t: (key: string, options?: any) => string;
   currentLanguage: string;
   changeLanguage: (lng: string) => void;

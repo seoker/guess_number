@@ -90,5 +90,11 @@
   "gameIncomplete": "Game Incomplete",
   "playerWonInRounds": "Player won in {{rounds}} rounds",
   "computerWonInRounds": "Computer won in {{rounds}} rounds",
-  "drawInRounds": "Draw in {{rounds}} rounds"
+  "drawInRounds": "Draw in {{rounds}} rounds",
+  
+  "checkHint": "Check",
+  "hintButtonTooltip": "Check if your current guess is consistent with your previous guesses ({{remaining}} hints remaining)",
+  "noHintsRemaining": "No hints remaining! You've used all 3 hints for this game.",
+  "hintConsistent": "✓ Your guess is consistent with your previous guess history.",
+  "hintInconsistent": "✗ Your guess is NOT consistent with your previous guess history. Consider revising it."
 }

@@ -90,5 +90,11 @@
   "gameIncomplete": "ゲーム未完了",
   "playerWonInRounds": "プレイヤーが{{rounds}}ラウンドで勝利",
   "computerWonInRounds": "コンピュータが{{rounds}}ラウンドで勝利",
-  "drawInRounds": "{{rounds}}ラウンドで引き分け"
+  "drawInRounds": "{{rounds}}ラウンドで引き分け",
+  
+  "checkHint": "チェック",
+  "hintButtonTooltip": "現在の推測が過去の推測と一致するかチェック（残り{{remaining}}回のヒント）",
+  "noHintsRemaining": "ヒントが残っていません！このゲームで3回のヒントをすべて使い切りました。",
+  "hintConsistent": "✓ あなたの推測は過去の推測履歴と一致しています。",
+  "hintInconsistent": "✗ あなたの推測は過去の推測履歴と一致していません。修正を検討してください。"
 }

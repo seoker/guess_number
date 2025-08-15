@@ -18,6 +18,7 @@ export const GameUI: React.FC<GameUIProps> = ({
   resetGame,
   correctHistoryFeedback,
   cancelFeedbackCorrection,
+  handleHintCheck,
   t
 }) => {
   const inputRef = useRef<HTMLInputElement>(null)
@@ -265,6 +266,14 @@ export const GameUI: React.FC<GameUIProps> = ({
                       disabled={gameState.gameWon || gameState.currentTurn !== 'player' || gameState.playerGuess.length !== 4}
                     >
                       {t('guess')}
+                    </button>
+                    <button 
+                      onClick={handleHintCheck}
+                      className="game-button hint-button"
+                      disabled={gameState.gameWon || gameState.currentTurn !== 'player' || gameState.playerGuess.length !== 4 || gameState.hintsRemaining <= 0 || history.player.length === 0}
+                      title={t('hintButtonTooltip', { remaining: gameState.hintsRemaining })}
+                    >
+                      {t('checkHint')} ({gameState.hintsRemaining})
                     </button>
                     <button 
                       className="restart-link"

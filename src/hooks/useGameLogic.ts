@@ -28,7 +28,8 @@ export const useGameLogic = (addGameRecord: (record: Omit<SavedGameRecord, 'id' 
     computerFinalTurn,
     computerWins,
     gameDraw,
-    switchToPlayer
+    switchToPlayer,
+    consumeHint
   } = useGameState()
   
   const {
@@ -262,6 +263,47 @@ export const useGameLogic = (addGameRecord: (record: Omit<SavedGameRecord, 'id' 
     clearMessage()
   }, [cancelCorrection, clearMessage])
 
+  // Handle hint check
+  const handleHintCheck = useCallback((): void => {
+    if (gameState.hintsRemaining <= 0) {
+      setMessage(t('noHintsRemaining'), MessageType.INFO)
+      return
+    }
+
+    const validation = validateNumber(gameState.playerGuess)
+    if (!validation.valid) {
+      setMessage(t(validation.message || ''), MessageType.INFO)
+      return
+    }
+
+    // Don't allow hint check if no previous guesses exist
+    if (history.player.length === 0) {
+      return
+    }
+
+    // Check if current guess could be the computer's target given previous feedback
+    // For each previous guess, if currentGuess were the target, would it produce the same A/B result?
+    let isConsistent = true
+    for (const record of history.player) {
+      const calculatedAB = calculateAB(record.guess, gameState.playerGuess)
+      const actualResult = record.result.match(/(\d+)A(\d+)B/)
+      if (actualResult) {
+        const [, A, B] = actualResult
+        if (calculatedAB.A !== parseInt(A) || calculatedAB.B !== parseInt(B)) {
+          isConsistent = false
+          break
+        }
+      }
+    }
+
+    consumeHint()
+    
+    if (isConsistent) {
+      setMessage(t('hintConsistent'), MessageType.SUCCESS)
+    } else {
+      setMessage(t('hintInconsistent'), MessageType.INFO)
+    }
+  }, [gameState.playerGuess, gameState.hintsRemaining, history.player, setMessage, consumeHint, t])
 
   return {
     // State
@@ -281,6 +323,7 @@ export const useGameLogic = (addGameRecord: (record: Omit<SavedGameRecord, 'id' 
     resetGame,
     correctHistoryFeedback,
     cancelFeedbackCorrection,
+    handleHintCheck,
     
     // Constants
     GAME_CONFIG,

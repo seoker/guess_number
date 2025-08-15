@@ -37,7 +37,8 @@ function App(): React.ReactElement {
     startFeedbackCorrection,
     resetGame,
     correctHistoryFeedback,
-    cancelFeedbackCorrection
+    cancelFeedbackCorrection,
+    handleHintCheck
   } = useGameLogic(addGameRecord)
 
   const handleViewChange = (view: string): void => {
@@ -72,6 +73,7 @@ function App(): React.ReactElement {
             resetGame={resetGame}
             correctHistoryFeedback={correctHistoryFeedback}
             cancelFeedbackCorrection={cancelFeedbackCorrection}
+            handleHintCheck={handleHintCheck}
             t={t}
             currentLanguage={i18n.language}
             changeLanguage={changeLanguage}

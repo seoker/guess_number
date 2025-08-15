@@ -23,7 +23,8 @@ const mockGameState: GameState = {
   computerAttempts: 0,
   message: '',
   computerTarget: '1234',
-  messageType: MessageType.INFO
+  messageType: MessageType.INFO,
+  hintsRemaining: 3
 }
 
 const mockHistory: GameHistory = {
@@ -58,6 +59,7 @@ const mockProps: GameUIProps = {
   resetGame: vi.fn() as () => void,
   correctHistoryFeedback: vi.fn() as (index: number, A: number, B: number) => void,
   cancelFeedbackCorrection: vi.fn() as () => void,
+  handleHintCheck: vi.fn() as () => void,
   t: vi.fn((key: string) => key) as (key: string, options?: any) => string,
   currentLanguage: 'zh-TW',
   changeLanguage: vi.fn() as (lng: string) => void,
@@ -486,6 +488,100 @@ describe('GameUI', () => {
       await user.click(resetButton)
       // The function should not be called immediately due to confirmation dialog
       expect(mockProps.resetGame).toHaveBeenCalledTimes(0)
+    })
+  })
+
+  describe('hint functionality', () => {
+    const propsWithHistory = {
+      ...mockProps,
+      gameState: {
+        ...mockGameState,
+        gameStarted: true,
+        currentTurn: CurrentTurn.PLAYER,
+        playerGuess: '1234',
+        hintsRemaining: 3
+      },
+      history: {
+        player: [{ guess: '5678', result: '0A2B', isCorrect: false }],
+        computer: []
+      }
+    }
+
+    it('should display hint button with remaining count', () => {
+      render(<GameUI {...propsWithHistory} />)
+      
+      const hintButton = screen.getByText('checkHint (3)')
+      expect(hintButton).toBeInTheDocument()
+    })
+
+    it('should disable hint button when no history exists', () => {
+      const propsNoHistory = {
+        ...propsWithHistory,
+        history: { player: [], computer: [] }
+      }
+      
+      render(<GameUI {...propsNoHistory} />)
+      
+      const hintButton = screen.getByText('checkHint (3)')
+      expect(hintButton).toBeDisabled()
+    })
+
+    it('should disable hint button when no hints remaining', () => {
+      const propsNoHints = {
+        ...propsWithHistory,
+        gameState: {
+          ...propsWithHistory.gameState,
+          hintsRemaining: 0
+        }
+      }
+      
+      render(<GameUI {...propsNoHints} />)
+      
+      const hintButton = screen.getByText('checkHint (0)')
+      expect(hintButton).toBeDisabled()
+    })
+
+    it('should disable hint button when guess is incomplete', () => {
+      const propsIncompleteGuess = {
+        ...propsWithHistory,
+        gameState: {
+          ...propsWithHistory.gameState,
+          playerGuess: '123'
+        }
+      }
+      
+      render(<GameUI {...propsIncompleteGuess} />)
+      
+      const hintButton = screen.getByText('checkHint (3)')
+      expect(hintButton).toBeDisabled()
+    })
+
+    it('should call handleHintCheck when hint button clicked', async () => {
+      const user = userEvent.setup()
+      render(<GameUI {...propsWithHistory} />)
+      
+      const hintButton = screen.getByText('checkHint (3)')
+      await user.click(hintButton)
+      
+      expect(mockProps.handleHintCheck).toHaveBeenCalledTimes(1)
+    })
+
+    it('should not show hint button during computer turn', () => {
+      const propsComputerTurn = {
+        ...propsWithHistory,
+        gameState: {
+          ...propsWithHistory.gameState,
+          currentTurn: CurrentTurn.COMPUTER
+        },
+        computerAI: {
+          ...mockComputerAI,
+          showFeedbackForm: true
+        }
+      }
+      
+      render(<GameUI {...propsComputerTurn} />)
+      
+      expect(screen.queryByText(/checkHint/)).not.toBeInTheDocument()
     })
   })
 })

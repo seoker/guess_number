@@ -16,7 +16,8 @@ enum GameActionType {
   COMPUTER_WINS = 'COMPUTER_WINS',
   GAME_DRAW = 'GAME_DRAW',
   SWITCH_TO_PLAYER = 'SWITCH_TO_PLAYER',
-  SWITCH_TO_COMPUTER = 'SWITCH_TO_COMPUTER'
+  SWITCH_TO_COMPUTER = 'SWITCH_TO_COMPUTER',
+  USE_HINT = 'USE_HINT'
 }
 
 type GameAction =
@@ -34,6 +35,7 @@ type GameAction =
   | { type: GameActionType.GAME_DRAW; payload: number }
   | { type: GameActionType.SWITCH_TO_PLAYER }
   | { type: GameActionType.SWITCH_TO_COMPUTER }
+  | { type: GameActionType.USE_HINT }
 
 const initialState: GameState = {
   computerTarget: '',
@@ -44,7 +46,8 @@ const initialState: GameState = {
   computerAttempts: 0,
   gameWon: false,
   gameStarted: false,
-  currentTurn: CurrentTurn.PLAYER
+  currentTurn: CurrentTurn.PLAYER,
+  hintsRemaining: 3
 }
 
 const gameStateReducer = (state: GameState, action: GameAction): GameState => {
@@ -54,7 +57,8 @@ const gameStateReducer = (state: GameState, action: GameAction): GameState => {
         ...initialState,
         computerTarget: generateTargetNumber(),
         gameStarted: true,
-        currentTurn: CurrentTurn.PLAYER
+        currentTurn: CurrentTurn.PLAYER,
+        hintsRemaining: 3
       }
 
     case GameActionType.RESET_GAME:
@@ -62,7 +66,8 @@ const gameStateReducer = (state: GameState, action: GameAction): GameState => {
         ...initialState,
         computerTarget: generateTargetNumber(),
         gameStarted: true,
-        currentTurn: CurrentTurn.PLAYER
+        currentTurn: CurrentTurn.PLAYER,
+        hintsRemaining: 3
       }
 
     case GameActionType.UPDATE_PLAYER_GUESS:
@@ -169,6 +174,12 @@ const gameStateReducer = (state: GameState, action: GameAction): GameState => {
         currentTurn: CurrentTurn.COMPUTER
       }
 
+    case GameActionType.USE_HINT:
+      return {
+        ...state,
+        hintsRemaining: Math.max(0, state.hintsRemaining - 1)
+      }
+
     default:
       return state
   }
@@ -233,6 +244,10 @@ export const useGameState = () => {
     dispatch({ type: GameActionType.SWITCH_TO_COMPUTER })
   }, [])
 
+  const consumeHint = useCallback(() => {
+    dispatch({ type: GameActionType.USE_HINT })
+  }, [])
+
   return {
     gameState,
     startNewGame,
@@ -248,6 +263,7 @@ export const useGameState = () => {
     computerWins,
     gameDraw,
     switchToPlayer,
-    switchToComputer
+    switchToComputer,
+    consumeHint
   }
 }
