@@ -37,7 +37,7 @@
   "computerWon": "電腦贏了！電腦猜對了你的數字！電腦的數字是：{{computerNumber}}",
   "gameDraw": "平手！你和電腦在同一回合都找到了正確答案！",
   "playerFoundAnswer": "你找到了答案！電腦獲得最後一次猜測機會。",
-  "computerFinalGuess": "電腦的最後猜測：",
+  "computerFinalGuess": "電腦的最後猜測：{{guess}}",
   
   "yourHint": "你的提示：",
   "computerThinking": "請填入幾A幾B的提示",

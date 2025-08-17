@@ -37,7 +37,7 @@
   "computerWon": "Computer won! The computer guessed your number correctly! The computer's number was: {{computerNumber}}",
   "gameDraw": "It's a draw! Both you and the computer found the correct numbers in the same round!",
   "playerFoundAnswer": "You found the answer! Computer gets one final guess.",
-  "computerFinalGuess": "Computer's final guess:",
+  "computerFinalGuess": "Computer's final guess: {{guess}}",
   
   "yourHint": "Your hint:",
   "computerThinking": "Please enter the A and B feedback",

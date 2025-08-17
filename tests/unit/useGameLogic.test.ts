@@ -5,9 +5,27 @@ import { useGameLogic } from '../../src/hooks/useGameLogic'
 // Mock react-i18next
 vi.mock('react-i18next', () => ({
   useTranslation: () => ({
-    t: (key: string) => key
+    t: (key: string, params?: Record<string, any>) => {
+      if (params) {
+        // Simple parameter substitution for testing
+        return key + JSON.stringify(params)
+      }
+      return key
+    }
   })
 }))
+
+// Helper function to get effective message (either from message or messageInfo)
+const getEffectiveMessage = (gameState: any): string => {
+  if (gameState.messageInfo) {
+    const { key, params } = gameState.messageInfo
+    if (params) {
+      return key + JSON.stringify(params)
+    }
+    return key
+  }
+  return gameState.message || ''
+}
 
 describe('useGameLogic', () => {
   let hookResult: RenderHookResult<ReturnType<typeof useGameLogic>, unknown>
@@ -71,7 +89,7 @@ describe('useGameLogic', () => {
 
       const hook = hookResult.result.current
       expect(hook.gameState.playerAttempts).toBe(0)
-      expect(hook.gameState.message).toBe('fourDigitsRequired')
+      expect(getEffectiveMessage(hook.gameState)).toBe('fourDigitsRequired')
     })
   })
 
@@ -132,7 +150,7 @@ describe('useGameLogic', () => {
 
       const hook = hookResult.result.current
       expect(hook.gameState.hintsRemaining).toBe(3)
-      expect(hook.gameState.message).toBe('fourDigitsRequired')
+      expect(getEffectiveMessage(hook.gameState)).toBe('fourDigitsRequired')
     })
 
     it('should not allow hint check when no hints remaining', () => {
@@ -165,7 +183,7 @@ describe('useGameLogic', () => {
 
       const hook = hookResult.result.current
       expect(hook.gameState.hintsRemaining).toBe(0)
-      expect(hook.gameState.message).toBe('noHintsRemaining')
+      expect(getEffectiveMessage(hook.gameState)).toBe('noHintsRemaining')
     })
 
     it('should reset hints when starting new game', () => {
@@ -219,8 +237,9 @@ describe('useGameLogic', () => {
       const hook = hookResult.result.current
       expect(hook.gameState.hintsRemaining).toBe(2)
       // Should get either consistent or inconsistent message (including detailed version)
+      const effectiveMessage = getEffectiveMessage(hook.gameState)
       expect(['hintConsistent', 'hintInconsistent', 'hintInconsistentWithDetails'].some(msg => 
-        hook.gameState.message === msg || hook.gameState.message?.startsWith('✗')
+        effectiveMessage === msg || effectiveMessage?.startsWith('✗') || effectiveMessage?.includes(msg)
       )).toBe(true)
     })
 
@@ -256,8 +275,9 @@ describe('useGameLogic', () => {
       const hook = hookResult.result.current
       expect(hook.gameState.hintsRemaining).toBe(2)
       // Message should be either consistent or inconsistent
+      const effectiveMessage = getEffectiveMessage(hook.gameState)
       expect(['hintConsistent', 'hintInconsistent'].some(msg => 
-        hook.gameState.message.includes(msg)
+        effectiveMessage.includes(msg)
       )).toBe(true)
     })
 
@@ -300,7 +320,7 @@ describe('useGameLogic', () => {
         })
 
         const hintsAfterCheck = hookResult.result.current.gameState.hintsRemaining
-        const message = hookResult.result.current.gameState.message
+        const message = getEffectiveMessage(hookResult.result.current.gameState)
         
         console.log('Hints after check:', hintsAfterCheck)
         console.log('Hint check message:', message)
@@ -399,7 +419,7 @@ describe('useGameLogic', () => {
           hookResult.result.current.handleHintCheck()
         })
 
-        const message = hookResult.result.current.gameState.message
+        const message = getEffectiveMessage(hookResult.result.current.gameState)
         console.log('Hint check result:', message)
         
         // The bug: it shows inconsistent when it should be consistent
@@ -454,7 +474,7 @@ describe('useGameLogic', () => {
         hookResult.result.current.handleHintCheck()
       })
 
-      const message = hookResult.result.current.gameState.message
+      const message = getEffectiveMessage(hookResult.result.current.gameState)
       console.log('Hint check message:', message)
       
       // When 1234 gives 0A0B, 5678 should be consistent because both share no digits

@@ -96,9 +96,12 @@ export const GameUI: React.FC<GameUIProps> = ({
             </div>
           )}
 
-          {gameState.message && (
+          {(gameState.message || gameState.messageInfo) && (
             <div className={`message ${getMessageType()}`}>
-              {gameState.message}
+              {gameState.messageInfo ? 
+                t(gameState.messageInfo.key, gameState.messageInfo.params) : 
+                gameState.message
+              }
               {feedbackCorrection.isActive && getMessageType() === 'complaint' && (
                 <div className="correction-buttons">
                   <button 

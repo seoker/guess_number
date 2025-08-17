@@ -37,7 +37,7 @@
   "computerWon": "コンピュータの勝利です！コンピュータがあなたの数字を正しく当てました！コンピュータの数字は：{{computerNumber}}",
   "gameDraw": "引き分けです！あなたとコンピュータが同じラウンドで正解を見つけました！",
   "playerFoundAnswer": "答えを見つけました！コンピュータに最後の推測の機会を与えます。",
-  "computerFinalGuess": "コンピュータの最終推測：",
+  "computerFinalGuess": "コンピュータの最終推測：{{guess}}",
   
   "yourHint": "あなたのヒント：",
   "computerThinking": "AとBのフィードバックを入力してください",

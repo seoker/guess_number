@@ -1109,6 +1109,7 @@
   .correction-actions {
     flex-direction: column;
     gap: 0.8rem;
+    align-items: center;
   }
   
   .fix-button, .reset-button, 

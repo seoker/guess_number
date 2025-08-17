@@ -1,5 +1,5 @@
 import { useReducer, useCallback } from 'react'
-import { GameState, MessageType, CurrentTurn } from '../types'
+import { GameState, MessageType, CurrentTurn, MessageInfo } from '../types'
 import { generateTargetNumber } from '../utils/gameUtils'
 
 enum GameActionType {
@@ -24,7 +24,7 @@ type GameAction =
   | { type: GameActionType.START_GAME }
   | { type: GameActionType.RESET_GAME }
   | { type: GameActionType.UPDATE_PLAYER_GUESS; payload: string }
-  | { type: GameActionType.SET_MESSAGE; payload: { message: string; messageType: MessageType } }
+  | { type: GameActionType.SET_MESSAGE; payload: { message: string; messageInfo: MessageInfo | null; messageType: MessageType } }
   | { type: GameActionType.CLEAR_MESSAGE }
   | { type: GameActionType.PLAYER_TURN_SUCCESS; payload: { attempts: number; result: string } }
   | { type: GameActionType.PLAYER_WINS; payload: number }
@@ -41,6 +41,7 @@ const initialState: GameState = {
   computerTarget: '',
   playerGuess: '',
   message: '',
+  messageInfo: null,
   messageType: MessageType.INFO,
   playerAttempts: 0,
   computerAttempts: 0,
@@ -80,6 +81,7 @@ const gameStateReducer = (state: GameState, action: GameAction): GameState => {
       return {
         ...state,
         message: action.payload.message,
+        messageInfo: action.payload.messageInfo,
         messageType: action.payload.messageType
       }
 
@@ -87,6 +89,7 @@ const gameStateReducer = (state: GameState, action: GameAction): GameState => {
       return {
         ...state,
         message: '',
+        messageInfo: null,
         messageType: MessageType.INFO
       }
 
@@ -200,8 +203,13 @@ export const useGameState = () => {
     dispatch({ type: GameActionType.UPDATE_PLAYER_GUESS, payload: guess })
   }, [])
 
-  const setMessage = useCallback((message: string, messageType: MessageType = MessageType.INFO) => {
-    dispatch({ type: GameActionType.SET_MESSAGE, payload: { message, messageType } })
+  const setMessage = useCallback((message: string, messageInfo: MessageInfo | null = null, messageType: MessageType = MessageType.INFO) => {
+    dispatch({ type: GameActionType.SET_MESSAGE, payload: { message, messageInfo, messageType } })
+  }, [])
+
+  const setTranslatableMessage = useCallback((messageKey: string, params?: Record<string, string | number>, messageType: MessageType = MessageType.INFO) => {
+    const messageInfo: MessageInfo = { key: messageKey, params }
+    dispatch({ type: GameActionType.SET_MESSAGE, payload: { message: '', messageInfo, messageType } })
   }, [])
 
   const clearMessage = useCallback(() => {
@@ -254,6 +262,7 @@ export const useGameState = () => {
     resetGame,
     updatePlayerGuess,
     setMessage,
+    setTranslatableMessage,
     clearMessage,
     playerTurnSuccess,
     playerWins,

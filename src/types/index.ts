@@ -19,6 +19,11 @@ export enum GameWinner {
 
 /* Game state and logic types */
 
+export interface MessageInfo {
+  key: string;
+  params?: Record<string, string | number>;
+}
+
 export interface GameState {
   gameStarted: boolean;
   gameWon: boolean;
@@ -28,6 +33,7 @@ export interface GameState {
   computerAttempts: number;
   currentTurn: CurrentTurn;
   message: string;
+  messageInfo: MessageInfo | null;
   messageType: MessageType;
   hintsRemaining: number;
 }

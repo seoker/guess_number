@@ -22,7 +22,7 @@ export const useGameLogic = (addGameRecord: (record: Omit<SavedGameRecord, 'id' 
     startNewGame: startGame,
     resetGame: resetGameState,
     updatePlayerGuess,
-    setMessage,
+    setTranslatableMessage,
     clearMessage,
     playerTurnSuccess,
     playerWins,
@@ -59,18 +59,22 @@ export const useGameLogic = (addGameRecord: (record: Omit<SavedGameRecord, 'id' 
     computer: []
   })
 
-  // Generate computer complaint message
-  const generateComplaint = useCallback((guess: string, feedback: GuessResult): string => {
-    const complaints = [
-      t('complaints.inconsistent', { guess, feedback: `${feedback.A}A${feedback.B}B` }),
-      t('complaints.unreasonable', { guess, feedback: `${feedback.A}A${feedback.B}B` }),
-      t('complaints.joking', { guess, feedback: `${feedback.A}A${feedback.B}B` }),
-      t('complaints.problematic', { guess, feedback: `${feedback.A}A${feedback.B}B` }),
-      t('complaints.wrong', { guess, feedback: `${feedback.A}A${feedback.B}B` })
+  // Generate computer complaint message info
+  const generateComplaintInfo = useCallback((guess: string, feedback: GuessResult): { key: string; params: Record<string, string | number> } => {
+    const complaintKeys = [
+      'complaints.inconsistent',
+      'complaints.unreasonable', 
+      'complaints.joking',
+      'complaints.problematic',
+      'complaints.wrong'
     ]
     
-    return complaints[Math.floor(Math.random() * complaints.length)]
-  }, [t])
+    const selectedKey = complaintKeys[Math.floor(Math.random() * complaintKeys.length)]
+    return {
+      key: selectedKey,
+      params: { guess, feedback: `${feedback.A}A${feedback.B}B` }
+    }
+  }, [])
 
   // Determine message type
   const getMessageType = useCallback((): MessageType => {
@@ -89,7 +93,7 @@ export const useGameLogic = (addGameRecord: (record: Omit<SavedGameRecord, 'id' 
   const handlePlayerGuess = useCallback((): void => {
     const validation = validateNumber(gameState.playerGuess)
     if (!validation.valid) {
-      setMessage(t(validation.message || ''), MessageType.INFO)
+      setTranslatableMessage(validation.message || '', undefined, MessageType.INFO)
       return
     }
 
@@ -105,15 +109,15 @@ export const useGameLogic = (addGameRecord: (record: Omit<SavedGameRecord, 'id' 
       
       if (currentPlayerAttempt > gameState.computerAttempts) {
         computerFinalTurn(currentPlayerAttempt)
-        setMessage(t('playerFoundAnswer'))
+        setTranslatableMessage('playerFoundAnswer')
         
         setTimeout(() => {
           const computerGuessNum = makeGuess()
-          setMessage(`${t('computerFinalGuess')}${computerGuessNum}`)
+          setTranslatableMessage('computerFinalGuess', { guess: computerGuessNum })
         }, GAME_CONFIG.COMPUTER_THINKING_TIME)
       } else {
         playerWins(currentPlayerAttempt)
-        setMessage(t('playerWon'), MessageType.SUCCESS)
+        setTranslatableMessage('playerWon', undefined, MessageType.SUCCESS)
         
         if (addGameRecord) {
           addGameRecord({
@@ -136,10 +140,10 @@ export const useGameLogic = (addGameRecord: (record: Omit<SavedGameRecord, 'id' 
       
       setTimeout(() => {
         makeGuess()
-        setMessage(t('computerThinking'))
+        setTranslatableMessage('computerThinking')
       }, GAME_CONFIG.COMPUTER_THINKING_TIME)
     }
-  }, [gameState.playerGuess, gameState.computerTarget, gameState.playerAttempts, gameState.computerAttempts, history.player, history.computer, setMessage, playerTurnSuccess, playerWins, computerFinalTurn, makeGuess, t, addGameRecord])
+  }, [gameState.playerGuess, gameState.computerTarget, gameState.playerAttempts, gameState.computerAttempts, history.player, history.computer, setTranslatableMessage, playerTurnSuccess, playerWins, computerFinalTurn, makeGuess, t, addGameRecord])
 
   // Handle player feedback
   const handleFeedbackSubmit = useCallback(() => {
@@ -148,15 +152,15 @@ export const useGameLogic = (addGameRecord: (record: Omit<SavedGameRecord, 'id' 
     
     const validation = validateFeedback(A, B)
     if (!validation.valid) {
-      setMessage(t(validation.message || ''), MessageType.INFO)
+      setTranslatableMessage(validation.message || '', undefined, MessageType.INFO)
       return
     }
 
     const feedback = { A, B }
     
     if (!checkFeedbackIsConsistent(feedback)) {
-      const complaint = generateComplaint(computerAI.currentGuess, feedback)
-      setMessage(complaint, MessageType.COMPLAINT)
+      const complaintInfo = generateComplaintInfo(computerAI.currentGuess, feedback)
+      setTranslatableMessage(complaintInfo.key, complaintInfo.params, MessageType.COMPLAINT)
       startCorrection()
       return
     }
@@ -175,7 +179,7 @@ export const useGameLogic = (addGameRecord: (record: Omit<SavedGameRecord, 'id' 
       
       if (playerAlreadyWon) {
         gameDraw(currentComputerAttempt)
-        setMessage(t('gameDraw'), MessageType.SUCCESS)
+        setTranslatableMessage('gameDraw', undefined, MessageType.SUCCESS)
         
         if (addGameRecord) {
           const playerWinningRound = history.player.length
@@ -190,7 +194,7 @@ export const useGameLogic = (addGameRecord: (record: Omit<SavedGameRecord, 'id' 
         }
       } else {
         computerWins(currentComputerAttempt, gameState.computerTarget)
-        setMessage(t('computerWon', { computerNumber: gameState.computerTarget }), MessageType.SUCCESS)
+        setTranslatableMessage('computerWon', { computerNumber: gameState.computerTarget }, MessageType.SUCCESS)
         
         if (addGameRecord) {
           addGameRecord({
@@ -208,7 +212,7 @@ export const useGameLogic = (addGameRecord: (record: Omit<SavedGameRecord, 'id' 
       
       if (playerAlreadyWon) {
         playerWinsWithComputerAttempts(history.player.length, currentComputerAttempt)
-        setMessage(t('playerWon'), MessageType.SUCCESS)
+        setTranslatableMessage('playerWon', undefined, MessageType.SUCCESS)
         
         if (addGameRecord) {
           addGameRecord({
@@ -223,7 +227,7 @@ export const useGameLogic = (addGameRecord: (record: Omit<SavedGameRecord, 'id' 
       } else {
         const remainingNumbers = processFeedback(`${A}A${B}B`)
         if (remainingNumbers.length === 0) {
-          setMessage(t('noPossibleNumbers'))
+          setTranslatableMessage('noPossibleNumbers')
           return
         }
         switchToPlayer()
@@ -231,7 +235,7 @@ export const useGameLogic = (addGameRecord: (record: Omit<SavedGameRecord, 'id' 
     }
     
     resetFeedbackForm()
-  }, [computerAI.playerFeedback, computerAI.currentGuess, gameState.computerAttempts, gameState.computerTarget, history.player, history.computer, checkFeedbackIsConsistent, generateComplaint, startCorrection, gameDraw, computerWins, playerWinsWithComputerAttempts, processFeedback, switchToPlayer, resetFeedbackForm, setMessage, t, addGameRecord])
+  }, [computerAI.playerFeedback, computerAI.currentGuess, gameState.computerAttempts, gameState.computerTarget, history.player, history.computer, checkFeedbackIsConsistent, generateComplaintInfo, startCorrection, gameDraw, computerWins, playerWinsWithComputerAttempts, processFeedback, switchToPlayer, resetFeedbackForm, setTranslatableMessage, addGameRecord])
 
   // Start feedback correction
   const startFeedbackCorrection = useCallback(() => {
@@ -267,19 +271,19 @@ export const useGameLogic = (addGameRecord: (record: Omit<SavedGameRecord, 'id' 
   // Handle hint check
   const handleHintCheck = useCallback((): void => {
     if (gameState.hintsRemaining <= 0) {
-      setMessage(t('noHintsRemaining'), MessageType.INFO)
+      setTranslatableMessage('noHintsRemaining', undefined, MessageType.INFO)
       return
     }
 
     const validation = validateNumber(gameState.playerGuess)
     if (!validation.valid) {
-      setMessage(t(validation.message || ''), MessageType.INFO)
+      setTranslatableMessage(validation.message || '', undefined, MessageType.INFO)
       return
     }
 
     // Don't allow hint check if no previous guesses exist
     if (history.player.length === 0) {
-      setMessage(t('hintButtonTooltip'), MessageType.INFO)
+      setTranslatableMessage('hintButtonTooltip', undefined, MessageType.INFO)
       return
     }
 
@@ -290,23 +294,23 @@ export const useGameLogic = (addGameRecord: (record: Omit<SavedGameRecord, 'id' 
     consumeHint()
     
     if (isConsistent) {
-      setMessage(t('hintConsistent'), MessageType.SUCCESS)
+      setTranslatableMessage('hintConsistent', undefined, MessageType.SUCCESS)
     } else {
       // Find which specific previous guess causes the inconsistency
       const inconsistentGuess = findInconsistentGuess(gameState.playerGuess, history.player)
       if (inconsistentGuess) {
-        setMessage(t('hintInconsistentWithDetails', {
+        setTranslatableMessage('hintInconsistentWithDetails', {
           guess: inconsistentGuess.guess,
           actualA: inconsistentGuess.result.A,
           actualB: inconsistentGuess.result.B,
           expectedA: inconsistentGuess.expectedResult.A,
           expectedB: inconsistentGuess.expectedResult.B
-        }), MessageType.INFO)
+        }, MessageType.INFO)
       } else {
-        setMessage(t('hintInconsistent'), MessageType.INFO)
+        setTranslatableMessage('hintInconsistent', undefined, MessageType.INFO)
       }
     }
-  }, [gameState.playerGuess, gameState.hintsRemaining, history.player, setMessage, consumeHint, t])
+  }, [gameState.playerGuess, gameState.hintsRemaining, history.player, setTranslatableMessage, consumeHint])
 
   return {
     // State
