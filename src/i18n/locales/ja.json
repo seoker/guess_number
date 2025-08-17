@@ -92,9 +92,10 @@
   "computerWonInRounds": "コンピュータが{{rounds}}ラウンドで勝利",
   "drawInRounds": "{{rounds}}ラウンドで引き分け",
   
-  "checkHint": "チェック",
+  "checkHint": "一貫性をチェック",
   "hintButtonTooltip": "現在の推測が過去の推測と一致するかチェック（残り{{remaining}}回のヒント）",
   "noHintsRemaining": "ヒントが残っていません！このゲームで3回のヒントをすべて使い切りました。",
   "hintConsistent": "✓ あなたの推測は過去の推測履歴と一致しています。",
-  "hintInconsistent": "✗ あなたの推測は過去の推測履歴と一致していません。修正を検討してください。"
+  "hintInconsistent": "✗ この推測は以前のフィードバックと矛盾します。これが正解だった場合、以前の推測は異なるA/B結果になるはずです。",
+  "hintInconsistentWithDetails": "✗ {{guess}}:{{actualA}}A{{actualB}}Bと矛盾しています。これが正解の場合、{{guess}}は{{expectedA}}A{{expectedB}}Bになるはずです。"
 }

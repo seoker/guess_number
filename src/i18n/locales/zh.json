@@ -92,9 +92,10 @@
   "computerWonInRounds": "電腦在 {{rounds}} 回合獲勝",
   "drawInRounds": "在 {{rounds}} 回合平手",
   
-  "checkHint": "檢查",
+  "checkHint": "檢查一致性",
   "hintButtonTooltip": "檢查您當前的猜測是否與之前的猜測一致（剩餘 {{remaining}} 次提示）",
   "noHintsRemaining": "沒有剩餘提示！您已使用完本局遊戲的3次提示。",
   "hintConsistent": "✓ 您的猜測與之前的猜測歷史一致。",
-  "hintInconsistent": "✗ 您的猜測與之前的猜測歷史不一致。請考慮修改。"
+  "hintInconsistent": "✗ 此猜測與之前的回饋矛盾。如果這是目標數字，您之前的猜測會得到不同的A/B結果。",
+  "hintInconsistentWithDetails": "✗ 與 {{guess}}:{{actualA}}A{{actualB}}B 不一致。如果這是目標數字，{{guess}} 應該得到 {{expectedA}}A{{expectedB}}B。"
 }
