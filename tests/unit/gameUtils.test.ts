@@ -31,7 +31,7 @@ describe('gameUtils', () => {
     it('should have correct configuration values', () => {
       expect(GAME_CONFIG.DIGIT_COUNT).toBe(4)
       expect(GAME_CONFIG.MAX_DIGIT).toBe(10)
-      expect(GAME_CONFIG.COMPUTER_THINKING_TIME).toBe(1000)
+      expect(GAME_CONFIG.COMPUTER_THINKING_TIME).toBe(100)
     })
   })
 
