@@ -152,6 +152,24 @@ export const isGuessConsistentWithHistory = (
   return possibleTargets.includes(guess)
 }
 
+// Find which specific previous guess causes inconsistency with current guess
+export const findInconsistentGuess = (
+  currentGuess: string,
+  playerHistory: GuessRecord[] | GameGuess[]
+): { guess: string; result: { A: number; B: number }; expectedResult: { A: number; B: number } } | null => {
+  for (const record of playerHistory) {
+    const actualResult = calculateAB(record.guess, currentGuess)
+    if (actualResult.A !== record.result.A || actualResult.B !== record.result.B) {
+      return {
+        guess: record.guess,
+        result: record.result, // What actually happened
+        expectedResult: actualResult // What would happen if currentGuess were target
+      }
+    }
+  }
+  return null
+}
+
 // === NEW STRUCTURE UTILITY FUNCTIONS ===
 
 // Create a GameGuess from individual components

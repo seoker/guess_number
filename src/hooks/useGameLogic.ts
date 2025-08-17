@@ -9,7 +9,8 @@ import {
   calculateAB, 
   validateNumber, 
   validateFeedback,
-  calculatePossibleTargets
+  calculatePossibleTargets,
+  findInconsistentGuess
 } from '../utils/gameUtils'
 
 export const useGameLogic = (addGameRecord: (record: Omit<SavedGameRecord, 'id' | 'timestamp'>) => void) => {
@@ -291,7 +292,19 @@ export const useGameLogic = (addGameRecord: (record: Omit<SavedGameRecord, 'id' 
     if (isConsistent) {
       setMessage(t('hintConsistent'), MessageType.SUCCESS)
     } else {
-      setMessage(t('hintInconsistent'), MessageType.INFO)
+      // Find which specific previous guess causes the inconsistency
+      const inconsistentGuess = findInconsistentGuess(gameState.playerGuess, history.player)
+      if (inconsistentGuess) {
+        setMessage(t('hintInconsistentWithDetails', {
+          guess: inconsistentGuess.guess,
+          actualA: inconsistentGuess.result.A,
+          actualB: inconsistentGuess.result.B,
+          expectedA: inconsistentGuess.expectedResult.A,
+          expectedB: inconsistentGuess.expectedResult.B
+        }), MessageType.INFO)
+      } else {
+        setMessage(t('hintInconsistent'), MessageType.INFO)
+      }
     }
   }, [gameState.playerGuess, gameState.hintsRemaining, history.player, setMessage, consumeHint, t])
 
