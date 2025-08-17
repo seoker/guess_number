@@ -1,4 +1,4 @@
-import React, { useRef } from 'react'
+import React, { useRef, useEffect } from 'react'
 import { useDigitInput } from '../hooks/useDigitInput'
 
 export interface DigitInputsProps {
@@ -6,13 +6,15 @@ export interface DigitInputsProps {
   updatePlayerGuess: (guess: string) => void
   handlePlayerGuess: () => void
   disabled: boolean
+  isPlayerTurn: boolean
 }
 
 export const DigitInputs: React.FC<DigitInputsProps> = ({
   playerGuess,
   updatePlayerGuess,
   handlePlayerGuess,
-  disabled
+  disabled,
+  isPlayerTurn
 }) => {
   const inputRef = useRef<HTMLInputElement>(null)
   
@@ -21,6 +23,12 @@ export const DigitInputs: React.FC<DigitInputsProps> = ({
     updatePlayerGuess,
     handlePlayerGuess
   )
+
+  useEffect(() => {
+    if (isPlayerTurn && !disabled && inputRef.current) {
+      inputRef.current.focus()
+    }
+  }, [isPlayerTurn, disabled])
 
   return (
     <div className="digit-inputs">

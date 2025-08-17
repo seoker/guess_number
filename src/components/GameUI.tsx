@@ -66,6 +66,7 @@ export const GameUI: React.FC<GameUIProps> = ({
                   updatePlayerGuess={updatePlayerGuess}
                   handlePlayerGuess={handlePlayerGuess}
                   disabled={gameState.gameWon || gameState.currentTurn !== 'player'}
+                  isPlayerTurn={gameState.currentTurn === 'player' && !gameState.gameWon}
                 />
                 <div className="button-group">
                   <button 
