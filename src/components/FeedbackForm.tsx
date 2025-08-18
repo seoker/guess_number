@@ -24,25 +24,63 @@ export const FeedbackForm: React.FC<FeedbackFormProps> = ({
       <div className="feedback-form">
         <div className="feedback-inputs">
           <div className="feedback-display">
-            <button 
-              className="feedback-element clickable"
-              onClick={() => {
+            <div className="feedback-element-group">
+              <button 
+                className="arrow-button up"
+                onClick={() => {
+                  const nextA = (playerFeedback.A + 1) % 5;
+                  onFeedbackClick('A', nextA);
+                }}
+                title={t('increaseValue')}
+              >
+                ▲
+              </button>
+              <div className="feedback-element clickable" onClick={() => {
                 const nextA = (playerFeedback.A + 1) % 5;
                 onFeedbackClick('A', nextA);
-              }}
-            >
-              {playerFeedback.A}
-            </button>
+              }}>
+                {playerFeedback.A}
+              </div>
+              <button 
+                className="arrow-button down"
+                onClick={() => {
+                  const nextA = playerFeedback.A === 0 ? 4 : playerFeedback.A - 1;
+                  onFeedbackClick('A', nextA);
+                }}
+                title={t('decreaseValue')}
+              >
+                ▼
+              </button>
+            </div>
             <span className="feedback-element static">A</span>
-            <button 
-              className="feedback-element clickable"
-              onClick={() => {
+            <div className="feedback-element-group">
+              <button 
+                className="arrow-button up"
+                onClick={() => {
+                  const nextB = (playerFeedback.B + 1) % 5;
+                  onFeedbackClick('B', nextB);
+                }}
+                title={t('increaseValue')}
+              >
+                ▲
+              </button>
+              <div className="feedback-element clickable" onClick={() => {
                 const nextB = (playerFeedback.B + 1) % 5;
                 onFeedbackClick('B', nextB);
-              }}
-            >
-              {playerFeedback.B}
-            </button>
+              }}>
+                {playerFeedback.B}
+              </div>
+              <button 
+                className="arrow-button down"
+                onClick={() => {
+                  const nextB = playerFeedback.B === 0 ? 4 : playerFeedback.B - 1;
+                  onFeedbackClick('B', nextB);
+                }}
+                title={t('decreaseValue')}
+              >
+                ▼
+              </button>
+            </div>
             <span className="feedback-element static">B</span>
           </div>
         </div>

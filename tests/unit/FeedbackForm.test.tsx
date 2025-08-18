@@ -31,12 +31,11 @@ describe('FeedbackForm', () => {
   it('should display current feedback values', () => {
     render(<FeedbackForm {...defaultProps} />)
 
-    const buttons = screen.getAllByRole('button')
-    const aButton = buttons.find(button => button.textContent === '1')
-    const bButton = buttons.find(button => button.textContent === '2')
+    const aValueElement = screen.getByText('1')
+    const bValueElement = screen.getByText('2')
 
-    expect(aButton).toBeInTheDocument()
-    expect(bButton).toBeInTheDocument()
+    expect(aValueElement).toBeInTheDocument()
+    expect(bValueElement).toBeInTheDocument()
   })
 
   it('should handle A feedback clicks', async () => {
@@ -44,8 +43,8 @@ describe('FeedbackForm', () => {
     render(<FeedbackForm {...defaultProps} />)
 
     const buttons = screen.getAllByRole('button')
-    const aButton = buttons.find(btn => btn.textContent === '1' && btn.className.includes('clickable'))
-    await user.click(aButton!)
+    const aIncreaseButton = buttons.find(btn => btn.textContent === '▲')
+    await user.click(aIncreaseButton!)
 
     expect(mockOnFeedbackClick).toHaveBeenCalledWith('A', 2)
   })
@@ -55,8 +54,9 @@ describe('FeedbackForm', () => {
     render(<FeedbackForm {...defaultProps} />)
 
     const buttons = screen.getAllByRole('button')
-    const bButton = buttons.find(btn => btn.textContent === '2' && btn.className.includes('clickable'))
-    await user.click(bButton!)
+    const bIncreaseButtons = buttons.filter(btn => btn.textContent === '▲')
+    const bIncreaseButton = bIncreaseButtons[1] // Second ▲ button is for B
+    await user.click(bIncreaseButton!)
 
     expect(mockOnFeedbackClick).toHaveBeenCalledWith('B', 3)
   })
@@ -70,8 +70,8 @@ describe('FeedbackForm', () => {
     render(<FeedbackForm {...props} />)
 
     const buttons = screen.getAllByRole('button')
-    const aButton = buttons.find(btn => btn.textContent === '4' && btn.className.includes('clickable'))
-    await user.click(aButton!)
+    const aIncreaseButton = buttons.find(btn => btn.textContent === '▲')
+    await user.click(aIncreaseButton!)
 
     expect(mockOnFeedbackClick).toHaveBeenCalledWith('A', 0)
   })
@@ -102,9 +102,8 @@ describe('FeedbackForm', () => {
     }
     render(<FeedbackForm {...props} />)
 
-    const buttons = screen.getAllByRole('button')
-    const zeroButtons = buttons.filter(button => button.textContent === '0')
+    const zeroValueElements = screen.getAllByText('0')
     
-    expect(zeroButtons).toHaveLength(2)
+    expect(zeroValueElements).toHaveLength(2) // Both A and B show 0
   })
 })

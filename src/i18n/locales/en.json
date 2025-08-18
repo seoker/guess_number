@@ -97,5 +97,8 @@
   "noHintsRemaining": "No hints remaining! You've used all 3 hints for this game.",
   "hintConsistent": "✓ Your guess is consistent with your previous guess history.",
   "hintInconsistent": "✗ This guess contradicts your previous feedback. If this were the target, your earlier guesses would have gotten different A/B results.",
-  "hintInconsistentWithDetails": "✗ Inconsistent with {{guess}}:{{actualA}}A{{actualB}}B. If this were the target, {{guess}} would get {{expectedA}}A{{expectedB}}B instead."
+  "hintInconsistentWithDetails": "✗ Inconsistent with {{guess}}:{{actualA}}A{{actualB}}B. If this were the target, {{guess}} would get {{expectedA}}A{{expectedB}}B instead.",
+  
+  "increaseValue": "Increase value",
+  "decreaseValue": "Decrease value"
 }

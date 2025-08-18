@@ -97,5 +97,8 @@
   "noHintsRemaining": "沒有剩餘提示！您已使用完本局遊戲的3次提示。",
   "hintConsistent": "✓ 您的猜測與之前的猜測歷史一致。",
   "hintInconsistent": "✗ 此猜測與之前的回饋矛盾。如果這是目標數字，您之前的猜測會得到不同的A/B結果。",
-  "hintInconsistentWithDetails": "✗ 與 {{guess}}:{{actualA}}A{{actualB}}B 不一致。如果這是目標數字，{{guess}} 應該得到 {{expectedA}}A{{expectedB}}B。"
+  "hintInconsistentWithDetails": "✗ 與 {{guess}}:{{actualA}}A{{actualB}}B 不一致。如果這是目標數字，{{guess}} 應該得到 {{expectedA}}A{{expectedB}}B。",
+  
+  "increaseValue": "增加數值",
+  "decreaseValue": "減少數值"
 }

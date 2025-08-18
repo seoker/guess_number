@@ -61,29 +61,33 @@ export const GameUI: React.FC<GameUIProps> = ({
           ) : (
             <div className="guess-section">
               <div className="input-section">
-                <DigitInputs
-                  playerGuess={gameState.playerGuess}
-                  updatePlayerGuess={updatePlayerGuess}
-                  handlePlayerGuess={handlePlayerGuess}
-                  disabled={gameState.gameWon || gameState.currentTurn !== 'player'}
-                  isPlayerTurn={gameState.currentTurn === 'player' && !gameState.gameWon}
-                />
-                <div className="button-group">
-                  <button 
-                    onClick={handlePlayerGuess} 
-                    className="game-button guess-button"
-                    disabled={gameState.gameWon || gameState.currentTurn !== 'player' || gameState.playerGuess.length !== 4}
-                  >
-                    {t('guess')}
-                  </button>
-                  <button 
-                    onClick={handleHintCheck}
-                    className="game-button hint-button"
-                    disabled={gameState.gameWon || gameState.currentTurn !== 'player' || gameState.playerGuess.length !== 4 || gameState.hintsRemaining <= 0 || history.player.length === 0}
-                    title={t('hintButtonTooltip', { remaining: gameState.hintsRemaining })}
-                  >
-                    {t('checkHint')} ({gameState.hintsRemaining})
-                  </button>
+                <div className="digit-inputs-and-main-buttons">
+                  <DigitInputs
+                    playerGuess={gameState.playerGuess}
+                    updatePlayerGuess={updatePlayerGuess}
+                    handlePlayerGuess={handlePlayerGuess}
+                    disabled={gameState.gameWon || gameState.currentTurn !== 'player'}
+                    isPlayerTurn={gameState.currentTurn === 'player' && !gameState.gameWon}
+                  />
+                  <div className="main-button-group">
+                    <button 
+                      onClick={handlePlayerGuess} 
+                      className="game-button guess-button"
+                      disabled={gameState.gameWon || gameState.currentTurn !== 'player' || gameState.playerGuess.length !== 4}
+                    >
+                      {t('guess')}
+                    </button>
+                    <button 
+                      onClick={handleHintCheck}
+                      className="game-button hint-button"
+                      disabled={gameState.gameWon || gameState.currentTurn !== 'player' || gameState.playerGuess.length !== 4 || gameState.hintsRemaining <= 0 || history.player.length === 0}
+                      title={t('hintButtonTooltip', { remaining: gameState.hintsRemaining })}
+                    >
+                      {t('checkHint')} ({gameState.hintsRemaining})
+                    </button>
+                  </div>
+                </div>
+                <div className="secondary-actions">
                   <button 
                     className="restart-link"
                     onClick={showRestartConfirmation}
