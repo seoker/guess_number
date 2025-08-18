@@ -48,6 +48,13 @@ export const GameUI: React.FC<GameUIProps> = ({
           <div className="game-info">
             <p className="attempts">{t('playerAttempts')}: {gameState.playerAttempts} | {t('computerAttempts')}: {gameState.computerAttempts}</p>
             <p className="hint">{t('currentTurn')}: {gameState.currentTurn === 'player' ? t('player') : t('computer')}</p>
+            <button 
+              className="restart-link"
+              onClick={showRestartConfirmation}
+              title={t('restartGame')}
+            >
+              {t('restartGame')}
+            </button>
           </div>
 
           {computerAI.showFeedbackForm ? (
@@ -86,15 +93,6 @@ export const GameUI: React.FC<GameUIProps> = ({
                       {t('checkHint')} ({gameState.hintsRemaining})
                     </button>
                   </div>
-                </div>
-                <div className="secondary-actions">
-                  <button 
-                    className="restart-link"
-                    onClick={showRestartConfirmation}
-                    title={t('restartGame')}
-                  >
-                    {t('restartGame')}
-                  </button>
                 </div>
               </div>
             </div>
