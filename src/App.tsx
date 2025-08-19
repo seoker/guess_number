@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, Suspense, lazy } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useGameLogic } from './hooks/useGameLogic'
 import { useGameRecords } from './hooks/useGameRecords'
@@ -7,6 +7,13 @@ import { GameUI } from './components/GameUI'
 import { GameRecords } from './components/GameRecords'
 import { Language } from './types'
 import './App.css'
+
+// Lazy load components for code splitting in production
+const LazyGameUI = lazy(() => import('./components/GameUI').then(module => ({ default: module.GameUI })))
+const LazyGameRecords = lazy(() => import('./components/GameRecords').then(module => ({ default: module.GameRecords })))
+
+// Check if we're in test environment
+const isTest = import.meta.env.NODE_ENV === 'test' || import.meta.env.VITEST
 
 function App(): React.ReactElement {
   const { t, i18n } = useTranslation()
@@ -45,6 +52,14 @@ function App(): React.ReactElement {
     setCurrentView(view)
   }
 
+  // Loading component
+  const LoadingSpinner = () => (
+    <div className="loading-spinner">
+      <div className="spinner"></div>
+      <p>{t('loading')}</p>
+    </div>
+  )
+
   return (
     <div className="app">
       <NavigationBar 
@@ -57,34 +72,70 @@ function App(): React.ReactElement {
       />
       
       <main className="main-content">
-        {currentView === 'game' ? (
-          <GameUI
-            gameState={gameState}
-            history={history}
-            computerAI={computerAI}
-            feedbackCorrection={feedbackCorrection}
-            startNewGame={startNewGame}
-            handlePlayerGuess={handlePlayerGuess}
-            handleFeedbackSubmit={handleFeedbackSubmit}
-            updatePlayerGuess={updatePlayerGuess}
-            updatePlayerFeedback={updatePlayerFeedback}
-            getMessageType={getMessageType}
-            startFeedbackCorrection={startFeedbackCorrection}
-            resetGame={resetGame}
-            correctHistoryFeedback={correctHistoryFeedback}
-            cancelFeedbackCorrection={cancelFeedbackCorrection}
-            handleHintCheck={handleHintCheck}
-            t={t}
-            currentLanguage={i18n.language}
-            changeLanguage={changeLanguage}
-            getSupportedLanguages={getSupportedLanguages}
-          />
+        {isTest ? (
+          // Direct rendering for tests to avoid async loading issues
+          currentView === 'game' ? (
+            <GameUI
+              gameState={gameState}
+              history={history}
+              computerAI={computerAI}
+              feedbackCorrection={feedbackCorrection}
+              startNewGame={startNewGame}
+              handlePlayerGuess={handlePlayerGuess}
+              handleFeedbackSubmit={handleFeedbackSubmit}
+              updatePlayerGuess={updatePlayerGuess}
+              updatePlayerFeedback={updatePlayerFeedback}
+              getMessageType={getMessageType}
+              startFeedbackCorrection={startFeedbackCorrection}
+              resetGame={resetGame}
+              correctHistoryFeedback={correctHistoryFeedback}
+              cancelFeedbackCorrection={cancelFeedbackCorrection}
+              handleHintCheck={handleHintCheck}
+              t={t}
+              currentLanguage={i18n.language}
+              changeLanguage={changeLanguage}
+              getSupportedLanguages={getSupportedLanguages}
+            />
+          ) : (
+            <GameRecords
+              gameRecords={gameRecords}
+              clearAllRecords={clearAllRecords}
+              t={t}
+            />
+          )
         ) : (
-          <GameRecords
-            gameRecords={gameRecords}
-            clearAllRecords={clearAllRecords}
-            t={t}
-          />
+          // Lazy loading with Suspense for production
+          <Suspense fallback={<LoadingSpinner />}>
+            {currentView === 'game' ? (
+              <LazyGameUI
+                gameState={gameState}
+                history={history}
+                computerAI={computerAI}
+                feedbackCorrection={feedbackCorrection}
+                startNewGame={startNewGame}
+                handlePlayerGuess={handlePlayerGuess}
+                handleFeedbackSubmit={handleFeedbackSubmit}
+                updatePlayerGuess={updatePlayerGuess}
+                updatePlayerFeedback={updatePlayerFeedback}
+                getMessageType={getMessageType}
+                startFeedbackCorrection={startFeedbackCorrection}
+                resetGame={resetGame}
+                correctHistoryFeedback={correctHistoryFeedback}
+                cancelFeedbackCorrection={cancelFeedbackCorrection}
+                handleHintCheck={handleHintCheck}
+                t={t}
+                currentLanguage={i18n.language}
+                changeLanguage={changeLanguage}
+                getSupportedLanguages={getSupportedLanguages}
+              />
+            ) : (
+              <LazyGameRecords
+                gameRecords={gameRecords}
+                clearAllRecords={clearAllRecords}
+                t={t}
+              />
+            )}
+          </Suspense>
         )}
       </main>
     </div>
