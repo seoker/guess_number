@@ -6,8 +6,20 @@
   "aExplanation": "A：数字と位置が両方正しい個数",
   "bExplanation": "B：数字は正しいが位置が間違っている個数",
   
+  "loading": "読み込み中...",
+  
+  "digitInputsLabel": "4桁の予想を入力してください",
+  "digitInputsHelp": "各ボックスに1桁ずつ入力してください。矢印キーやTabキーで数字間を移動できます。",
+  "digitPosition": "{{position}}桁目",
+  "allDigitsEntered": "4桁すべて入力完了、推測の準備ができました",
+  "digitsRemaining": "あと{{remaining}}桁入力が必要です",
+  
   "startGame": "ゲーム開始",
   "guess": "推測",
+  "submitGuessButtonLabel": "4桁の推測を送信",
+  "guessButtonEnabledHelp": "押して推測を送信し結果を確認",
+  "guessButtonDisabledHelp": "推測を送信する前に4桁すべてを入力してください",
+  "hintButtonLabel": "一貫性ヒントをチェック（残り{{remaining}}回）",
   "submitFeedback": "フィードバック送信",
   "playAgain": "もう一度プレイ",
   

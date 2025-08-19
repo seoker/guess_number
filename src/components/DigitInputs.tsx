@@ -7,6 +7,7 @@ export interface DigitInputsProps {
   handlePlayerGuess: () => void
   disabled: boolean
   isPlayerTurn: boolean
+  t: (key: string, options?: any) => string
 }
 
 export const DigitInputs: React.FC<DigitInputsProps> = ({
@@ -14,7 +15,8 @@ export const DigitInputs: React.FC<DigitInputsProps> = ({
   updatePlayerGuess,
   handlePlayerGuess,
   disabled,
-  isPlayerTurn
+  isPlayerTurn,
+  t
 }) => {
   const inputRef = useRef<HTMLInputElement>(null)
   
@@ -30,8 +32,19 @@ export const DigitInputs: React.FC<DigitInputsProps> = ({
     }
   }, [isPlayerTurn, disabled])
 
+  const filledDigits = playerGuess.replace(/\s/g, '').length
+  const isComplete = filledDigits === 4
+
   return (
-    <div className="digit-inputs">
+    <div 
+      className="digit-inputs" 
+      role="group" 
+      aria-label={t('digitInputsLabel')}
+      aria-describedby="digit-inputs-help"
+    >
+      <div id="digit-inputs-help" className="sr-only">
+        {t('digitInputsHelp')}
+      </div>
       {[0, 1, 2, 3].map(index => (
         <input
           key={index}
@@ -47,8 +60,16 @@ export const DigitInputs: React.FC<DigitInputsProps> = ({
           disabled={disabled}
           maxLength={1}
           placeholder="?"
+          aria-label={t('digitPosition', { position: index + 1 })}
+          aria-describedby={`digit-${index}-status`}
+          aria-required="true"
+          aria-invalid={!isComplete && isPlayerTurn ? "false" : undefined}
+          autoComplete="off"
         />
       ))}
+      <div className="sr-only" aria-live="polite" aria-atomic="true">
+        {isComplete ? t('allDigitsEntered') : t('digitsRemaining', { remaining: 4 - filledDigits })}
+      </div>
     </div>
   )
 }

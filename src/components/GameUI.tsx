@@ -75,23 +75,32 @@ export const GameUI: React.FC<GameUIProps> = ({
                     handlePlayerGuess={handlePlayerGuess}
                     disabled={gameState.gameWon || gameState.currentTurn !== 'player'}
                     isPlayerTurn={gameState.currentTurn === 'player' && !gameState.gameWon}
+                    t={t}
                   />
                   <div className="main-button-group">
                     <button 
                       onClick={handlePlayerGuess} 
                       className="game-button guess-button"
-                      disabled={gameState.gameWon || gameState.currentTurn !== 'player' || gameState.playerGuess.length !== 4}
+                      disabled={gameState.gameWon || gameState.currentTurn !== 'player' || gameState.playerGuess.replace(/\s/g, '').length !== 4}
+                      aria-describedby="guess-button-help"
                     >
                       {t('guess')}
                     </button>
+                    <div id="guess-button-help" className="sr-only">
+                      {gameState.playerGuess.replace(/\s/g, '').length !== 4 ? t('guessButtonDisabledHelp') : t('guessButtonEnabledHelp')}
+                    </div>
                     <button 
                       onClick={handleHintCheck}
                       className="game-button hint-button"
-                      disabled={gameState.gameWon || gameState.currentTurn !== 'player' || gameState.playerGuess.length !== 4 || gameState.hintsRemaining <= 0 || history.player.length === 0}
+                      disabled={gameState.gameWon || gameState.currentTurn !== 'player' || gameState.playerGuess.replace(/\s/g, '').length !== 4 || gameState.hintsRemaining <= 0 || history.player.length === 0}
+                      aria-describedby="hint-button-help"
                       title={t('hintButtonTooltip', { remaining: gameState.hintsRemaining })}
                     >
                       {t('checkHint')} ({gameState.hintsRemaining})
                     </button>
+                    <div id="hint-button-help" className="sr-only">
+                      {t('hintButtonTooltip', { remaining: gameState.hintsRemaining })}
+                    </div>
                   </div>
                 </div>
               </div>

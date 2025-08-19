@@ -6,8 +6,20 @@
   "aExplanation": "A：數字和位置都對的個數",
   "bExplanation": "B：數字對但位置不對的個數",
   
+  "loading": "加載中...",
+  
+  "digitInputsLabel": "輸入您的4位數猜測",
+  "digitInputsHelp": "每個框輸入一位數字。使用箭頭鍵或Tab鍵在數字間導航。",
+  "digitPosition": "第{{position}}位數字",
+  "allDigitsEntered": "已輸入全部4位數字，準備猜測",
+  "digitsRemaining": "還需輸入{{remaining}}位數字",
+  
   "startGame": "開始遊戲",
   "guess": "猜測",
+  "submitGuessButtonLabel": "提交您的4位數猜測",
+  "guessButtonEnabledHelp": "按下提交您的猜測並查看結果",
+  "guessButtonDisabledHelp": "請完成全部4位數字後再提交猜測",
+  "hintButtonLabel": "檢查一致性提示（剩餘{{remaining}}次）",
   "submitFeedback": "提交提示",
   "playAgain": "再玩一次",
   

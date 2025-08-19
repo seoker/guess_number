@@ -6,8 +6,20 @@
   "aExplanation": "A: Number of digits that are correct in both value and position",
   "bExplanation": "B: Number of digits that are correct in value but wrong in position",
   
+  "loading": "Loading...",
+  
+  "digitInputsLabel": "Enter your 4-digit guess",
+  "digitInputsHelp": "Enter one digit per box. Use arrow keys or tab to navigate between digits.",
+  "digitPosition": "Digit {{position}}",
+  "allDigitsEntered": "All 4 digits entered, ready to guess",
+  "digitsRemaining": "{{remaining}} digits remaining to enter",
+  
   "startGame": "Start Game",
   "guess": "Guess",
+  "submitGuessButtonLabel": "Submit your 4-digit guess",
+  "guessButtonEnabledHelp": "Press to submit your guess and see the result",
+  "guessButtonDisabledHelp": "Complete all 4 digits before submitting your guess",
+  "hintButtonLabel": "Check consistency hint ({{remaining}} remaining)",
   "submitFeedback": "Submit Feedback",
   "playAgain": "Play Again",
   

@@ -12,10 +12,12 @@ vi.mock('../../src/hooks/useDigitInput', () => ({
 describe('DigitInputs', () => {
   let mockUpdatePlayerGuess: ReturnType<typeof vi.fn>
   let mockHandlePlayerGuess: ReturnType<typeof vi.fn>
+  let mockT: ReturnType<typeof vi.fn>
 
   beforeEach(() => {
     mockUpdatePlayerGuess = vi.fn()
     mockHandlePlayerGuess = vi.fn()
+    mockT = vi.fn((key) => key)
   })
 
   afterEach(() => {
@@ -29,6 +31,8 @@ describe('DigitInputs', () => {
         updatePlayerGuess={mockUpdatePlayerGuess}
         handlePlayerGuess={mockHandlePlayerGuess}
         disabled={false}
+        isPlayerTurn={true}
+        t={mockT}
       />
     )
 
@@ -50,6 +54,8 @@ describe('DigitInputs', () => {
         updatePlayerGuess={mockUpdatePlayerGuess}
         handlePlayerGuess={mockHandlePlayerGuess}
         disabled={false}
+        isPlayerTurn={true}
+        t={mockT}
       />
     )
 
@@ -67,6 +73,8 @@ describe('DigitInputs', () => {
         updatePlayerGuess={mockUpdatePlayerGuess}
         handlePlayerGuess={mockHandlePlayerGuess}
         disabled={false}
+        isPlayerTurn={true}
+        t={mockT}
       />
     )
 
@@ -84,6 +92,8 @@ describe('DigitInputs', () => {
         updatePlayerGuess={mockUpdatePlayerGuess}
         handlePlayerGuess={mockHandlePlayerGuess}
         disabled={true}
+        isPlayerTurn={false}
+        t={mockT}
       />
     )
 
@@ -100,6 +110,8 @@ describe('DigitInputs', () => {
         updatePlayerGuess={mockUpdatePlayerGuess}
         handlePlayerGuess={mockHandlePlayerGuess}
         disabled={false}
+        isPlayerTurn={true}
+        t={mockT}
       />
     )
 
@@ -118,6 +130,8 @@ describe('DigitInputs', () => {
         updatePlayerGuess={mockUpdatePlayerGuess}
         handlePlayerGuess={mockHandlePlayerGuess}
         disabled={false}
+        isPlayerTurn={true}
+        t={mockT}
       />
     )
 
