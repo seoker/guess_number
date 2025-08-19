@@ -60,6 +60,7 @@ export default defineConfig([
   },
   {
     files: ['tests/**/*.{ts,tsx}'],
+    ignores: ['tests/e2e/*.playwright.test.ts'],
     extends: [
       js.configs.recommended,
       reactHooks.configs['recommended-latest'],
@@ -135,6 +136,30 @@ export default defineConfig([
       'max-lines-per-function': 'off', // Test functions can be longer
       'max-statements': 'off', // Tests may have multiple assertions
       'complexity': 'off', // Test logic can be complex
+    },
+  },
+  {
+    files: ['tests/e2e/*.playwright.test.ts'],
+    extends: [js.configs.recommended],
+    plugins: {
+      '@typescript-eslint': tseslint,
+    },
+    languageOptions: {
+      parser: tsparser,
+      ecmaVersion: 2020,
+      globals: {
+        ...globals.browser,
+        ...globals.node,
+      },
+      parserOptions: {
+        ecmaVersion: 'latest',
+        sourceType: 'module',
+      },
+    },
+    rules: {
+      'no-unused-vars': 'off',
+      '@typescript-eslint/no-unused-vars': 'off',
+      'no-console': 'off',
     },
   },
 ])
