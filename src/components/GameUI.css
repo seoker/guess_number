@@ -973,10 +973,20 @@
     transition: all 0.05s ease !important;
   }
   
-  /* Prevent unwanted movement for digit inputs on mobile */
+  /* Enhanced touch feedback for digit inputs on mobile */
   .digit-input:active {
     transform: none !important;
     transition: all 0.05s ease !important;
+    background-color: rgba(102, 126, 234, 0.15);
+    border-color: #667eea;
+    box-shadow: 0 0 0 2px rgba(102, 126, 234, 0.3);
+  }
+  
+  .digit-input:focus {
+    outline: none;
+    border-color: #667eea;
+    box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.25);
+    background-color: rgba(102, 126, 234, 0.05);
   }
   
   /* Mobile-specific disabled button styling */
@@ -1209,10 +1219,20 @@
     transition: all 0.05s ease !important;
   }
   
-  /* Prevent unwanted movement for digit inputs on mobile */
+  /* Enhanced touch feedback for digit inputs on mobile */
   .digit-input:active {
     transform: none !important;
     transition: all 0.05s ease !important;
+    background-color: rgba(102, 126, 234, 0.15);
+    border-color: #667eea;
+    box-shadow: 0 0 0 2px rgba(102, 126, 234, 0.3);
+  }
+  
+  .digit-input:focus {
+    outline: none;
+    border-color: #667eea;
+    box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.25);
+    background-color: rgba(102, 126, 234, 0.05);
   }
   
   /* Mobile-specific disabled button styling */
